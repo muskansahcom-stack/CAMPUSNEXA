@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protected Complaint — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+    <style>
+        .prot-container {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+        .prot-shield-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.16) 0%, rgba(15, 23, 42, 0.85) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            border-radius: var(--cnx-radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.15);
+        }
+        .prot-shield-icon {
+            font-size: 2.25rem;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 14px;
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .prot-example-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--cnx-border-subtle);
+            border-radius: 9999px;
+            padding: 0.3rem 0.75rem;
+            font-size: 0.75rem;
+            color: var(--cnx-text-secondary);
+            margin: 0.25rem 0.25rem 0.25rem 0;
+            cursor: pointer;
+            transition: all var(--cnx-transition-fast);
+        }
+        .prot-example-pill:hover {
+            border-color: #8b5cf6;
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.2);
+        }
+        .prot-success-box {
+            display: none;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: var(--cnx-radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="cnx-layout" style="background-color: var(--cnx-bg-main);">
+
+    <!-- Top Navigation Bar -->
+    <header class="cnx-topbar" style="position: sticky; top: 0; z-index: 100;">
+        <div class="cnx-topbar-left">
+            <a href="student-dashboard.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa" style="height: 34px; width: 34px; border-radius: 8px;">
+                <div>
+                    <div style="font-weight: 800; font-size: 1.15rem; color: #ffffff; letter-spacing: -0.5px;">CampusNexa</div>
+                    <div style="font-size: 0.68rem; color: #00c9ff; font-weight: 600; text-transform: uppercase;">Report. Track. Resolve.</div>
+                </div>
+            </a>
+        </div>
+        <div class="cnx-topbar-right">
+            <a href="student-dashboard.html" class="cnx-btn cnx-btn-outline cnx-btn-sm">
+                &larr; Back to Dashboard
+            </a>
+            <div class="cnx-user-pill" id="userPill">
+                <div class="cnx-avatar" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6);">S</div>
+                <div class="cnx-user-info-wrap">
+                    <span class="cnx-user-name" id="topbarUsername">Logged-in Student</span>
+                    <span class="cnx-user-role-label">Protected Reporting Mode</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="prot-container">
+
+        <!-- Title & Subtitle -->
+        <div style="margin-bottom: 1.75rem;">
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35); padding: 0.3rem 0.85rem; border-radius: 9999px; font-size: 0.78rem; font-weight: 700; color: #c084fc; margin-bottom: 0.75rem;">
+                🛡️ CONFIDENTIAL DISCLOSURE CHANNEL
+            </div>
+            <h1 style="font-size: 1.85rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem;">
+                Protected Complaint
+            </h1>
+            <p style="font-size: 0.95rem; color: var(--cnx-text-secondary); max-width: 720px; line-height: 1.55;">
+                Report sensitive, health hazard, or recurring campus problems without exposing your student identity to the receiving hostel warden or maintenance staff.
+            </p>
+        </div>
+
+        <!-- Privacy Shield Guarantee Banner -->
+        <div class="prot-shield-card">
+            <div class="prot-shield-icon">🔒</div>
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 0.35rem;">
+                    Server-Side Identity Isolation Guarantee
+                </h3>
+                <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+                    When you file a <strong>Protected Complaint</strong>, your complaint information is stored separately from your student identity. In the database, ownership is recorded in <code>protected_complaint_identity</code>.
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #c084fc;">
+                    <div>✓ Receiving authorities only see: <strong>Identity: 🔒 PROTECTED</strong></div>
+                    <div>✓ Zero student name, phone, email, or registration number is transmitted</div>
+                    <div>✓ You can still track and inspect this complaint after logging in</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Feedback Banner -->
+        <div class="prot-success-box" id="successBox">
+            <div style="font-size: 3rem; margin-bottom: 0.75rem;">🎉</div>
+            <h2 style="font-size: 1.45rem; font-weight: 800; color: #34d399; margin-bottom: 0.5rem;">
+                Protected Complaint Submitted Successfully
+            </h2>
+            <p style="font-size: 0.92rem; color: var(--cnx-text-secondary); max-width: 550px; margin: 0 auto 1.5rem; line-height: 1.5;">
+                Your grievance has been safely transmitted to the maintenance dispatch triage with identity concealment. You can view, track, and follow up anytime using your ticket tracking identifier.
+            </p>
+            <div style="display: inline-block; background: rgba(0,0,0,0.3); border: 1px dashed #34d399; padding: 0.75rem 1.75rem; border-radius: var(--cnx-radius-md); font-family: monospace; font-size: 1.35rem; font-weight: 800; color: #ffffff; margin-bottom: 1.75rem;" id="successTicketNum">
+                CNX-2026-000000
+            </div>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <button type="button" class="cnx-btn cnx-btn-primary" onclick="goToTracking()">
+                    🔍 Track Complaint &rarr;
+                </button>
+                <button type="button" class="cnx-btn cnx-btn-outline" onclick="resetFormForNew()">
+                    📝 File Another Protected Complaint
+                </button>
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="cnx-card" id="formCard">
+            <form id="protectedForm" enctype="multipart/form-data">
+                <input type="hidden" name="isProtected" value="true">
+                <input type="hidden" name="visibility" value="PROTECTED">
+
+                <!-- Sensitive Issue Quick Examples -->
+                <div style="margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--cnx-border-subtle);">
+                    <label class="cnx-form-label" style="margin-bottom: 0.5rem; color: #c084fc;">
+                        ⚡ Quick Select Sensitive Concern Preset:
+                    </label>
+                    <div style="display: flex; flex-wrap: wrap;">
+                        <span class="prot-example-pill" onclick="applyPreset('5', 'Mess & Food Quality', 'Rotten Food / Foul Smell', 'HIGH', 'Hygiene / Health Hazard Concern')">🍲 Rotten Food</span>
+                        <span class="prot-example-pill" onclick="applyPreset('5', 'Mess & Food Quality', 'Half-Cooked Food / Raw Meat', 'HIGH', 'Hygiene / Health Hazard Concern')">🥩 Half-Cooked Food</span>
+                        <span class="prot-example-pill" onclick="applyPreset('5', 'Mess & Food Quality', 'Foreign Object in Food (Insects/Glass)', 'CRITICAL', 'Hygiene / Health Hazard Concern')">🪳 Foreign Object in Food</span>
+                        <span class="prot-example-pill" onclick="applyPreset('4', 'Cleaning & Sanitation', 'Repeated Cleaning Problem', 'HIGH', 'Repeated Defect Ignored')">🧹 Repeated Cleaning Problem</span>
+                        <span class="prot-example-pill" onclick="applyPreset('4', 'Cleaning & Sanitation', 'Hostel Hygiene & Bio-Hazard', 'HIGH', 'Hygiene / Health Hazard Concern')">🦠 Hostel Hygiene</span>
+                        <span class="prot-example-pill" onclick="applyPreset('9', 'Security & Safety', 'Campus Safety Concern / Broken Lock', 'CRITICAL', 'Personal Safety & Security Risk')">🚨 Safety Concern</span>
+                        <span class="prot-example-pill" onclick="applyPreset('11', 'Other', 'Other Sensitive Institutional Issue', 'HIGH', 'Fear of Retaliation / Discomfort')">📌 Other Sensitive Issue</span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <!-- 1. Category -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="categorySelect">Grievance Category *</label>
+                        <select id="categorySelect" name="categoryId" class="cnx-select" required onchange="handleCategoryChange()">
+                            <option value="5" selected>🍲 Mess & Food Quality</option>
+                            <option value="4">🧹 Cleaning & Sanitation</option>
+                            <option value="9">🛡️ Security & Safety</option>
+                            <option value="1">🏛️ Buildings & Rooms</option>
+                            <option value="3">🚰 Plumbing & Water</option>
+                            <option value="11">📌 Other Sensitive Institutional Issue</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. Priority -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="prioritySelect">Severity / Priority *</label>
+                        <select id="prioritySelect" name="priority" class="cnx-select" required>
+                            <option value="CRITICAL">CRITICAL — Emergency health hazard / direct threat</option>
+                            <option value="HIGH" selected>HIGH — Severe ongoing contamination or defect</option>
+                            <option value="MEDIUM">MEDIUM — Unresolved recurring defect</option>
+                            <option value="LOW">LOW — Minor maintenance observation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <!-- 3. Hostel / Building -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="hostelInput">Hostel / Campus Building *</label>
+                        <input type="text" id="hostelInput" name="building" class="cnx-input" placeholder="e.g. Central Dining Hall, Boys Hostel 1 Wing B" required>
+                    </div>
+
+                    <!-- 4. Location Details -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="locationInput">Specific Location / Counter / Room *</label>
+                        <input type="text" id="locationInput" name="location" class="cnx-input" placeholder="e.g. Counter 2 Service Area, Room 304, 3rd Floor Washroom" required>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <!-- 5. Sub-Category / Specific Issue -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="subCategoryInput">Specific Sub-Category Issue *</label>
+                        <input type="text" id="subCategoryInput" name="subCategory" class="cnx-input" placeholder="e.g. Contaminated Gravy, Rotten Vegetables, Uncleaned Drain" required>
+                    </div>
+
+                    <!-- 6. Reason for Protection -->
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label" for="protectionReasonSelect">Reason for Protection *</label>
+                        <select id="protectionReasonSelect" name="protectionReason" class="cnx-select" required>
+                            <option value="Fear of Mess Contractor Retaliation" selected>Fear of Mess Contractor Retaliation</option>
+                            <option value="Repeated Issue Ignored by Local Staff">Repeated Issue Ignored by Local Staff</option>
+                            <option value="Hygiene / Acute Health Hazard Concern">Hygiene / Acute Health Hazard Concern</option>
+                            <option value="Personal Safety & Security Risk">Personal Safety & Security Risk</option>
+                            <option value="Hostel Administration Dispute">Hostel Administration Dispute</option>
+                            <option value="Discomfort Exposing Identity">Discomfort Exposing Identity</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 7. Title -->
+                <div class="cnx-form-group" style="margin-bottom: 1.25rem;">
+                    <label class="cnx-form-label" for="titleInput">Complaint Title *</label>
+                    <input type="text" id="titleInput" name="title" class="cnx-input" placeholder="e.g. Foreign insect discovered in lunch rice serving" required maxlength="200">
+                </div>
+
+                <!-- 8. Description -->
+                <div class="cnx-form-group" style="margin-bottom: 1.25rem;">
+                    <label class="cnx-form-label" for="descriptionInput">Detailed Statement of Facts *</label>
+                    <textarea id="descriptionInput" name="description" class="cnx-textarea" rows="5" required placeholder="Describe what occurred with specific facts, date/time, affected individuals, and observations. Your student identity is strictly masked from the receiving warden and technicians."></textarea>
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted);">Please provide specific, factual evidence to assist authorities in prompt corrective action.</span>
+                </div>
+
+                <!-- 9. Evidence Upload -->
+                <div class="cnx-form-group" style="margin-bottom: 2rem;">
+                    <label class="cnx-form-label" for="evidenceFileInput">
+                        Attach Evidence / Photograph (Recommended)
+                    </label>
+                    <input type="file" id="evidenceFileInput" name="evidence" class="cnx-input" accept=".jpg,.jpeg,.png,.webp,.pdf">
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted);">
+                        Upload photographic evidence of the issue (Max 5MB: JPG, PNG, WEBP, or PDF).
+                    </span>
+                </div>
+
+                <!-- Form Submit Action -->
+                <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                    <button type="submit" class="cnx-btn cnx-btn-primary" id="btnSubmit" style="background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); border-color: #8b5cf6; padding: 0.75rem 1.75rem; font-size: 0.95rem;">
+                        🔒 Submit Protected Complaint &rarr;
+                    </button>
+                    <a href="student-dashboard.html" class="cnx-btn cnx-btn-secondary">
+                        Cancel & Return
+                    </a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        let submittedTicketNumber = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSession();
+            setupForm();
+        });
+
+        async function checkSession() {
+            try {
+                const res = await fetch('api/session');
+                const data = await res.json();
+                if (!data.authenticated) {
+                    window.location.href = 'login.html?error=Please+log+in+first';
+                    return;
+                }
+                document.getElementById('topbarUsername').textContent = data.fullName || data.username || 'Student';
+            } catch (e) {
+                console.error('Session verification error:', e);
+            }
+        }
+
+        function applyPreset(catId, catName, subCat, priority, reason) {
+            document.getElementById('categorySelect').value = catId;
+            document.getElementById('subCategoryInput').value = subCat;
+            document.getElementById('prioritySelect').value = priority;
+            document.getElementById('protectionReasonSelect').value = reason;
+            document.getElementById('titleInput').value = `${subCat} at campus facility`;
+            document.getElementById('descriptionInput').focus();
+        }
+
+        function handleCategoryChange() {
+            const cat = document.getElementById('categorySelect').value;
+            const sub = document.getElementById('subCategoryInput');
+            if (cat === '5') {
+                sub.placeholder = 'e.g. Rotten Food, Raw Meal, Foreign Object';
+            } else if (cat === '4') {
+                sub.placeholder = 'e.g. Repeated Cleaning Failure, Overflowing Drain';
+            } else if (cat === '9') {
+                sub.placeholder = 'e.g. Broken Door Latch, Missing Guard';
+            } else {
+                sub.placeholder = 'e.g. Specific Defect or Concern';
+            }
+        }
+
+        function setupForm() {
+            const form = document.getElementById('protectedForm');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('btnSubmit');
+                btn.disabled = true;
+                btn.textContent = '🔒 Transmitting with Identity Masking...';
+
+                try {
+                    const formData = new FormData(form);
+                    formData.set('isProtected', 'true');
+                    formData.set('visibility', 'PROTECTED');
+
+                    const res = await fetch('report-issue', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: formData
+                    });
+
+                    const data = await res.json();
+                    if (data && data.success) {
+                        submittedTicketNumber = data.complaintNumber;
+                        document.getElementById('successTicketNum').textContent = data.complaintNumber;
+                        document.getElementById('formCard').style.display = 'none';
+                        document.getElementById('successBox').style.display = 'block';
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                        alert(data.message || 'Failed to submit protected complaint.');
+                        btn.disabled = false;
+                        btn.textContent = '🔒 Submit Protected Complaint →';
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Error connecting to server. Please try again.');
+                    btn.disabled = false;
+                    btn.textContent = '🔒 Submit Protected Complaint →';
+                }
+            });
+        }
+
+        function goToTracking() {
+            window.location.href = `student-dashboard.html#track-complaint`;
+        }
+
+        function resetFormForNew() {
+            document.getElementById('protectedForm').reset();
+            document.getElementById('formCard').style.display = 'block';
+            document.getElementById('successBox').style.display = 'none';
+            document.getElementById('btnSubmit').disabled = false;
+            document.getElementById('btnSubmit').textContent = '🔒 Submit Protected Complaint →';
+        }
+    </script>
+</body>
+</html>

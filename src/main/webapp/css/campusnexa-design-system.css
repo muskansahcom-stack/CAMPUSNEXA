@@ -1,0 +1,1568 @@
+/* ==========================================================================
+   CampusNexa Design System (SaaS Enterprise Edition)
+   Brand: CampusNexa
+   Tagline: Report. Track. Resolve.
+   Typography: Plus Jakarta Sans / Inter
+   Theme: Luxury Dark Navy & Slate with Electric Cyan Accents
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+    /* Brand Accent & Gradients */
+    --cnx-primary: #00c9ff;
+    --cnx-primary-hover: #00b4e6;
+    --cnx-primary-gradient: linear-gradient(135deg, #00c9ff 0%, #2563eb 100%);
+    --cnx-primary-glow: rgba(0, 201, 255, 0.3);
+    --cnx-accent-indigo: #6366f1;
+    --cnx-accent-purple: #8b5cf6;
+    
+    /* Semantic State Colors */
+    --cnx-success: #10b981;
+    --cnx-success-glow: rgba(16, 185, 129, 0.3);
+    --cnx-warning: #f59e0b;
+    --cnx-warning-glow: rgba(245, 158, 11, 0.3);
+    --cnx-danger: #ef4444;
+    --cnx-danger-glow: rgba(239, 68, 68, 0.3);
+    --cnx-info: #0ea5e9;
+    
+    /* Dark Surface Palette (SaaS Luxury Tier) */
+    --cnx-bg-main: #060b19;
+    --cnx-bg-alt: #0a1128;
+    --cnx-surface-1: #0f172a;
+    --cnx-surface-2: #1e293b;
+    --cnx-surface-3: #334155;
+    --cnx-surface-glass: rgba(15, 23, 42, 0.85);
+    --cnx-surface-card: rgba(30, 41, 59, 0.7);
+    --cnx-surface-hover: rgba(255, 255, 255, 0.05);
+    
+    /* Text Tokens */
+    --cnx-text-primary: #f8fafc;
+    --cnx-text-secondary: #94a3b8;
+    --cnx-text-muted: #64748b;
+    --cnx-text-inverse: #020617;
+    
+    /* Borders & Dividers */
+    --cnx-border-subtle: rgba(255, 255, 255, 0.08);
+    --cnx-border-medium: rgba(255, 255, 255, 0.15);
+    --cnx-border-bright: rgba(0, 201, 255, 0.35);
+    --cnx-border-focus: rgba(0, 201, 255, 0.6);
+    
+    /* Box Shadows */
+    --cnx-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.25);
+    --cnx-shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+    --cnx-shadow-lg: 0 16px 40px -6px rgba(0, 0, 0, 0.6);
+    --cnx-shadow-glow: 0 0 25px rgba(0, 201, 255, 0.22);
+    --cnx-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.1);
+    
+    /* Radii */
+    --cnx-radius-xs: 4px;
+    --cnx-radius-sm: 8px;
+    --cnx-radius-md: 12px;
+    --cnx-radius-lg: 18px;
+    --cnx-radius-xl: 24px;
+    --cnx-radius-full: 9999px;
+    
+    /* Layout Constants */
+    --cnx-sidebar-width: 270px;
+    --cnx-topbar-height: 72px;
+    
+    /* Transitions */
+    --cnx-transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --cnx-transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --cnx-transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Base & Typography
+   ========================================================================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--cnx-bg-main);
+    color: var(--cnx-text-primary);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+code, kbd, pre, samp {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--cnx-bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--cnx-surface-3);
+    border-radius: var(--cnx-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cnx-text-muted);
+}
+
+/* ==========================================================================
+   SaaS Layout Grid: Sidebar + Main Content (Topbar + View)
+   ========================================================================== */
+.cnx-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--cnx-bg-main);
+}
+
+.cnx-main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-left: var(--cnx-sidebar-width);
+    transition: margin-left var(--cnx-transition-normal);
+}
+
+@media (max-width: 1024px) {
+    .cnx-main-wrapper {
+        margin-left: 0 !important;
+    }
+}
+
+.cnx-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 2.25rem;
+}
+
+@media (max-width: 768px) {
+    .cnx-container {
+        padding: 1.25rem 1rem;
+    }
+}
+
+/* ==========================================================================
+   Component 1: Sidebar
+   ========================================================================== */
+.cnx-sidebar {
+    width: var(--cnx-sidebar-width);
+    background: var(--cnx-bg-alt);
+    border-right: 1px solid var(--cnx-border-subtle);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform var(--cnx-transition-smooth);
+    overflow-y: auto;
+}
+
+.cnx-sidebar-brand {
+    padding: 1.5rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border-bottom: 1px solid var(--cnx-border-subtle);
+}
+
+.cnx-brand-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(0, 201, 255, 0.4));
+}
+
+.cnx-brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #ffffff 40%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cnx-brand-tagline {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--cnx-primary);
+    text-transform: uppercase;
+    display: block;
+}
+
+.cnx-sidebar-role-badge {
+    margin: 1rem 1.25rem 0.5rem;
+    padding: 0.45rem 0.85rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-md);
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.cnx-role-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cnx-primary);
+    box-shadow: 0 0 8px var(--cnx-primary);
+}
+
+.cnx-role-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--cnx-text-secondary);
+}
+
+.cnx-sidebar-nav {
+    padding: 1rem 0.85rem;
+    flex: 1;
+}
+
+.cnx-nav-section-title {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--cnx-text-muted);
+    padding: 0.85rem 0.75rem 0.35rem;
+}
+
+.cnx-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.3rem;
+    border-radius: var(--cnx-radius-md);
+    color: var(--cnx-text-secondary);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all var(--cnx-transition-fast);
+    border: 1px solid transparent;
+}
+
+.cnx-nav-link:hover {
+    background: var(--cnx-surface-hover);
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.cnx-nav-link.active {
+    background: linear-gradient(135deg, rgba(0, 201, 255, 0.12) 0%, rgba(37, 99, 235, 0.22) 100%);
+    border-color: var(--cnx-border-bright);
+    color: #38bdf8;
+    box-shadow: 0 4px 14px rgba(0, 201, 255, 0.12);
+}
+
+.cnx-nav-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.cnx-nav-badge {
+    margin-left: auto;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.18rem 0.5rem;
+    border-radius: var(--cnx-radius-full);
+    background: rgba(0, 201, 255, 0.18);
+    color: #38bdf8;
+    border: 1px solid rgba(0, 201, 255, 0.3);
+}
+
+.cnx-sidebar-footer {
+    padding: 1.25rem;
+    border-top: 1px solid var(--cnx-border-subtle);
+    background: rgba(5, 8, 20, 0.6);
+}
+
+/* Mobile Sidebar Drawer Overlay */
+.cnx-sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 7, 16, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 999;
+}
+
+@media (max-width: 1024px) {
+    .cnx-sidebar {
+        transform: translateX(-100%);
+    }
+    .cnx-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+    }
+    .cnx-sidebar-backdrop.open {
+        display: block;
+    }
+}
+
+/* ==========================================================================
+   Component 2: Topbar (SaaS Executive Header)
+   ========================================================================== */
+.cnx-topbar {
+    height: var(--cnx-topbar-height);
+    background: var(--cnx-surface-glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--cnx-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+
+@media (max-width: 768px) {
+    .cnx-topbar {
+        padding: 0 1rem;
+    }
+}
+
+.cnx-topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.cnx-menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--cnx-border-subtle);
+    color: #ffffff;
+    font-size: 1.2rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: var(--cnx-radius-sm);
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .cnx-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.cnx-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--cnx-text-muted);
+}
+
+.cnx-breadcrumb-current {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.cnx-topbar-center {
+    flex: 1;
+    max-width: 440px;
+    margin: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .cnx-topbar-center {
+        display: none;
+    }
+}
+
+.cnx-search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cnx-search-bar input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-full);
+    padding: 0.55rem 2.8rem 0.55rem 2.4rem;
+    color: #ffffff;
+    font-size: 0.85rem;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-search-bar input:focus {
+    outline: none;
+    border-color: var(--cnx-border-bright);
+    background: var(--cnx-surface-2);
+    box-shadow: 0 0 0 3px rgba(0, 201, 255, 0.15);
+}
+
+.cnx-search-icon {
+    position: absolute;
+    left: 0.9rem;
+    color: var(--cnx-text-muted);
+    font-size: 0.9rem;
+    pointer-events: none;
+}
+
+.cnx-search-kbd {
+    position: absolute;
+    right: 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: 4px;
+    padding: 0.15rem 0.4rem;
+    font-size: 0.65rem;
+    color: var(--cnx-text-muted);
+    pointer-events: none;
+}
+
+.cnx-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cnx-icon-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    width: 40px;
+    height: 40px;
+    border-radius: var(--cnx-radius-md);
+    color: var(--cnx-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-icon-btn:hover {
+    background: var(--cnx-surface-hover);
+    color: #ffffff;
+    border-color: var(--cnx-border-medium);
+}
+
+.cnx-notif-dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: var(--cnx-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--cnx-primary);
+}
+
+.cnx-user-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-full);
+    text-decoration: none;
+    color: #ffffff;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-user-pill:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--cnx-border-bright);
+}
+
+.cnx-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--cnx-primary-gradient);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 201, 255, 0.3);
+}
+
+.cnx-user-info-wrap {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.cnx-user-name {
+    font-size: 0.825rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.cnx-user-role-label {
+    font-size: 0.65rem;
+    color: var(--cnx-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Component 3: Cards & Stat Cards
+   ========================================================================== */
+.cnx-card {
+    background: var(--cnx-surface-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-lg);
+    box-shadow: var(--cnx-shadow-card);
+    padding: 1.5rem;
+    transition: all var(--cnx-transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.cnx-card:hover {
+    border-color: var(--cnx-border-medium);
+    box-shadow: var(--cnx-shadow-md);
+}
+
+.cnx-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.cnx-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.cnx-card-subtitle {
+    font-size: 0.8rem;
+    color: var(--cnx-text-muted);
+    margin-top: 0.2rem;
+}
+
+/* 4 & 5 Grid KPI Cards */
+.cnx-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.cnx-stat-card {
+    background: var(--cnx-surface-card);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-lg);
+    padding: 1.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--cnx-transition-normal);
+}
+
+.cnx-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--cnx-border-subtle);
+    transition: background var(--cnx-transition-fast);
+}
+
+.cnx-stat-card.cyan::before { background: linear-gradient(90deg, #00c9ff, #2563eb); }
+.cnx-stat-card.amber::before { background: linear-gradient(90deg, #f59e0b, #d97706); }
+.cnx-stat-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #6d28d9); }
+.cnx-stat-card.emerald::before { background: linear-gradient(90deg, #10b981, #059669); }
+.cnx-stat-card.rose::before { background: linear-gradient(90deg, #ef4444, #be123c); }
+
+.cnx-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cnx-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+}
+
+.cnx-stat-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--cnx-text-secondary);
+}
+
+.cnx-stat-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--cnx-radius-md);
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.cnx-stat-card.cyan .cnx-stat-icon-wrap { background: rgba(0, 201, 255, 0.12); color: #38bdf8; }
+.cnx-stat-card.amber .cnx-stat-icon-wrap { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+.cnx-stat-card.purple .cnx-stat-icon-wrap { background: rgba(139, 92, 246, 0.12); color: #c084fc; }
+.cnx-stat-card.emerald .cnx-stat-icon-wrap { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+.cnx-stat-card.rose .cnx-stat-icon-wrap { background: rgba(239, 68, 68, 0.12); color: #f87171; }
+
+.cnx-stat-value {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+}
+
+.cnx-stat-subtext {
+    font-size: 0.75rem;
+    color: var(--cnx-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.cnx-trend-pill {
+    padding: 0.12rem 0.4rem;
+    border-radius: var(--cnx-radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.cnx-trend-pill.up { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.cnx-trend-pill.neutral { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; }
+
+/* ==========================================================================
+   Component 4: SaaS Data Tables
+   ========================================================================== */
+.cnx-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--cnx-radius-md);
+    border: 1px solid var(--cnx-border-subtle);
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.cnx-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.cnx-table th {
+    background: rgba(10, 17, 40, 0.85);
+    padding: 0.95rem 1.25rem;
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--cnx-text-secondary);
+    border-bottom: 1px solid var(--cnx-border-subtle);
+}
+
+.cnx-table td {
+    padding: 1.05rem 1.25rem;
+    font-size: 0.875rem;
+    color: #e2e8f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    vertical-align: middle;
+}
+
+.cnx-table tbody tr {
+    transition: background var(--cnx-transition-fast);
+}
+
+.cnx-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+.cnx-ticket-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #38bdf8;
+    background: rgba(0, 201, 255, 0.08);
+    border: 1px solid rgba(0, 201, 255, 0.25);
+    padding: 0.25rem 0.55rem;
+    border-radius: var(--cnx-radius-xs);
+}
+
+/* ==========================================================================
+   Component 5: Forms & Inputs
+   ========================================================================== */
+.cnx-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.25rem;
+}
+
+.cnx-form-label {
+    font-size: 0.825rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cnx-form-hint {
+    font-size: 0.75rem;
+    color: var(--cnx-text-muted);
+    font-weight: 400;
+}
+
+.cnx-input,
+.cnx-select,
+.cnx-textarea {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--cnx-border-subtle);
+    border-radius: var(--cnx-radius-md);
+    padding: 0.75rem 1rem;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #00c9ff !important;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-input:focus,
+.cnx-select:focus,
+.cnx-textarea:focus {
+    outline: none;
+    border-color: var(--cnx-border-bright);
+    background: var(--cnx-surface-2);
+    box-shadow: 0 0 0 3px rgba(0, 201, 255, 0.18);
+}
+
+.cnx-textarea {
+    min-height: 110px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.cnx-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.1rem;
+    padding-right: 2.5rem;
+}
+
+.cnx-select option {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+/* File Upload Dropzone */
+.cnx-dropzone {
+    border: 2px dashed rgba(255, 255, 255, 0.18);
+    border-radius: var(--cnx-radius-lg);
+    background: rgba(15, 23, 42, 0.4);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-dropzone:hover,
+.cnx-dropzone.dragover {
+    border-color: var(--cnx-primary);
+    background: rgba(0, 201, 255, 0.05);
+}
+
+.cnx-dropzone-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.65rem;
+    color: #38bdf8;
+}
+
+.cnx-dropzone-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.cnx-dropzone-sub {
+    font-size: 0.78rem;
+    color: var(--cnx-text-muted);
+    margin-top: 0.25rem;
+}
+
+/* Toggle Switch */
+.cnx-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    cursor: pointer;
+}
+
+.cnx-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.cnx-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.cnx-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: var(--cnx-surface-3);
+    border-radius: var(--cnx-radius-full);
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--cnx-border-subtle);
+}
+
+.cnx-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.cnx-switch input:checked + .cnx-slider {
+    background: var(--cnx-primary-gradient);
+    border-color: transparent;
+}
+
+.cnx-switch input:checked + .cnx-slider:before {
+    transform: translateX(22px);
+}
+
+/* ==========================================================================
+   Component 6: Buttons
+   ========================================================================== */
+.cnx-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.65rem 1.35rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-radius: var(--cnx-radius-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--cnx-transition-fast);
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.cnx-btn-primary {
+    background: var(--cnx-primary-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 201, 255, 0.25);
+}
+
+.cnx-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 201, 255, 0.45);
+    color: #ffffff;
+}
+
+.cnx-btn-secondary {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--cnx-border-subtle);
+    color: #f1f5f9;
+}
+
+.cnx-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--cnx-border-medium);
+    color: #ffffff;
+}
+
+.cnx-btn-outline {
+    background: transparent;
+    border-color: var(--cnx-border-bright);
+    color: #38bdf8;
+}
+
+.cnx-btn-outline:hover {
+    background: rgba(0, 201, 255, 0.1);
+    color: #ffffff;
+}
+
+.cnx-btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+}
+
+.cnx-btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+}
+
+.cnx-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+}
+
+.cnx-btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+}
+
+.cnx-btn-sm {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.78rem;
+    border-radius: var(--cnx-radius-sm);
+}
+
+.cnx-btn-lg {
+    padding: 0.9rem 1.85rem;
+    font-size: 1rem;
+    border-radius: var(--cnx-radius-lg);
+}
+
+/* ==========================================================================
+   Component 7: Status Badges & Priority Pills
+   ========================================================================== */
+.cnx-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.75rem;
+    border-radius: var(--cnx-radius-full);
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    line-height: 1;
+}
+
+.cnx-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Status variants */
+.cnx-badge-submitted {
+    background: rgba(59, 130, 246, 0.14);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+.cnx-badge-submitted .cnx-badge-dot { background: #60a5fa; box-shadow: 0 0 6px #60a5fa; }
+
+.cnx-badge-under-review {
+    background: rgba(139, 92, 246, 0.14);
+    color: #c084fc;
+    border: 1px solid rgba(139, 92, 246, 0.35);
+}
+.cnx-badge-under-review .cnx-badge-dot { background: #c084fc; box-shadow: 0 0 6px #c084fc; }
+
+.cnx-badge-assigned {
+    background: rgba(6, 182, 212, 0.14);
+    color: #22d3ee;
+    border: 1px solid rgba(6, 182, 212, 0.35);
+}
+.cnx-badge-assigned .cnx-badge-dot { background: #22d3ee; box-shadow: 0 0 6px #22d3ee; }
+
+.cnx-badge-in-progress {
+    background: rgba(245, 158, 11, 0.14);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.cnx-badge-in-progress .cnx-badge-dot { background: #fbbf24; box-shadow: 0 0 6px #fbbf24; }
+
+.cnx-badge-resolved {
+    background: rgba(16, 185, 129, 0.14);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.cnx-badge-resolved .cnx-badge-dot { background: #34d399; box-shadow: 0 0 6px #34d399; }
+
+.cnx-badge-closed {
+    background: rgba(100, 116, 139, 0.14);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.35);
+}
+.cnx-badge-closed .cnx-badge-dot { background: #94a3b8; }
+
+.cnx-badge-escalated {
+    background: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+    animation: cnx-pulse 2s infinite;
+}
+.cnx-badge-escalated .cnx-badge-dot { background: #f87171; box-shadow: 0 0 8px #f87171; }
+
+.cnx-badge-reopened {
+    background: rgba(251, 146, 60, 0.14);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.35);
+}
+.cnx-badge-reopened .cnx-badge-dot { background: #fb923c; }
+
+/* Priority Badges */
+.cnx-priority-pill {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--cnx-radius-xs);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.cnx-priority-low { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
+.cnx-priority-medium { background: rgba(14, 165, 233, 0.12); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.25); }
+.cnx-priority-high { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.25); }
+.cnx-priority-critical { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); font-weight: 800; }
+
+/* ==========================================================================
+   Component 8: Modals
+   ========================================================================== */
+.cnx-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--cnx-transition-normal), visibility var(--cnx-transition-normal);
+}
+
+.cnx-modal-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.cnx-modal {
+    width: 100%;
+    max-width: 600px;
+    background: #0f172a;
+    border: 1px solid var(--cnx-border-bright);
+    border-radius: var(--cnx-radius-xl);
+    box-shadow: var(--cnx-shadow-lg), 0 0 35px rgba(0, 201, 255, 0.12);
+    transform: scale(0.94) translateY(10px);
+    transition: transform var(--cnx-transition-smooth);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cnx-modal-backdrop.open .cnx-modal {
+    transform: scale(1) translateY(0);
+}
+
+.cnx-modal-header {
+    padding: 1.4rem 1.75rem;
+    border-bottom: 1px solid var(--cnx-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cnx-modal-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+}
+
+.cnx-modal-close {
+    background: none;
+    border: none;
+    color: var(--cnx-text-muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color var(--cnx-transition-fast);
+}
+
+.cnx-modal-close:hover {
+    color: #ffffff;
+}
+
+.cnx-modal-body {
+    padding: 1.75rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.cnx-modal-footer {
+    padding: 1.25rem 1.75rem;
+    border-top: 1px solid var(--cnx-border-subtle);
+    background: rgba(10, 17, 40, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.85rem;
+}
+
+/* ==========================================================================
+   Component 9: Notifications & Toasts
+   ========================================================================== */
+.cnx-toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+}
+
+.cnx-toast {
+    pointer-events: auto;
+    min-width: 320px;
+    max-width: 420px;
+    background: #0f172a;
+    border: 1px solid var(--cnx-border-medium);
+    border-radius: var(--cnx-radius-md);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    transform: translateX(110%);
+    opacity: 0;
+    transition: all var(--cnx-transition-smooth);
+}
+
+.cnx-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.cnx-toast.success { border-left: 4px solid var(--cnx-success); }
+.cnx-toast.warning { border-left: 4px solid var(--cnx-warning); }
+.cnx-toast.danger { border-left: 4px solid var(--cnx-danger); }
+.cnx-toast.info { border-left: 4px solid var(--cnx-primary); }
+
+.cnx-toast-content {
+    flex: 1;
+}
+
+.cnx-toast-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.cnx-toast-body {
+    font-size: 0.8rem;
+    color: var(--cnx-text-secondary);
+    margin-top: 0.2rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   Component 10: Timeline (Horizontal Stepper & Vertical Trail)
+   ========================================================================== */
+.cnx-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 2.25rem 0 2rem;
+    padding: 0 1rem;
+}
+
+.cnx-stepper::before {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: 45px;
+    right: 45px;
+    height: 3px;
+    background: var(--cnx-surface-3);
+    z-index: 1;
+}
+
+.cnx-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    text-align: center;
+}
+
+.cnx-step-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 2px solid var(--cnx-surface-3);
+    color: var(--cnx-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    transition: all var(--cnx-transition-normal);
+    margin-bottom: 0.6rem;
+}
+
+.cnx-step.completed .cnx-step-circle {
+    background: var(--cnx-success);
+    border-color: var(--cnx-success);
+    color: #ffffff;
+    box-shadow: 0 0 16px var(--cnx-success-glow);
+}
+
+.cnx-step.active .cnx-step-circle {
+    background: var(--cnx-primary);
+    border-color: var(--cnx-primary);
+    color: #040817;
+    box-shadow: 0 0 18px var(--cnx-primary-glow);
+    transform: scale(1.1);
+}
+
+.cnx-step-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--cnx-text-muted);
+}
+
+.cnx-step.completed .cnx-step-label { color: #34d399; }
+.cnx-step.active .cnx-step-label { color: #38bdf8; }
+
+/* Vertical Trail */
+.cnx-timeline-trail {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.cnx-timeline-trail::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 8px;
+    width: 2px;
+    background: var(--cnx-surface-3);
+}
+
+.cnx-timeline-item {
+    position: relative;
+}
+
+.cnx-timeline-dot {
+    position: absolute;
+    left: -2rem;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 3px solid var(--cnx-primary);
+    box-shadow: 0 0 10px var(--cnx-primary-glow);
+}
+
+.cnx-timeline-time {
+    font-size: 0.74rem;
+    color: var(--cnx-text-muted);
+}
+
+.cnx-timeline-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0.15rem 0 0.35rem;
+}
+
+.cnx-timeline-desc {
+    font-size: 0.825rem;
+    color: var(--cnx-text-secondary);
+    line-height: 1.45;
+}
+
+/* ==========================================================================
+   Component 11: Pagination
+   ========================================================================== */
+.cnx-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--cnx-border-subtle);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.cnx-pagination-text {
+    font-size: 0.825rem;
+    color: var(--cnx-text-secondary);
+}
+
+.cnx-pagination-btns {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.cnx-page-btn {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 0.5rem;
+    border-radius: var(--cnx-radius-sm);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    color: var(--cnx-text-secondary);
+    font-size: 0.825rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-page-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.cnx-page-btn.active {
+    background: var(--cnx-primary-gradient);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 2px 8px rgba(0, 201, 255, 0.3);
+}
+
+.cnx-page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Component 12: Search & Filter Bar
+   ========================================================================== */
+.cnx-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cnx-filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.cnx-filter-pill {
+    padding: 0.45rem 1rem;
+    border-radius: var(--cnx-radius-full);
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    color: var(--cnx-text-secondary);
+    cursor: pointer;
+    transition: all var(--cnx-transition-fast);
+}
+
+.cnx-filter-pill:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.cnx-filter-pill.active {
+    background: rgba(0, 201, 255, 0.15);
+    border-color: var(--cnx-border-bright);
+    color: #38bdf8;
+    box-shadow: 0 2px 10px rgba(0, 201, 255, 0.15);
+}
+
+/* ==========================================================================
+   Component 13: Empty States
+   ========================================================================== */
+.cnx-empty-state {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cnx-empty-icon {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cnx-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 1.25rem;
+    color: var(--cnx-text-muted);
+}
+
+.cnx-empty-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.45rem;
+}
+
+.cnx-empty-desc {
+    font-size: 0.85rem;
+    color: var(--cnx-text-muted);
+    max-width: 380px;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   Component 14: Loading States & Skeletons
+   ========================================================================== */
+.cnx-skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 25%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 75%);
+    background-size: 200% 100%;
+    animation: cnx-shimmer 1.6s infinite;
+    border-radius: var(--cnx-radius-xs);
+}
+
+@keyframes cnx-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.cnx-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-top-color: var(--cnx-primary);
+    border-radius: 50%;
+    animation: cnx-spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes cnx-spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes cnx-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* ==========================================================================
+   Component 15: Error & Alert Banners
+   ========================================================================== */
+.cnx-alert {
+    padding: 1rem 1.25rem;
+    border-radius: var(--cnx-radius-md);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.cnx-alert-danger {
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+}
+
+.cnx-alert-success {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #86efac;
+}
+
+.cnx-alert-warning {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fde047;
+}
+
+.cnx-alert-info {
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    color: #7dd3fc;
+}

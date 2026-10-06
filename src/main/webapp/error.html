@@ -1,0 +1,86 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusNexa — Service Notice</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .error-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+        .error-code {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+        .error-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+        .error-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.75rem;
+        }
+        .error-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body class="portal-body" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem;">
+    <div class="error-card">
+        <div class="error-code" id="errCode">404</div>
+        <h2 class="error-title" id="errTitle">Resource Not Found</h2>
+        <p class="error-desc" id="errDesc">
+            The page or resource you requested could not be located on the campus maintenance portal.
+        </p>
+        <div class="error-actions">
+            <a href="login.html" class="btn btn-primary" id="btnHome">Back to Login</a>
+            <a href="javascript:history.back()" class="btn btn-outline">Go Back</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code') || 'Notice';
+            const codeEl = document.getElementById('errCode');
+            const titleEl = document.getElementById('errTitle');
+            const descEl = document.getElementById('errDesc');
+
+            if (code === '403') {
+                codeEl.textContent = '403';
+                titleEl.textContent = 'Access Restricted';
+                descEl.textContent = 'You do not have the required role or authorization to access this area.';
+            } else if (code === '500') {
+                codeEl.textContent = '500';
+                titleEl.textContent = 'Service Notice';
+                descEl.textContent = 'An unexpected server condition occurred while processing your request. Please try again.';
+            } else if (code === '400') {
+                codeEl.textContent = '400';
+                titleEl.textContent = 'Invalid Request';
+                descEl.textContent = 'The request submitted contained invalid parameters or format.';
+            } else {
+                codeEl.textContent = '404';
+                titleEl.textContent = 'Resource Not Found';
+                descEl.textContent = 'The page or resource you requested could not be located.';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "ShikshaSetu - Rural Learning Platform",
+  "short_name": "ShikshaSetu",
+  "description": "AI-powered adaptive learning designed for rural students across India, built for every device, weak 2G signals, and offline study.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#047857",
+  "orientation": "portrait",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ]
+}
