@@ -70,23 +70,71 @@ public final class DBConnection {
         jdbcPassword = props.getProperty("db.password", DEFAULT_PASSWORD);
         jdbcDriver = props.getProperty("db.driver", DEFAULT_DRIVER);
 
-        // Environment variables override properties file if defined
+        // 1. URL resolution: Check DB_URL -> MYSQL_URL -> Railway MYSQLHOST/PORT/DATABASE
         String envUrl = System.getenv("DB_URL");
         if (envUrl != null && !envUrl.trim().isEmpty()) {
             jdbcUrl = envUrl.trim();
+        } else {
+            String mysqlUrl = System.getenv("MYSQL_URL");
+            if (mysqlUrl != null && !mysqlUrl.trim().isEmpty()) {
+                try {
+                    String cleanUrl = mysqlUrl.trim();
+                    if (cleanUrl.startsWith("mysql://")) {
+                        cleanUrl = cleanUrl.substring("mysql://".length());
+                        String userInfo = "";
+                        String hostPortDb = cleanUrl;
+                        if (cleanUrl.contains("@")) {
+                            String[] parts = cleanUrl.split("@", 2);
+                            userInfo = parts[0];
+                            hostPortDb = parts[1];
+                        }
+                        String[] userParts = userInfo.split(":", 2);
+                        if (userParts.length > 0 && !userParts[0].isEmpty()) {
+                            jdbcUser = userParts[0];
+                        }
+                        if (userParts.length > 1) {
+                            jdbcPassword = userParts[1];
+                        }
+                        jdbcUrl = "jdbc:mysql://" + hostPortDb + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+                        LOGGER.info("CampusNexa: Successfully parsed Railway MYSQL_URL for JDBC.");
+                    }
+                } catch (Exception e) {
+                    LOGGER.log(Level.WARNING, "Failed to parse MYSQL_URL, falling back.", e);
+                }
+            } else {
+                String rHost = System.getenv("MYSQLHOST");
+                if (rHost == null || rHost.trim().isEmpty()) rHost = System.getenv("MYSQL_HOST");
+                if (rHost != null && !rHost.trim().isEmpty()) {
+                    String rPort = System.getenv("MYSQLPORT");
+                    if (rPort == null || rPort.trim().isEmpty()) rPort = System.getenv("MYSQL_PORT");
+                    if (rPort == null || rPort.trim().isEmpty()) rPort = "3306";
+                    String rDb = System.getenv("MYSQLDATABASE");
+                    if (rDb == null || rDb.trim().isEmpty()) rDb = System.getenv("MYSQL_DATABASE");
+                    if (rDb == null || rDb.trim().isEmpty()) rDb = "railway";
+                    jdbcUrl = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC",
+                            rHost.trim(), rPort.trim(), rDb.trim());
+                    LOGGER.info("CampusNexa: Auto-detected Railway MySQL host: " + rHost + ":" + rPort + "/" + rDb);
+                }
+            }
         }
 
+        // 2. User resolution: DB_USER -> MYSQLUSER -> MYSQL_USER
         String envUser = System.getenv("DB_USER");
+        if (envUser == null || envUser.trim().isEmpty()) envUser = System.getenv("MYSQLUSER");
+        if (envUser == null || envUser.trim().isEmpty()) envUser = System.getenv("MYSQL_USER");
         if (envUser != null && !envUser.trim().isEmpty()) {
             jdbcUser = envUser.trim();
         }
 
+        // 3. Password resolution: DB_PASSWORD -> MYSQLPASSWORD -> MYSQL_PASSWORD
         String envPassword = System.getenv("DB_PASSWORD");
+        if (envPassword == null) envPassword = System.getenv("MYSQLPASSWORD");
+        if (envPassword == null) envPassword = System.getenv("MYSQL_PASSWORD");
         if (envPassword != null) {
             jdbcPassword = envPassword;
         }
 
-        // System property overrides
+        // 4. System property overrides (e.g. -Ddb.url=...)
         String sysUrl = System.getProperty("db.url");
         if (sysUrl != null && !sysUrl.trim().isEmpty()) {
             jdbcUrl = sysUrl.trim();
