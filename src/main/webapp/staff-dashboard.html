@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Operations Portal — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+</head>
+<body class="cnx-layout">
+
+    <!-- Mobile Drawer Backdrop -->
+    <div class="cnx-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="cnx-sidebar" id="portalSidebar">
+        <div>
+            <!-- Brand Emblem & Tagline -->
+            <div class="cnx-sidebar-brand">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="cnx-brand-logo">
+                <div>
+                    <div class="cnx-brand-title">CampusNexa</div>
+                    <span class="cnx-brand-tagline">Report. Track. Resolve.</span>
+                </div>
+            </div>
+
+            <!-- Role Badge -->
+            <div class="cnx-sidebar-role-badge">
+                <div class="cnx-role-indicator" style="background: #10b981; box-shadow: 0 0 8px #10b981;"></div>
+                <div class="cnx-role-text">Staff Operations Queue</div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="cnx-sidebar-nav">
+                <div class="cnx-nav-section-title">Operations</div>
+                <a href="#assigned" class="cnx-nav-link active" id="navAssigned">
+                    <span class="cnx-nav-icon">📋</span>
+                    <span>Assigned Tickets</span>
+                    <span class="cnx-nav-badge" id="navBadgeAssigned">0</span>
+                </a>
+                <a href="#active-work" class="cnx-nav-link" id="navActive">
+                    <span class="cnx-nav-icon">🔧</span>
+                    <span>Active Repairs</span>
+                    <span class="cnx-nav-badge" id="navBadgeActive" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3);">0</span>
+                </a>
+                <a href="#history" class="cnx-nav-link" id="navHistory">
+                    <span class="cnx-nav-icon">✅</span>
+                    <span>Completed History</span>
+                </a>
+
+                <div class="cnx-nav-section-title">Support</div>
+                <a href="demo-login?role=STUDENT" class="cnx-nav-link">
+                    <span class="cnx-nav-icon">🎓</span>
+                    <span>Student View</span>
+                </a>
+                <a href="demo-login?role=ADMIN" class="cnx-nav-link">
+                    <span class="cnx-nav-icon">⚙️</span>
+                    <span>Admin View</span>
+                </a>
+                <a href="logout" class="cnx-nav-link" style="color: #f87171;">
+                    <span class="cnx-nav-icon">🚪</span>
+                    <span>Sign Out</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="cnx-sidebar-footer">
+            <div style="font-size: 0.72rem; color: var(--cnx-text-muted); text-align: center;">
+                <div>CampusNexa Staff Portal v2.0</div>
+                <div style="color: #10b981; margin-top: 2px;">● Connected to MySQL Engine</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="cnx-main-wrapper">
+        <!-- SaaS Topbar -->
+        <header class="cnx-topbar">
+            <div class="cnx-topbar-left">
+                <button class="cnx-menu-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+                <div class="cnx-breadcrumbs">
+                    <span>Operations</span>
+                    <span>/</span>
+                    <span class="cnx-breadcrumb-current" id="topbarViewTitle">Technician Work Queue</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-center">
+                <div class="cnx-search-bar">
+                    <span class="cnx-search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Filter tickets by ID, location, or issue description..." oninput="handleStaffSearch()">
+                    <span class="cnx-search-kbd">⌘K</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-right">
+                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" onclick="loadStaffIssues()" title="Reload assigned tasks from MySQL">
+                    🔄 Refresh
+                </button>
+                <div class="cnx-icon-btn" title="System alerts">
+                    🔔
+                    <span class="cnx-notif-dot"></span>
+                </div>
+                <div class="cnx-user-pill">
+                    <div class="cnx-avatar" id="userInitial">T</div>
+                    <div class="cnx-user-info-wrap">
+                        <span class="cnx-user-name" id="sidebarUsername">Technician</span>
+                        <span class="cnx-user-role-label">Field Staff</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body Container -->
+        <main class="cnx-container">
+            <!-- Alert Banner -->
+            <div id="pageAlert" class="cnx-alert cnx-alert-info" style="display: none;"></div>
+
+            <!-- Header Welcome Card -->
+            <div class="cnx-card" style="margin-bottom: 2rem; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%); border-color: rgba(16, 185, 129, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h1 style="font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem;">
+                            Technician Dispatch & Work Queue
+                        </h1>
+                        <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); max-width: 650px; line-height: 1.5;">
+                            Real-time maintenance assignments dispatched to your field profile. Inspect defects on-site, advance tickets through diagnostic stages, and confirm resolution with audit notes.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="filterByStatus('IN_PROGRESS')">
+                            ⚡ Focus Active Repairs
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Metric Cards Grid -->
+            <div class="cnx-stats-grid">
+                <div class="cnx-stat-card cyan">
+                    <div class="cnx-stat-top">
+                        <span class="cnx-stat-label">Assigned Tickets</span>
+                        <div class="cnx-stat-icon-wrap">📋</div>
+                    </div>
+                    <div class="cnx-stat-value" id="metricAssigned">0</div>
+                    <div class="cnx-stat-subtext">
+                        <span class="cnx-trend-pill neutral">Total Workload</span>
+                        <span>Direct assignments</span>
+                    </div>
+                </div>
+
+                <div class="cnx-stat-card amber">
+                    <div class="cnx-stat-top">
+                        <span class="cnx-stat-label">In Progress</span>
+                        <div class="cnx-stat-icon-wrap">⏳</div>
+                    </div>
+                    <div class="cnx-stat-value" id="metricInProgress">0</div>
+                    <div class="cnx-stat-subtext">
+                        <span class="cnx-trend-pill up">Active</span>
+                        <span>Repairs ongoing</span>
+                    </div>
+                </div>
+
+                <div class="cnx-stat-card emerald">
+                    <div class="cnx-stat-top">
+                        <span class="cnx-stat-label">Resolved</span>
+                        <div class="cnx-stat-icon-wrap">✅</div>
+                    </div>
+                    <div class="cnx-stat-value" id="metricResolved">0</div>
+                    <div class="cnx-stat-subtext">
+                        <span class="cnx-trend-pill up">Completed</span>
+                        <span>Verified fixed</span>
+                    </div>
+                </div>
+
+                <div class="cnx-stat-card purple">
+                    <div class="cnx-stat-top">
+                        <span class="cnx-stat-label">Avg SLA Time</span>
+                        <div class="cnx-stat-icon-wrap">⚡</div>
+                    </div>
+                    <div class="cnx-stat-value" id="metricSla">4.2h</div>
+                    <div class="cnx-stat-subtext">
+                        <span class="cnx-trend-pill up">Target: 12h</span>
+                        <span>Institutional SLA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Pills Bar & Search -->
+            <div class="cnx-filter-bar">
+                <div class="cnx-filter-pills">
+                    <button type="button" class="cnx-filter-pill active" onclick="filterByStatus('ALL', this)">All Tasks</button>
+                    <button type="button" class="cnx-filter-pill" onclick="filterByStatus('REPORTED', this)">Reported / Pending</button>
+                    <button type="button" class="cnx-filter-pill" onclick="filterByStatus('IN_PROGRESS', this)">In Progress</button>
+                    <button type="button" class="cnx-filter-pill" onclick="filterByStatus('RESOLVED', this)">Resolved</button>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--cnx-text-muted);" id="tableFilterSummary">
+                    Showing all assigned tickets
+                </div>
+            </div>
+
+            <!-- Data Table Card -->
+            <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                <div class="cnx-table-responsive">
+                    <table class="cnx-table" id="staffIssuesTable">
+                        <thead>
+                            <tr>
+                                <th>Ticket #</th>
+                                <th>Priority</th>
+                                <th>Campus Location</th>
+                                <th>Issue Details</th>
+                                <th>Reported By</th>
+                                <th>Status</th>
+                                <th>Logged On</th>
+                                <th style="text-align: right;">Action / Lifecycle</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffIssuesTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination Container -->
+                <div class="cnx-pagination" id="staffPagination"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal 1: Advance to In Progress -->
+    <div class="cnx-modal-backdrop" id="modalStartWork">
+        <div class="cnx-modal">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">▶ Begin Maintenance Work</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalStartWork">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <p style="font-size: 0.9rem; color: var(--cnx-text-secondary); margin-bottom: 1.25rem;">
+                    You are changing the ticket status to <strong style="color: #fbbf24;">IN PROGRESS</strong>. This notifies the reporting student and hostel authorities that a technician has arrived on site.
+                </p>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Ticket Identifier</label>
+                    <input type="text" id="startWorkTicketId" class="cnx-input" readonly style="background: rgba(255,255,255,0.04); font-family: monospace;">
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Initial Inspection Remarks (Optional)</label>
+                    <textarea id="startWorkRemarks" class="cnx-textarea" placeholder="e.g. Inspecting main breaker panel and faulty conduit in Room 302..."></textarea>
+                </div>
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalStartWork">Cancel</button>
+                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" id="btnConfirmStartWork" onclick="confirmStartWork()">
+                    Confirm & Start Work &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Mark Resolved with Diagnostic Remarks -->
+    <div class="cnx-modal-backdrop" id="modalResolveWork">
+        <div class="cnx-modal">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">✅ Confirm Problem Resolution</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalResolveWork">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <p style="font-size: 0.9rem; color: var(--cnx-text-secondary); margin-bottom: 1.25rem;">
+                    Please provide technical diagnosis and steps taken to rectify the problem. This record is preserved in the institutional audit log and triggers student feedback verification.
+                </p>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Ticket Identifier</label>
+                    <input type="text" id="resolveTicketId" class="cnx-input" readonly style="background: rgba(255,255,255,0.04); font-family: monospace;">
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Repair Diagnosis & Resolution Remarks *</label>
+                    <textarea id="resolveRemarks" class="cnx-textarea" required placeholder="e.g. Replaced faulty 16A MCB breaker, tightened loose neutral terminal, verified AC voltage at 230V stable. Tested operational under full load."></textarea>
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Parts / Materials Consumed (Optional)</label>
+                    <input type="text" id="resolveMaterials" class="cnx-input" placeholder="e.g. 1x Schneider MCB 16A, 2m 2.5sqmm copper cable">
+                </div>
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalResolveWork">Cancel</button>
+                <button type="button" class="cnx-btn cnx-btn-success cnx-btn-sm" id="btnConfirmResolve" onclick="confirmResolveWork()">
+                    ✓ Mark Ticket Resolved &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: View Full Details & Lifecycle -->
+    <div class="cnx-modal-backdrop" id="modalViewDetails">
+        <div class="cnx-modal" style="max-width: 680px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="detailModalTitle">Ticket Details</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalViewDetails">&times;</button>
+            </div>
+            <div class="cnx-modal-body" id="detailModalBody">
+                <!-- Dynamically filled -->
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalViewDetails">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        let allStaffIssues = [];
+        let filteredIssues = [];
+        let currentStatusFilter = 'ALL';
+        let searchQuery = '';
+        let selectedIssueIdForAction = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSession();
+        });
+
+        // 1. Session verification & role enforcement
+        async function initSession() {
+            try {
+                const session = await CampusNexa.fetchSession();
+                if (!session || !session.authenticated) {
+                    window.location.href = 'login.html?error=Please+sign+in+first';
+                    return;
+                }
+
+                const role = (session.role || '').toUpperCase();
+                if (role !== 'STAFF' && role !== 'MAINTENANCE_STAFF') {
+                    // Redirect non-staff
+                    if (role === 'ADMIN') window.location.href = 'admin-dashboard.html';
+                    else if (role === 'WARDEN' || role === 'DEPUTY_WARDEN') window.location.href = 'authority-dashboard.html';
+                    else if (role === 'HIGHER_AUTHORITY') window.location.href = 'higher-authority-dashboard.html';
+                    else window.location.href = 'student-dashboard.html';
+                    return;
+                }
+
+                // Render Skeletons while loading
+                CampusNexa.renderSkeleton('#staffIssuesTableBody', 'table', 4);
+                loadStaffIssues();
+            } catch (e) {
+                console.error('Session error:', e);
+                window.location.href = 'login.html?error=Session+check+failed';
+            }
+        }
+
+        // 2. Fetch Assigned Issues from MySQL
+        async function loadStaffIssues() {
+            try {
+                const resp = await fetch('api/staff/issues');
+                if (!resp.ok) throw new Error('Failed to load tickets');
+                const data = await resp.json();
+                allStaffIssues = Array.isArray(data) ? data : [];
+                applyFilters();
+            } catch (err) {
+                console.error('Staff issues error:', err);
+                CampusNexa.toast('Data Sync Failed', 'Could not retrieve assigned tickets from MySQL.', 'danger');
+                CampusNexa.renderEmptyState('#staffIssuesTableBody', {
+                    icon: '⚠️',
+                    title: 'Connection Issue',
+                    desc: 'Unable to reach the server. Please check your network or try refreshing.'
+                });
+            }
+        }
+
+        // 3. Status Filter & Search
+        function filterByStatus(status, pillBtn) {
+            currentStatusFilter = status;
+            if (pillBtn) {
+                document.querySelectorAll('.cnx-filter-pill').forEach(btn => btn.classList.remove('active'));
+                pillBtn.classList.add('active');
+            }
+            applyFilters();
+        }
+
+        function handleStaffSearch() {
+            searchQuery = (document.getElementById('globalSearchInput').value || '').trim().toLowerCase();
+            applyFilters();
+        }
+
+        function applyFilters() {
+            filteredIssues = allStaffIssues.filter(item => {
+                const s = (item.status || 'REPORTED').toUpperCase();
+                // Status filter
+                if (currentStatusFilter !== 'ALL') {
+                    if (currentStatusFilter === 'REPORTED' && s !== 'REPORTED' && s !== 'SUBMITTED') return false;
+                    if (currentStatusFilter === 'IN_PROGRESS' && s !== 'IN_PROGRESS') return false;
+                    if (currentStatusFilter === 'RESOLVED' && s !== 'RESOLVED' && s !== 'CLOSED') return false;
+                }
+
+                // Keyword search
+                if (searchQuery) {
+                    const idStr = String(item.id || '');
+                    const title = (item.title || '').toLowerCase();
+                    const desc = (item.description || '').toLowerCase();
+                    const loc = (item.location || '').toLowerCase();
+                    const student = (item.student || '').toLowerCase();
+                    if (!idStr.includes(searchQuery) && !title.includes(searchQuery) && !desc.includes(searchQuery) && !loc.includes(searchQuery) && !student.includes(searchQuery)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            updateMetrics();
+            renderTableWithPagination();
+        }
+
+        // 4. Update KPI Numbers
+        function updateMetrics() {
+            const total = allStaffIssues.length;
+            const inProgress = allStaffIssues.filter(i => (i.status || '').toUpperCase() === 'IN_PROGRESS').length;
+            const resolved = allStaffIssues.filter(i => (i.status || '').toUpperCase() === 'RESOLVED').length;
+
+            document.getElementById('metricAssigned').textContent = total;
+            document.getElementById('metricInProgress').textContent = inProgress;
+            document.getElementById('metricResolved').textContent = resolved;
+
+            document.getElementById('navBadgeAssigned').textContent = total;
+            document.getElementById('navBadgeActive').textContent = inProgress;
+
+            document.getElementById('tableFilterSummary').textContent = 
+                `Showing ${filteredIssues.length} of ${total} assigned tickets`;
+        }
+
+        // 5. Render Table with Client Pagination
+        function renderTableWithPagination() {
+            const tbody = document.getElementById('staffIssuesTableBody');
+            const paginationWrap = document.getElementById('staffPagination');
+
+            if (filteredIssues.length === 0) {
+                CampusNexa.renderEmptyState(tbody, {
+                    icon: '🎉',
+                    title: 'No Assigned Tasks Matching Filters',
+                    desc: 'All tickets matching this criteria are caught up or there are no assignments yet.'
+                });
+                paginationWrap.innerHTML = '';
+                return;
+            }
+
+            CampusNexa.setupPagination(filteredIssues, 1, 8, (pageItems) => {
+                tbody.innerHTML = pageItems.map(issue => {
+                    const status = (issue.status || 'REPORTED').toUpperCase();
+                    const priority = (issue.priority || 'MEDIUM').toUpperCase();
+
+                    let actionBtnHtml = '';
+                    if (status === 'REPORTED' || status === 'SUBMITTED') {
+                        actionBtnHtml = `
+                            <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openStartWorkModal(${issue.id})">
+                                ▶ Start Work
+                            </button>
+                        `;
+                    } else if (status === 'IN_PROGRESS') {
+                        actionBtnHtml = `
+                            <button type="button" class="cnx-btn cnx-btn-success cnx-btn-sm" onclick="openResolveModal(${issue.id})">
+                                ✓ Resolve
+                            </button>
+                        `;
+                    } else if (status === 'RESOLVED') {
+                        actionBtnHtml = `<span style="color: #34d399; font-size: 0.825rem; font-weight: 700;">✓ Completed</span>`;
+                    } else {
+                        actionBtnHtml = `<span style="color: var(--cnx-text-muted); font-size: 0.8rem;">Closed</span>`;
+                    }
+
+                    return `
+                        <tr>
+                            <td>
+                                <span class="cnx-ticket-pill">#${issue.id}</span>
+                            </td>
+                            <td>${CampusNexa.priorityBadge(priority)}</td>
+                            <td>
+                                <div style="font-weight: 700; color: #ffffff;">📍 ${escapeHtml(issue.location || 'Campus Premises')}</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 700; color: #f8fafc; margin-bottom: 0.2rem; cursor: pointer;" onclick="viewIssueDetail(${issue.id})">
+                                    ${escapeHtml(issue.title || 'Untitled Ticket')}
+                                </div>
+                                <div style="font-size: 0.78rem; color: var(--cnx-text-secondary); max-width: 320px; white-space: normal; line-height: 1.35;">
+                                    ${escapeHtml(issue.description || '')}
+                                </div>
+                            </td>
+                            <td>
+                                <span style="font-size: 0.85rem; color: #cbd5e1;">👤 ${escapeHtml(issue.student || 'Student')}</span>
+                            </td>
+                            <td>${CampusNexa.badge(status)}</td>
+                            <td>
+                                <span style="font-size: 0.78rem; color: var(--cnx-text-muted);">${formatDate(issue.createdAt)}</span>
+                            </td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.4rem; justify-content: flex-end; align-items: center;">
+                                    ${actionBtnHtml}
+                                    <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="viewIssueDetail(${issue.id})" title="View Details">
+                                        👁️
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }, paginationWrap);
+        }
+
+        // 6. Action Modals Logic
+        function openStartWorkModal(issueId) {
+            selectedIssueIdForAction = issueId;
+            document.getElementById('startWorkTicketId').value = `#${issueId}`;
+            document.getElementById('startWorkRemarks').value = '';
+            CampusNexa.modal.open('modalStartWork');
+        }
+
+        async function confirmStartWork() {
+            if (!selectedIssueIdForAction) return;
+            const btn = document.getElementById('btnConfirmStartWork');
+            btn.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('issueId', selectedIssueIdForAction);
+            params.append('status', 'IN_PROGRESS');
+
+            try {
+                const resp = await fetch('api/staff/update-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const resData = await resp.json();
+
+                if (resp.ok && resData.success) {
+                    CampusNexa.modal.close('modalStartWork');
+                    CampusNexa.toast('Work Started', `Ticket #${selectedIssueIdForAction} moved to IN PROGRESS.`, 'success');
+                    loadStaffIssues();
+                } else {
+                    CampusNexa.toast('Update Failed', resData.message || 'Could not update status', 'danger');
+                }
+            } catch (err) {
+                CampusNexa.toast('Server Error', 'Failed to communicate with update endpoint.', 'danger');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function openResolveModal(issueId) {
+            selectedIssueIdForAction = issueId;
+            document.getElementById('resolveTicketId').value = `#${issueId}`;
+            document.getElementById('resolveRemarks').value = '';
+            document.getElementById('resolveMaterials').value = '';
+            CampusNexa.modal.open('modalResolveWork');
+        }
+
+        async function confirmResolveWork() {
+            const remarks = document.getElementById('resolveRemarks').value.trim();
+            if (!remarks) {
+                CampusNexa.toast('Remarks Required', 'Please enter technical resolution steps before closing.', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmResolve');
+            btn.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('issueId', selectedIssueIdForAction);
+            params.append('status', 'RESOLVED');
+
+            try {
+                const resp = await fetch('api/staff/update-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const resData = await resp.json();
+
+                if (resp.ok && resData.success) {
+                    CampusNexa.modal.close('modalResolveWork');
+                    CampusNexa.toast('Ticket Resolved', `Ticket #${selectedIssueIdForAction} marked as RESOLVED!`, 'success');
+                    loadStaffIssues();
+                } else {
+                    CampusNexa.toast('Update Failed', resData.message || 'Could not update status', 'danger');
+                }
+            } catch (err) {
+                CampusNexa.toast('Server Error', 'Failed to communicate with update endpoint.', 'danger');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function viewIssueDetail(issueId) {
+            const issue = allStaffIssues.find(i => i.id === issueId);
+            if (!issue) return;
+
+            document.getElementById('detailModalTitle').textContent = `Ticket Details — #${issue.id}`;
+            const body = document.getElementById('detailModalBody');
+
+            const stepperHtml = CampusNexa.renderStepper(issue.status);
+
+            body.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    ${stepperHtml}
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Status</span>
+                        <div style="margin-top: 0.35rem;">${CampusNexa.badge(issue.status)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Priority</span>
+                        <div style="margin-top: 0.35rem;">${CampusNexa.priorityBadge(issue.priority)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Location</span>
+                        <div style="font-weight: 700; color: #ffffff; margin-top: 0.25rem;">📍 ${escapeHtml(issue.location)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Reported By</span>
+                        <div style="font-weight: 600; color: #cbd5e1; margin-top: 0.25rem;">👤 ${escapeHtml(issue.student)}</div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Title</span>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-top: 0.25rem;">${escapeHtml(issue.title)}</div>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Detailed Description</span>
+                    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--cnx-border-subtle); padding: 0.85rem 1rem; border-radius: 8px; color: #cbd5e1; font-size: 0.875rem; line-height: 1.5; margin-top: 0.35rem; white-space: pre-wrap;">${escapeHtml(issue.description)}</div>
+                </div>
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Logged On</span>
+                    <div style="font-size: 0.825rem; color: var(--cnx-text-secondary); margin-top: 0.25rem;">${formatDate(issue.createdAt)}</div>
+                </div>
+            `;
+            CampusNexa.modal.open('modalViewDetails');
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const cleaned = dateStr.split('.')[0].replace(' ', 'T');
+                const d = new Date(cleaned);
+                if (isNaN(d.getTime())) return dateStr;
+                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal Login — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="auth-split-layout">
+        <!-- Left Hero Showcase: CampusNexa Brand & 4-Pillar Philosophy -->
+        <div class="auth-hero-panel">
+            <div>
+                <div class="hero-brand-top">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Logo" class="hero-brand-logo">
+                    <div>
+                        <h1>CampusNexa</h1>
+                        <p class="hero-tagline">Report. Track. Resolve.</p>
+                    </div>
+                </div>
+
+                <div class="hero-headline-wrap">
+                    <h2>Student Facilities & Maintenance Portal</h2>
+                    <p>
+                        Your direct channel to report classroom, laboratory, hostel, and campus infrastructure issues. Track real-time repair progress and stay updated as technicians resolve tickets.
+                    </p>
+                </div>
+
+                <!-- The 4 Platform Philosophy Pillars -->
+                <div class="philosophy-grid">
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">📄</div>
+                        <h3>Report Issues</h3>
+                        <p>Instant repair requests with automated priority tagging.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">📍</div>
+                        <h3>Track Progress</h3>
+                        <p>Live visibility from submission to active repair.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">🛡️</div>
+                        <h3>Ensure Safety</h3>
+                        <p>Proactive mitigation of campus safety hazards.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">👥</div>
+                        <h3>Stronger Campus</h3>
+                        <p>Empowering student voices for campus stewardship.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-footer-note">
+                <span>🎓 Dedicated Student Portal Access &bull; Student Session Authentication &bull; Live MySQL Database</span>
+            </div>
+        </div>
+
+        <!-- Right Login Form Panel -->
+        <div class="auth-form-panel">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="mobile-logo" style="display:block;">
+                    <div class="portal-role-badge badge-student">🎓 Student Portal</div>
+                    <h2>Student Sign In</h2>
+                    <p>Enter your student account credentials to proceed</p>
+                </div>
+
+                <!-- Error and Informational Messages -->
+                <div id="alertBox" class="alert hidden" role="alert"></div>
+
+                <!-- Instant 1-Click Demo Login -->
+                <a href="demo-login?role=STUDENT" class="btn-demo-instant btn-demo-student" id="demoStudentBtn">
+                    ⚡ 1-Click Student Demo Login &rarr;
+                </a>
+
+                <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: #64748b; font-size: 0.75rem;">
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                    <span style="padding: 0 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Or Sign In Manually</span>
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                </div>
+
+                <form action="login" method="POST" class="auth-form" id="studentLoginForm">
+                    <input type="hidden" name="expectedRole" value="STUDENT">
+                    <input type="hidden" name="sourcePage" value="student-login.html">
+
+                    <div class="form-group">
+                        <label for="username">Student Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username" placeholder="e.g. student1, student2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="loginBtn" style="padding: 0.9rem; font-size: 1rem; width: 100%;">
+                        Sign In to Student Portal &rarr;
+                    </button>
+                </form>
+
+                <div class="demo-accounts">
+                    <p style="font-weight: 600; margin-bottom: 0.65rem; color: #cbd5e1; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Student Demo Accounts (Click to Instant Login):
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                        <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student1'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span><code>student1</code> (Muskan Sah)</span>
+                                <span class="chip-role student">Student</span>
+                            </div>
+                            <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                        </div>
+                        <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student2'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span><code>student2</code> / <code>student123</code></span>
+                                <span class="chip-role student">Student</span>
+                            </div>
+                            <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.825rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <div>Administrator? <a href="admin-login.html" style="color: #fbbf24; text-decoration: none; font-weight: 600;">Go to Admin Console &rarr;</a></div>
+                    <div>Staff Technician? <a href="staff-login.html" style="color: #34d399; text-decoration: none; font-weight: 600;">Go to Staff Queue &rarr;</a></div>
+                    <div><a href="index.html" style="color: #38bdf8; text-decoration: none;">&larr; Return to Campus Gateway</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const message = urlParams.get('message');
+            const alertBox = document.getElementById('alertBox');
+
+            if (error) {
+                alertBox.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-error';
+                alertBox.classList.remove('hidden');
+            } else if (message) {
+                alertBox.textContent = decodeURIComponent(message.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-success';
+                alertBox.classList.remove('hidden');
+            }
+        });
+
+        function fillLogin(u, p) {
+            document.getElementById('username').value = u;
+            document.getElementById('password').value = p;
+        }
+    </script>
+</body>
+</html>

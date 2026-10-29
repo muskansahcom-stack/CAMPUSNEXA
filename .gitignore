@@ -1,0 +1,21 @@
+# Build outputs
+target/
+*.war
+*.ear
+*.jar
+*.class
+
+# Operating System & IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Server & Temp logs
+*.log
+uploads/evidence/*
+!uploads/evidence/.gitkeep

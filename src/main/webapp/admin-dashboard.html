@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Administrator Console — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <style>
+        .cnx-admin-section { display: none; }
+        .cnx-admin-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .perm-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; margin: 2px; }
+        .perm-tag.granted { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .perm-tag.locked { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .privacy-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+        .privacy-pill.restricted { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .privacy-pill.decrypted { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .cnx-action-btn-group { display: flex; gap: 4px; justify-content: flex-end; align-items: center; }
+        .meter-bar { height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.1); overflow: hidden; margin-top: 6px; }
+        .meter-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+    </style>
+</head>
+<body class="cnx-layout">
+
+    <!-- Mobile Drawer Backdrop -->
+    <div class="cnx-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar Navigation (15 Exact Items Required) -->
+    <aside class="cnx-sidebar" id="portalSidebar">
+        <div>
+            <!-- Brand Emblem & Tagline -->
+            <div class="cnx-sidebar-brand">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="cnx-brand-logo">
+                <div>
+                    <div class="cnx-brand-title">CampusNexa</div>
+                    <span class="cnx-brand-tagline">Report. Track. Resolve.</span>
+                </div>
+            </div>
+
+            <!-- Role Badge -->
+            <div class="cnx-sidebar-role-badge">
+                <div class="cnx-role-indicator" style="background: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></div>
+                <div class="cnx-role-text">Institutional Administrator</div>
+            </div>
+
+            <!-- 15 Sidebar Navigation Items -->
+            <nav class="cnx-sidebar-nav">
+                <div class="cnx-nav-section-title">Core Operations</div>
+                <a href="#dashboard" class="cnx-nav-link active" id="navDashboard" onclick="switchSection('dashboard', this)">
+                    <span class="cnx-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="cnx-nav-section-title">User & Access Management</div>
+                <a href="#users" class="cnx-nav-link" id="navUsers" onclick="switchSection('users', this)">
+                    <span class="cnx-nav-icon">👥</span>
+                    <span>Users</span>
+                    <span class="cnx-nav-badge" id="navBadgeUsers">0</span>
+                </a>
+                <a href="#students" class="cnx-nav-link" id="navStudents" onclick="switchSection('students', this)">
+                    <span class="cnx-nav-icon">🎓</span>
+                    <span>Students</span>
+                    <span class="cnx-nav-badge" id="navBadgeStudents">0</span>
+                </a>
+                <a href="#maintenance-staff" class="cnx-nav-link" id="navMaintenanceStaff" onclick="switchSection('maintenance-staff', this)">
+                    <span class="cnx-nav-icon">🔧</span>
+                    <span>Maintenance Staff</span>
+                    <span class="cnx-nav-badge" id="navBadgeStaff">0</span>
+                </a>
+                <a href="#authorities" class="cnx-nav-link" id="navAuthorities" onclick="switchSection('authorities', this)">
+                    <span class="cnx-nav-icon">🏛️</span>
+                    <span>Authorities</span>
+                    <span class="cnx-nav-badge" id="navBadgeAuthorities">0</span>
+                </a>
+                <a href="#roles-permissions" class="cnx-nav-link" id="navRolesPermissions" onclick="switchSection('roles-permissions', this)">
+                    <span class="cnx-nav-icon">🛡️</span>
+                    <span>Roles & Permissions</span>
+                </a>
+
+                <div class="cnx-nav-section-title">Campus Configuration</div>
+                <a href="#categories" class="cnx-nav-link" id="navCategories" onclick="switchSection('categories', this)">
+                    <span class="cnx-nav-icon">🏷️</span>
+                    <span>Complaint Categories</span>
+                </a>
+                <a href="#facilities" class="cnx-nav-link" id="navFacilities" onclick="switchSection('facilities', this)">
+                    <span class="cnx-nav-icon">🏢</span>
+                    <span>Facilities</span>
+                </a>
+                <a href="#hostels" class="cnx-nav-link" id="navHostels" onclick="switchSection('hostels', this)">
+                    <span class="cnx-nav-icon">🏠</span>
+                    <span>Hostels</span>
+                </a>
+                <a href="#escalation-rules" class="cnx-nav-link" id="navEscalationRules" onclick="switchSection('escalation-rules', this)">
+                    <span class="cnx-nav-icon">⚙️</span>
+                    <span>Escalation Rules</span>
+                </a>
+                <a href="#settings" class="cnx-nav-link" id="navSettings" onclick="switchSection('settings', this)">
+                    <span class="cnx-nav-icon">🛠️</span>
+                    <span>System Settings</span>
+                </a>
+
+                <div class="cnx-nav-section-title">Analytics & Compliance</div>
+                <a href="#reports" class="cnx-nav-link" id="navReports" onclick="switchSection('reports', this)">
+                    <span class="cnx-nav-icon">📈</span>
+                    <span>Reports</span>
+                </a>
+                <a href="#audit-logs" class="cnx-nav-link" id="navAuditLogs" onclick="switchSection('audit-logs', this)">
+                    <span class="cnx-nav-icon">📜</span>
+                    <span>Audit Logs</span>
+                </a>
+
+                <div class="cnx-nav-section-title">Account</div>
+                <a href="#profile" class="cnx-nav-link" id="navProfile" onclick="switchSection('profile', this)">
+                    <span class="cnx-nav-icon">👤</span>
+                    <span>Profile</span>
+                </a>
+                <a href="logout" class="cnx-nav-link" style="color: #f87171;">
+                    <span class="cnx-nav-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="cnx-sidebar-footer">
+            <div style="font-size: 0.72rem; color: var(--cnx-text-muted); text-align: center;">
+                <div>CampusNexa Enterprise v2.0</div>
+                <div style="color: #f59e0b; margin-top: 2px;">● Root DB Administration Active</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="cnx-main-wrapper">
+        <!-- Topbar -->
+        <header class="cnx-topbar">
+            <div class="cnx-topbar-left">
+                <button class="cnx-menu-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+                <div class="cnx-breadcrumbs">
+                    <span>Admin Control Center</span>
+                    <span>/</span>
+                    <span class="cnx-breadcrumb-current" id="topbarViewTitle">Dashboard</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-center">
+                <div class="cnx-search-bar">
+                    <span class="cnx-search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Quick search complaints, users, staff, facilities..." oninput="handleGlobalSearch()">
+                    <span class="cnx-search-kbd">⌘K</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-right">
+                <!-- Whistleblower Protection Badge -->
+                <div id="topbarPrivacyBadge" class="privacy-pill restricted" title="Protected identity visibility state">
+                    <span>🔒 Identity Masked</span>
+                </div>
+
+                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" onclick="loadAllAdminData()" title="Reload data from MySQL">
+                    🔄 Refresh
+                </button>
+
+                <!-- Notifications & Alerts Bell -->
+                <div class="cnx-notif-btn-wrapper">
+                    <div class="cnx-icon-btn" id="topbarNotifBtn" title="System Alerts & Notifications" style="position:relative; cursor:pointer;">
+                        🔔
+                        <span class="cnx-notif-badge" id="topbarNotifBadge" style="display:none;">0</span>
+                    </div>
+                </div>
+
+                <div class="cnx-user-pill" onclick="switchSection('profile', document.getElementById('navProfile'))" style="cursor: pointer;">
+                    <div class="cnx-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">A</div>
+                    <div class="cnx-user-info-wrap">
+                        <span class="cnx-user-name" id="topbarAdminName">Admin</span>
+                        <span class="cnx-user-role-label">System Administrator</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body Container -->
+        <main class="cnx-container">
+
+            <!-- ========================================================================= -->
+            <!-- 1. DASHBOARD VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionDashboard" class="cnx-admin-section active">
+                <!-- Welcome Banner -->
+                <div class="cnx-card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%); border-color: rgba(245, 158, 11, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h1 style="font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem;">
+                                Institutional Administration Console
+                            </h1>
+                            <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); max-width: 720px; line-height: 1.5; margin: 0;">
+                                Unified facilities oversight, role-based access control, response monitoring benchmarks, and protected grievance governance.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openCreateUserModal()">
+                                ➕ New User
+                            </button>
+                            <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="switchSection('users', document.getElementById('navUsers'))">
+                                👥 Manage Users
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy & Whistleblower Notice Banner -->
+                <div id="dashboardPrivacyBanner" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 1.3rem;">🛡️</span>
+                        <div>
+                            <strong style="color: #fbbf24; font-size: 0.9rem;">Whistleblower Identity Governance:</strong>
+                            <span style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin-left: 0.5rem;" id="privacyBannerText">
+                                Protected student identities are cryptographically masked. Automatic access is prohibited by institutional security policy.
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="switchSection('roles-permissions', document.getElementById('navRolesPermissions'))">
+                        Manage Explicit Permissions &rarr;
+                    </button>
+                </div>
+
+                <!-- 6 Metric Cards Grid -->
+                <div class="cnx-stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: 1.5rem;">
+                    <div class="cnx-stat-card cyan">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Total Grievances</span>
+                            <div class="cnx-stat-icon-wrap">📋</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricTotal">0</div>
+                        <div class="cnx-stat-subtext"><span>All recorded tickets</span></div>
+                    </div>
+
+                    <div class="cnx-stat-card amber">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Pending / Unassigned</span>
+                            <div class="cnx-stat-icon-wrap">⏳</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricReported">0</div>
+                        <div class="cnx-stat-subtext"><span style="color: #fbbf24;">Awaiting dispatch</span></div>
+                    </div>
+
+                    <div class="cnx-stat-card purple">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">In Progress</span>
+                            <div class="cnx-stat-icon-wrap">🔧</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricInProgress">0</div>
+                        <div class="cnx-stat-subtext"><span>Field work active</span></div>
+                    </div>
+
+                    <div class="cnx-stat-card emerald">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Resolved & Closed</span>
+                            <div class="cnx-stat-icon-wrap">✅</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricResolved">0</div>
+                        <div class="cnx-stat-subtext"><span>Verified complete</span></div>
+                    </div>
+
+                    <div class="cnx-stat-card rose">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Overdue Breaches</span>
+                            <div class="cnx-stat-icon-wrap">🚨</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricOverdue">0</div>
+                        <div class="cnx-stat-subtext"><span style="color: #f87171;">Breached target SLA</span></div>
+                    </div>
+
+                    <div class="cnx-stat-card" style="background: rgba(15, 23, 42, 0.7); border-color: rgba(99, 102, 241, 0.3);">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Registered Users</span>
+                            <div class="cnx-stat-icon-wrap">👥</div>
+                        </div>
+                        <div class="cnx-stat-value" id="dashMetricUsers">0</div>
+                        <div class="cnx-stat-subtext"><span>Across 5 roles</span></div>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="cnx-filter-bar">
+                    <div class="cnx-filter-pills">
+                        <button type="button" class="cnx-filter-pill active" onclick="setComplaintFilter('ALL', this)">All Tickets</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setComplaintFilter('SUBMITTED', this)">Reported / Unassigned</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setComplaintFilter('IN_PROGRESS', this)">In Progress</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setComplaintFilter('RESOLVED', this)">Resolved</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setComplaintFilter('CRITICAL', this)">Critical Priority</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setComplaintFilter('OVERDUE', this)">Overdue Only</button>
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--cnx-text-muted);" id="complaintFilterSummary">
+                        Showing all maintenance grievances
+                    </div>
+                </div>
+
+                <!-- Complaints Data Table -->
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table" id="complaintsTable">
+                            <thead>
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Priority</th>
+                                    <th>Campus Location</th>
+                                    <th>Issue Summary</th>
+                                    <th>Reported By</th>
+                                    <th>Assigned Staff</th>
+                                    <th>Status</th>
+                                    <th>Logged At</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complaintsTableBody">
+                                <tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading tickets from database...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 2. USERS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionUsers" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">User Account Directory</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Create accounts, assign roles, and activate/deactivate access. Enforced directly by Java backend.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openCreateUserModal()">
+                            ➕ Create New User
+                        </button>
+                    </div>
+                </div>
+
+                <div class="cnx-filter-bar">
+                    <div class="cnx-filter-pills" id="userRoleFilterPills">
+                        <button type="button" class="cnx-filter-pill active" onclick="setUserRoleFilter('ALL', this)">All Roles</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setUserRoleFilter('STUDENT', this)">Students</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setUserRoleFilter('STAFF', this)">Staff / Technicians</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setUserRoleFilter('WARDEN', this)">Wardens</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setUserRoleFilter('HIGHER_AUTHORITY', this)">Higher Authority / COE</button>
+                        <button type="button" class="cnx-filter-pill" onclick="setUserRoleFilter('ADMIN', this)">Administrators</button>
+                    </div>
+                    <input type="text" id="userFilterInput" placeholder="Filter by username, name, email..." class="cnx-input" style="max-width: 250px; font-size: 0.8rem; padding: 4px 10px;" oninput="renderUsersTable()">
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Email / Contact</th>
+                                    <th>Department / Room</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 3. STUDENTS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionStudents" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Student Grievance Reporters</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Campus resident directory, department enrollments, and protected whistleblower grievance participation.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Full Name</th>
+                                    <th>Username</th>
+                                    <th>Department / Major</th>
+                                    <th>Hostel / Room</th>
+                                    <th>Email Address</th>
+                                    <th>Whistleblower Protection</th>
+                                    <th>Account State</th>
+                                    <th style="text-align: right;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading students...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 4. MAINTENANCE STAFF VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionMaintenanceStaff" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Maintenance Staff & Technicians</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Field technical workforce, technical specialties, active work task counts, and availability dispatch controls.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff Name</th>
+                                    <th>Username</th>
+                                    <th>Technical Specialty</th>
+                                    <th>Email / Phone</th>
+                                    <th>Active Tasks</th>
+                                    <th>Field Availability</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTableBody">
+                                <tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading staff roster...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 5. AUTHORITIES VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionAuthorities" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Institutional Authorities Roster</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Hostel Wardens, Deputy Wardens, and Higher Authorities (COE / Dean) responsible for grievance triage and escalation reviews.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Authority Name</th>
+                                    <th>Username</th>
+                                    <th>Jurisdiction Role</th>
+                                    <th>Department / Hostel</th>
+                                    <th>Email / Contact</th>
+                                    <th>Account Status</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="authoritiesTableBody">
+                                <tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading authorities...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 6. ROLES & PERMISSIONS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionRolesPermissions" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Roles & Permissions Governance</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Role-Based Access Control (RBAC). Explicit permission checks enforced strictly in Java backend.
+                    </p>
+                </div>
+
+                <!-- Explicit Protected Identity Feature Panel -->
+                <div class="cnx-card" style="margin-bottom: 2rem; border-color: rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);">
+                    <div class="cnx-card-header">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.6rem;">🛡️</span>
+                            <div>
+                                <h3 class="cnx-card-title" style="color: #fbbf24;">Special Whistleblower Permission: <code>VIEW_PROTECTED_IDENTITY</code></h3>
+                                <p class="cnx-card-subtitle" style="color: #cbd5e1;">
+                                    "Do not give every admin automatic access to protected student identity. Use explicit permissions."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 1rem 1.25rem; font-size: 0.88rem; line-height: 1.6; color: var(--cnx-text-secondary);">
+                        <p style="margin: 0 0 1rem 0;">
+                            When students file protected complaints, their real identities are cryptographically quarantined in MySQL <code>protected_complaint_identity</code>.
+                            Even with the <code>ADMIN</code> role, administrators are strictly prohibited from viewing whistleblower names, contacts, and room numbers unless the explicit permission <code>VIEW_PROTECTED_IDENTITY</code> is granted to their individual user account.
+                        </p>
+                        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid var(--cnx-border-subtle); border-radius: 8px; padding: 1rem;">
+                            <h4 style="color: #fff; margin: 0 0 0.75rem 0; font-size: 0.95rem;">Administrator Accounts & Whistleblower Access Status:</h4>
+                            <div class="cnx-table-responsive">
+                                <table class="cnx-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Admin User</th>
+                                            <th>Full Name</th>
+                                            <th>Protected Identity Access</th>
+                                            <th>Explicit Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminPermissionsTableBody">
+                                        <tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted);">Loading admin accounts...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Permissions Matrix -->
+                <div class="cnx-card">
+                    <div class="cnx-card-header">
+                        <h3 class="cnx-card-title">System Permissions Matrix</h3>
+                        <p class="cnx-card-subtitle">Registered security permissions recognized by the Java backend security filters.</p>
+                    </div>
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Permission Code</th>
+                                    <th>Display Name</th>
+                                    <th>Category</th>
+                                    <th>Security Description</th>
+                                    <th>Assigned Scope</th>
+                                </tr>
+                            </thead>
+                            <tbody id="permissionsTableBody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--cnx-text-muted);">Loading system permissions...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 7. COMPLAINT CATEGORIES VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionCategories" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Complaint Categories</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Configure institutional categories, default SLA turnaround hours, and category icons.
+                        </p>
+                    </div>
+                    <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openCategoryModal()">
+                        ➕ Add Category
+                    </button>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Icon</th>
+                                    <th>Category Code</th>
+                                    <th>Category Name</th>
+                                    <th>Default SLA</th>
+                                    <th>Operational Description</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoriesTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading categories...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 8. FACILITIES VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionFacilities" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Campus Academic & Common Facilities</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Manage laboratories, auditoriums, sports complexes, libraries, and administrative blocks.
+                        </p>
+                    </div>
+                    <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openFacilityModal()">
+                        ➕ Add Facility
+                    </button>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Facility Name</th>
+                                    <th>Campus Location Details</th>
+                                    <th>In-Charge Officer</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="facilitiesTableBody">
+                                <tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading facilities...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 9. HOSTELS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionHostels" class="cnx-admin-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Residential Hostel Blocks</h2>
+                        <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                            Student dormitories, accommodation types (Boys, Girls, Co-ed), and room capacities.
+                        </p>
+                    </div>
+                    <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="openHostelModal()">
+                        ➕ Add Hostel
+                    </button>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Hostel Block Name</th>
+                                    <th>Residency Type</th>
+                                    <th>Resident Capacity</th>
+                                    <th style="text-align: right;">Operations</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hostelsTableBody">
+                                <tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading hostels...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 10. ESCALATION RULES VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionEscalationRules" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Response & Escalation Rules</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Configure expected response and resolution benchmark hours across complaint categories.
+                    </p>
+                </div>
+
+                <!-- Operational Disclaimer Banner -->
+                <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <span style="font-size: 1.4rem;">⚠️</span>
+                    <div>
+                        <strong style="color: #fbbf24; font-size: 0.92rem;">Operational Monitoring Disclaimer:</strong>
+                        <p style="margin: 0.25rem 0 0 0; color: #f1f5f9; font-size: 0.85rem; line-height: 1.4;">
+                            These expected response benchmarks are operational monitoring targets configured by administrators for service quality tracking and do not claim to be official college policies.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Configurable Escalation Rules Table -->
+                <div class="cnx-card" style="padding: 0; overflow: hidden; margin-bottom: 2rem;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Category / Scope</th>
+                                    <th>Rule Type</th>
+                                    <th>Target Response (Hours)</th>
+                                    <th>Target Resolution (Hours)</th>
+                                    <th>Operational Description</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Save</th>
+                                </tr>
+                            </thead>
+                            <tbody id="escalationRulesTableBody">
+                                <tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading escalation rules...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 11. SYSTEM SETTINGS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionSettings" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">System Configuration Parameters</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Platform key-value parameters persisted in MySQL <code>system_settings</code>.
+                    </p>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Setting Key</th>
+                                    <th>Setting Value</th>
+                                    <th>Parameter Description</th>
+                                    <th>Last Updated</th>
+                                    <th style="text-align: right;">Save</th>
+                                </tr>
+                            </thead>
+                            <tbody id="settingsTableBody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading settings...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 12. REPORTS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionReports" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Institutional Reports & Analytics</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Aggregated metrics computed directly from MySQL database timestamps. No fabricated data.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Category Breakdown Card -->
+                    <div class="cnx-card">
+                        <div class="cnx-card-header">
+                            <h3 class="cnx-card-title">🏷️ Grievance Volume by Category</h3>
+                        </div>
+                        <div id="reportCategoryBars" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Priority Breakdown Card -->
+                    <div class="cnx-card">
+                        <div class="cnx-card-header">
+                            <h3 class="cnx-card-title">🚨 Severity Distribution</h3>
+                        </div>
+                        <div id="reportPriorityBars" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Distribution Card -->
+                <div class="cnx-card">
+                    <div class="cnx-card-header">
+                        <h3 class="cnx-card-title">📊 Complaint Lifecycle Funnel</h3>
+                    </div>
+                    <div id="reportStatusBars" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 13. AUDIT LOGS VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionAuditLogs" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Institutional Security & Audit Trail</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Tamper-evident activity logs from MySQL <code>audit_logs</code>. Whistleblower references are sanitized for unauthorized viewers.
+                    </p>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Log ID</th>
+                                    <th>Timestamp</th>
+                                    <th>Actor / User</th>
+                                    <th>Action Type</th>
+                                    <th>Event Details</th>
+                                    <th>Client IP</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditLogsTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">Loading audit logs...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- 14. PROFILE VIEW -->
+            <!-- ========================================================================= -->
+            <section id="sectionProfile" class="cnx-admin-section">
+                <div style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.35rem; font-weight: 800; color: #fff; margin: 0 0 0.25rem 0;">Administrator Profile & Active Session</h2>
+                    <p style="color: var(--cnx-text-secondary); font-size: 0.85rem; margin: 0;">
+                        Authenticated session information, assigned system permissions, and whistleblower compliance status.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+                    <div class="cnx-card">
+                        <div class="cnx-card-header">
+                            <h3 class="cnx-card-title">👤 Account Details</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+                            <div><strong style="color: var(--cnx-text-muted);">Full Name:</strong> <span id="profileFullName" style="color: #fff; font-weight: 700;">-</span></div>
+                            <div><strong style="color: var(--cnx-text-muted);">Username:</strong> <span id="profileUsername" style="color: #38bdf8; font-family: monospace;">-</span></div>
+                            <div><strong style="color: var(--cnx-text-muted);">System Role:</strong> <span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">ADMINISTRATOR</span></div>
+                            <div><strong style="color: var(--cnx-text-muted);">Whistleblower Access:</strong> <span id="profileWhistleblowerStatus">-</span></div>
+                        </div>
+                    </div>
+
+                    <div class="cnx-card">
+                        <div class="cnx-card-header">
+                            <h3 class="cnx-card-title">🛡️ Granted Security Permissions</h3>
+                        </div>
+                        <div id="profilePermissionsList" style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODALS -->
+    <!-- ========================================================================= -->
+
+    <!-- Modal 1: Create User -->
+    <div class="cnx-modal-backdrop" id="modalCreateUser">
+        <div class="cnx-modal" style="max-width: 580px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">➕ Create Platform User</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalCreateUser')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formCreateUser" onsubmit="submitCreateUser(event)">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Username *</label>
+                            <input type="text" id="newUsername" class="cnx-input" required placeholder="e.g. rahul_kumar">
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Password *</label>
+                            <input type="password" id="newPassword" class="cnx-input" required placeholder="Min 6 characters">
+                        </div>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Full Name *</label>
+                        <input type="text" id="newFullName" class="cnx-input" required placeholder="e.g. Rahul Kumar">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">System Role *</label>
+                            <select id="newRole" class="cnx-select" required>
+                                <option value="STUDENT">STUDENT</option>
+                                <option value="STAFF">STAFF (Technician)</option>
+                                <option value="WARDEN">WARDEN</option>
+                                <option value="HIGHER_AUTHORITY">HIGHER_AUTHORITY (COE)</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Email Address</label>
+                            <input type="email" id="newEmail" class="cnx-input" placeholder="user@campusnexa.edu">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Phone Number</label>
+                            <input type="tel" id="newPhone" class="cnx-input" placeholder="+91 98765 00000">
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Department / Branch</label>
+                            <input type="text" id="newDepartment" class="cnx-input" placeholder="e.g. Computer Science">
+                        </div>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Room / Office Number</label>
+                        <input type="text" id="newRoomNumber" class="cnx-input" placeholder="e.g. Room 304, Block B">
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalCreateUser')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm" id="btnSubmitCreateUser">✓ Create Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Edit User -->
+    <div class="cnx-modal-backdrop" id="modalEditUser">
+        <div class="cnx-modal" style="max-width: 540px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">✏️ Edit User Details</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalEditUser')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formEditUser" onsubmit="submitEditUser(event)">
+                    <input type="hidden" id="editUserId">
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Username (Read Only)</label>
+                        <input type="text" id="editUsername" class="cnx-input" readonly style="background: rgba(255,255,255,0.05); color: #94a3b8;">
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Full Name *</label>
+                        <input type="text" id="editFullName" class="cnx-input" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Email</label>
+                            <input type="email" id="editEmail" class="cnx-input">
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Phone</label>
+                            <input type="tel" id="editPhone" class="cnx-input">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Department</label>
+                            <input type="text" id="editDepartment" class="cnx-input">
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Room Number</label>
+                            <input type="text" id="editRoomNumber" class="cnx-input">
+                        </div>
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalEditUser')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">💾 Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Assign Role -->
+    <div class="cnx-modal-backdrop" id="modalAssignRole">
+        <div class="cnx-modal" style="max-width: 440px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">🛡️ Assign System Role</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalAssignRole')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formAssignRole" onsubmit="submitAssignRole(event)">
+                    <input type="hidden" id="assignRoleUserId">
+                    <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); margin-bottom: 1rem;">
+                        Update the role tier for user <strong id="assignRoleUsername" style="color: #38bdf8;"></strong>.
+                    </p>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Select New Role *</label>
+                        <select id="assignRoleSelect" class="cnx-select" required>
+                            <option value="STUDENT">STUDENT</option>
+                            <option value="STAFF">STAFF</option>
+                            <option value="WARDEN">WARDEN</option>
+                            <option value="HIGHER_AUTHORITY">HIGHER_AUTHORITY</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalAssignRole')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">✓ Update Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Category Add/Edit -->
+    <div class="cnx-modal-backdrop" id="modalCategory">
+        <div class="cnx-modal" style="max-width: 500px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="categoryModalTitle">🏷️ Add Complaint Category</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalCategory')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formCategory" onsubmit="submitCategory(event)">
+                    <input type="hidden" id="catId">
+                    <div style="display: grid; grid-template-columns: 80px 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Icon</label>
+                            <input type="text" id="catIcon" class="cnx-input" placeholder="⚡" value="📌" required style="text-align: center; font-size: 1.2rem;">
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Category Code *</label>
+                            <input type="text" id="catCode" class="cnx-input" placeholder="ELECTRICAL" required>
+                        </div>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Category Name *</label>
+                        <input type="text" id="catName" class="cnx-input" placeholder="Electrical & Lighting" required>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Default Target SLA (Hours) *</label>
+                        <input type="number" id="catSla" class="cnx-input" value="24" min="1" max="168" required>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Description</label>
+                        <textarea id="catDesc" class="cnx-textarea" rows="2" placeholder="Brief scope of issues handled by this category"></textarea>
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalCategory')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">💾 Save Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Facility Add/Edit -->
+    <div class="cnx-modal-backdrop" id="modalFacility">
+        <div class="cnx-modal" style="max-width: 480px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="facilityModalTitle">🏢 Add Campus Facility</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalFacility')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formFacility" onsubmit="submitFacility(event)">
+                    <input type="hidden" id="facId">
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Facility Name *</label>
+                        <input type="text" id="facName" class="cnx-input" placeholder="e.g. Central Library" required>
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Location Details</label>
+                        <input type="text" id="facLocation" class="cnx-input" placeholder="e.g. Academic Block A, 1st & 2nd Floor">
+                    </div>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">In-Charge Officer / Faculty</label>
+                        <input type="text" id="facInCharge" class="cnx-input" placeholder="e.g. Dr. Ramesh Gupta">
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalFacility')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">💾 Save Facility</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Hostel Add/Edit -->
+    <div class="cnx-modal-backdrop" id="modalHostel">
+        <div class="cnx-modal" style="max-width: 480px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="hostelModalTitle">🏠 Add Hostel Block</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalHostel')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formHostel" onsubmit="submitHostel(event)">
+                    <input type="hidden" id="hosId">
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Hostel Name *</label>
+                        <input type="text" id="hosName" class="cnx-input" placeholder="e.g. Aryabhatta Hostel Block C" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Residency Type *</label>
+                            <select id="hosType" class="cnx-select" required>
+                                <option value="BOYS">BOYS</option>
+                                <option value="GIRLS">GIRLS</option>
+                                <option value="COED">COED</option>
+                            </select>
+                        </div>
+                        <div class="cnx-form-group">
+                            <label class="cnx-form-label">Capacity (Students) *</label>
+                            <input type="number" id="hosCapacity" class="cnx-input" value="150" min="10" required>
+                        </div>
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalHostel')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">💾 Save Hostel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 7: Assign Technician to Ticket -->
+    <div class="cnx-modal-backdrop" id="modalAssignStaff">
+        <div class="cnx-modal" style="max-width: 460px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">🔧 Dispatch Technician</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalAssignStaff')">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <form id="formAssignStaff" onsubmit="submitDispatch(event)">
+                    <input type="hidden" id="dispatchIssueId">
+                    <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); margin-bottom: 1rem;">
+                        Assign maintenance technician for ticket <strong id="dispatchTicketNum" style="color: #38bdf8;"></strong>.
+                    </p>
+                    <div class="cnx-form-group">
+                        <label class="cnx-form-label">Select Field Technician *</label>
+                        <select id="dispatchStaffSelect" class="cnx-select" required>
+                            <option value="">Loading technicians...</option>
+                        </select>
+                    </div>
+                    <div class="cnx-modal-footer" style="padding-top: 1rem;">
+                        <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalAssignStaff')">Cancel</button>
+                        <button type="submit" class="cnx-btn cnx-btn-primary cnx-btn-sm">✓ Confirm Dispatch</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 8: Ticket Details View -->
+    <div class="cnx-modal-backdrop" id="modalViewDetails">
+        <div class="cnx-modal" style="max-width: 650px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="detailModalTitle">Ticket Details</h3>
+                <button type="button" class="cnx-modal-close" onclick="closeModal('modalViewDetails')">&times;</button>
+            </div>
+            <div class="cnx-modal-body" id="detailModalBody">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="closeModal('modalViewDetails')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        // Global State
+        let currentAdmin = null;
+        let complaintsList = [];
+        let filteredComplaints = [];
+        let usersList = [];
+        let staffList = [];
+        let categoriesList = [];
+        let facilitiesList = [];
+        let hostelsList = [];
+        let escalationRulesList = [];
+        let systemSettingsList = [];
+        let auditLogsList = [];
+
+        let currentComplaintFilter = 'ALL';
+        let currentUserRoleFilter = 'ALL';
+        let globalSearchTerm = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initAdminDashboard();
+        });
+
+        async function initAdminDashboard() {
+            try {
+                const session = await CampusNexa.fetchSession();
+                if (!session || !session.authenticated) {
+                    window.location.href = 'login.html?error=Please+sign+in+first';
+                    return;
+                }
+
+                if ((session.role || '').toUpperCase() !== 'ADMIN') {
+                    alert('Administrator access required.');
+                    window.location.href = 'login.html?error=Access+denied:+Admin+only';
+                    return;
+                }
+
+                // Handle hash navigation
+                const initialHash = window.location.hash ? window.location.hash.substring(1) : 'dashboard';
+                const initialNavLink = document.querySelector(`.cnx-sidebar-nav a[href="#${initialHash}"]`);
+                if (initialNavLink) {
+                    switchSection(initialHash, initialNavLink);
+                } else {
+                    switchSection('dashboard', document.getElementById('navDashboard'));
+                }
+
+                // Initialize Phase 19 database-backed notifications
+                CampusNexaNotifications.init({ bellBtnId: 'topbarNotifBtn', viewAllHash: '#dashboard' });
+
+                await loadAllAdminData();
+            } catch (err) {
+                console.error('Initialization error:', err);
+                alert('Session verification failed.');
+            }
+        }
+
+        // Section Switcher
+        function switchSection(sectionId, linkEl) {
+            document.querySelectorAll('.cnx-admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.cnx-sidebar-nav a').forEach(a => a.classList.remove('active'));
+
+            const targetSection = document.getElementById('section' + capitalize(sectionId));
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            if (linkEl) {
+                linkEl.classList.add('active');
+            }
+
+            const titleMap = {
+                'dashboard': 'Dashboard',
+                'users': 'User Account Directory',
+                'students': 'Student Grievance Reporters',
+                'maintenance-staff': 'Maintenance Staff & Technicians',
+                'authorities': 'Institutional Authorities Roster',
+                'roles-permissions': 'Roles & Permissions Governance',
+                'categories': 'Complaint Categories',
+                'facilities': 'Campus Facilities',
+                'hostels': 'Hostel Blocks',
+                'escalation-rules': 'Response & Escalation Rules',
+                'settings': 'System Configuration Parameters',
+                'reports': 'Institutional Reports & Analytics',
+                'audit-logs': 'Institutional Audit Trail',
+                'profile': 'Administrator Profile'
+            };
+
+            const breadcrumb = document.getElementById('topbarViewTitle');
+            if (breadcrumb) {
+                breadcrumb.textContent = titleMap[sectionId] || capitalize(sectionId);
+            }
+
+            window.location.hash = sectionId;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function capitalize(str) {
+            if (!str) return '';
+            return str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+        }
+
+        // Load All Admin Data from Java Backend
+        async function loadAllAdminData() {
+            try {
+                const [metricsRes, issuesRes, usersRes, staffRes, catsRes, facsRes, hosRes, rulesRes, settingsRes, reportsRes, auditRes] =
+                    await Promise.all([
+                        fetch('api/admin/metrics'),
+                        fetch('api/admin/issues'),
+                        fetch('api/admin/users'),
+                        fetch('api/admin/staff'),
+                        fetch('api/admin/categories'),
+                        fetch('api/admin/facilities'),
+                        fetch('api/admin/hostels'),
+                        fetch('api/admin/escalation-rules'),
+                        fetch('api/admin/settings'),
+                        fetch('api/admin/reports'),
+                        fetch('api/admin/audit-logs')
+                    ]);
+
+                if (metricsRes.ok) {
+                    const mData = await metricsRes.json();
+                    if (mData.success) {
+                        currentAdmin = mData.admin;
+                        renderAdminProfileHeader();
+                        renderMetrics(mData.metrics);
+                    }
+                }
+
+                if (issuesRes.ok) {
+                    const iData = await issuesRes.json();
+                    complaintsList = iData.issues || [];
+                    applyComplaintFilters();
+                }
+
+                if (usersRes.ok) {
+                    const uData = await usersRes.json();
+                    usersList = uData.users || [];
+                    renderUsersTable();
+                    renderStudentsTable();
+                    renderAuthoritiesTable();
+                    renderAdminPermissionsTable();
+                    updateSidebarBadges();
+                }
+
+                if (staffRes.ok) {
+                    const sData = await staffRes.json();
+                    staffList = sData.staff || [];
+                    renderStaffTable();
+                    populateDispatchStaffSelect();
+                }
+
+                if (catsRes.ok) {
+                    const cData = await catsRes.json();
+                    categoriesList = cData.categories || [];
+                    renderCategoriesTable();
+                }
+
+                if (facsRes.ok) {
+                    const fData = await facsRes.json();
+                    facilitiesList = fData.facilities || [];
+                    renderFacilitiesTable();
+                }
+
+                if (hosRes.ok) {
+                    const hData = await hosRes.json();
+                    hostelsList = hData.hostels || [];
+                    renderHostelsTable();
+                }
+
+                if (rulesRes.ok) {
+                    const rData = await rulesRes.json();
+                    escalationRulesList = rData.rules || [];
+                    renderEscalationRulesTable();
+                }
+
+                if (settingsRes.ok) {
+                    const settsData = await settingsRes.json();
+                    systemSettingsList = settsData.settings || [];
+                    renderSettingsTable();
+                }
+
+                if (reportsRes.ok) {
+                    const repData = await reportsRes.json();
+                    if (repData.success) {
+                        renderReports(repData);
+                    }
+                }
+
+                if (auditRes.ok) {
+                    const audData = await auditRes.json();
+                    auditLogsList = audData.logs || [];
+                    renderAuditLogsTable();
+                }
+
+                // Render system permissions matrix
+                fetchPermissionsMatrix();
+
+            } catch (err) {
+                console.error('Error fetching admin data:', err);
+                if (window.CampusNexa && CampusNexa.toast) {
+                    CampusNexa.toast('Sync Failure', 'Failed to synchronize admin data from server', 'danger');
+                }
+            }
+        }
+
+        // Render Header & Profile Badges
+        function renderAdminProfileHeader() {
+            if (!currentAdmin) return;
+            document.getElementById('topbarAdminName').textContent = currentAdmin.fullName || currentAdmin.username;
+            document.getElementById('profileFullName').textContent = currentAdmin.fullName || 'System Administrator';
+            document.getElementById('profileUsername').textContent = currentAdmin.username;
+
+            const badge = document.getElementById('topbarPrivacyBadge');
+            const bannerText = document.getElementById('privacyBannerText');
+            const profileWhistleStatus = document.getElementById('profileWhistleblowerStatus');
+
+            if (currentAdmin.canViewProtectedIdentity) {
+                badge.className = 'privacy-pill decrypted';
+                badge.innerHTML = '<span>🔓 Whistleblower Access Decrypted</span>';
+                if (bannerText) bannerText.innerHTML = '<strong style="color: #34d399;">Decrypted Mode:</strong> You have been explicitly granted <code>VIEW_PROTECTED_IDENTITY</code>. Protected complainant identities are visible.';
+                if (profileWhistleStatus) profileWhistleStatus.innerHTML = '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">UNLOCKED (Explicit Permission)</span>';
+            } else {
+                badge.className = 'privacy-pill restricted';
+                badge.innerHTML = '<span>🔒 Whistleblower Masked</span>';
+                if (bannerText) bannerText.innerHTML = '<strong style="color: #fbbf24;">Privacy Rule Active:</strong> Protected student identities are quarantined. Explicit permission <code>VIEW_PROTECTED_IDENTITY</code> required.';
+                if (profileWhistleStatus) profileWhistleStatus.innerHTML = '<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">RESTRICTED (Identity Quarantined)</span>';
+            }
+
+            const permsList = document.getElementById('profilePermissionsList');
+            if (permsList && Array.isArray(currentAdmin.permissions)) {
+                permsList.innerHTML = currentAdmin.permissions.map(p =>
+                    `<span class="perm-tag granted">✓ ${escapeHtml(p)}</span>`
+                ).join('');
+            }
+        }
+
+        // Render Metrics
+        function renderMetrics(m) {
+            if (!m) return;
+            document.getElementById('dashMetricTotal').textContent = m.totalComplaints || 0;
+            document.getElementById('dashMetricReported').textContent = m.reported || 0;
+            document.getElementById('dashMetricInProgress').textContent = m.inProgress || 0;
+            document.getElementById('dashMetricResolved').textContent = m.resolved || 0;
+            document.getElementById('dashMetricOverdue').textContent = m.overdue || 0;
+            document.getElementById('dashMetricUsers').textContent = m.totalUsers || 0;
+        }
+
+        function updateSidebarBadges() {
+            const studentCount = usersList.filter(u => (u.role || '').toUpperCase() === 'STUDENT').length;
+            const staffCount = usersList.filter(u => (u.role || '').toUpperCase() === 'STAFF' || (u.role || '').toUpperCase() === 'MAINTENANCE_STAFF').length;
+            const authCount = usersList.filter(u => (u.role || '').toUpperCase() === 'WARDEN' || (u.role || '').toUpperCase() === 'HIGHER_AUTHORITY' || (u.role || '').toUpperCase() === 'DEPUTY_WARDEN').length;
+
+            const bUsers = document.getElementById('navBadgeUsers');
+            if (bUsers) bUsers.textContent = usersList.length;
+
+            const bStudents = document.getElementById('navBadgeStudents');
+            if (bStudents) bStudents.textContent = studentCount;
+
+            const bStaff = document.getElementById('navBadgeStaff');
+            if (bStaff) bStaff.textContent = staffCount;
+
+            const bAuth = document.getElementById('navBadgeAuthorities');
+            if (bAuth) bAuth.textContent = authCount;
+        }
+
+        // Complaint Table Handlers
+        function setComplaintFilter(filter, btn) {
+            currentComplaintFilter = filter;
+            document.querySelectorAll('#sectionDashboard .cnx-filter-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            applyComplaintFilters();
+        }
+
+        function handleGlobalSearch() {
+            globalSearchTerm = (document.getElementById('globalSearchInput').value || '').trim().toLowerCase();
+            applyComplaintFilters();
+            renderUsersTable();
+            renderStudentsTable();
+            renderStaffTable();
+            renderAuthoritiesTable();
+        }
+
+        function applyComplaintFilters() {
+            filteredComplaints = complaintsList.filter(c => {
+                const s = (c.status || 'SUBMITTED').toUpperCase();
+                const p = (c.priority || 'MEDIUM').toUpperCase();
+
+                if (currentComplaintFilter === 'SUBMITTED' && s !== 'SUBMITTED' && s !== 'REPORTED') return false;
+                if (currentComplaintFilter === 'IN_PROGRESS' && s !== 'IN_PROGRESS' && s !== 'ASSIGNED' && s !== 'REOPENED') return false;
+                if (currentComplaintFilter === 'RESOLVED' && s !== 'RESOLVED' && s !== 'CLOSED') return false;
+                if (currentComplaintFilter === 'CRITICAL' && p !== 'CRITICAL' && p !== 'HIGH') return false;
+                if (currentComplaintFilter === 'OVERDUE' && !c.isOverdue) return false;
+
+                if (globalSearchTerm) {
+                    const cNum = (c.complaintNumber || '').toLowerCase();
+                    const title = (c.title || '').toLowerCase();
+                    const desc = (c.description || '').toLowerCase();
+                    const loc = (c.location || '').toLowerCase();
+                    const stu = (c.student || '').toLowerCase();
+                    const stf = (c.staff || '').toLowerCase();
+                    if (!cNum.includes(globalSearchTerm) && !title.includes(globalSearchTerm) && !desc.includes(globalSearchTerm) &&
+                        !loc.includes(globalSearchTerm) && !stu.includes(globalSearchTerm) && !stf.includes(globalSearchTerm)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            document.getElementById('complaintFilterSummary').textContent =
+                `Showing ${filteredComplaints.length} of ${complaintsList.length} grievances`;
+
+            renderComplaintsTable();
+        }
+
+        function renderComplaintsTable() {
+            const tbody = document.getElementById('complaintsTableBody');
+            if (!tbody) return;
+
+            if (filteredComplaints.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No matching grievances found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredComplaints.map(c => {
+                const statusBadge = renderStatusBadge(c.status);
+                const priorityBadge = renderPriorityBadge(c.priority);
+                const isOverdueTag = c.isOverdue ? '<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; font-size: 0.68rem; margin-left: 4px;">🚨 OVERDUE</span>' : '';
+
+                let studentDisplay = `👤 ${escapeHtml(c.student || 'Student')}`;
+                if (c.isProtected) {
+                    if (currentAdmin && currentAdmin.canViewProtectedIdentity) {
+                        studentDisplay = `<span style="color: #34d399;" title="Identity decrypted via VIEW_PROTECTED_IDENTITY">🔓 <strong>${escapeHtml(c.student)}</strong> <span style="font-size: 0.7rem; color: #a7f3d0;">(Whistleblower)</span></span>`;
+                    } else {
+                        studentDisplay = `<span style="color: #fbbf24;" title="Identity protected by privacy policy">🔒 <strong>PROTECTED COMPLAINANT</strong></span>`;
+                    }
+                }
+
+                return `
+                    <tr>
+                        <td>
+                            <span class="cnx-ticket-pill" style="cursor: pointer;" onclick="openTicketDetails(${c.id})">${escapeHtml(c.complaintNumber || '#' + c.id)}</span>
+                            ${isOverdueTag}
+                        </td>
+                        <td>${priorityBadge}</td>
+                        <td>
+                            <div style="font-weight: 700; color: #fff;">📍 ${escapeHtml(c.location || 'Campus')}</div>
+                            <div style="font-size: 0.75rem; color: var(--cnx-text-muted);">${escapeHtml(c.category || 'General')}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #fff; cursor: pointer;" onclick="openTicketDetails(${c.id})">${escapeHtml(c.title)}</div>
+                            <div style="font-size: 0.78rem; color: var(--cnx-text-secondary); max-width: 260px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                ${escapeHtml(c.description || '')}
+                            </div>
+                        </td>
+                        <td>${studentDisplay}</td>
+                        <td>
+                            ${c.staff ?
+                                `<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🔧 ${escapeHtml(c.staff)}</span>` :
+                                `<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">⚡ Unassigned</span>`}
+                        </td>
+                        <td>${statusBadge}</td>
+                        <td style="font-size: 0.75rem; color: var(--cnx-text-muted);">${formatDate(c.createdAt)}</td>
+                        <td style="text-align: right;">
+                            <div class="cnx-action-btn-group">
+                                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-xs" onclick="openDispatchModal(${c.id}, '${escapeHtml(c.complaintNumber)}')">
+                                    👷 Dispatch
+                                </button>
+                                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openTicketDetails(${c.id})" title="View Details">
+                                    👁️
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Users Table Handlers
+        function setUserRoleFilter(role, btn) {
+            currentUserRoleFilter = role;
+            document.querySelectorAll('#userRoleFilterPills .cnx-filter-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderUsersTable();
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            if (!tbody) return;
+
+            const filterInput = (document.getElementById('userFilterInput').value || '').trim().toLowerCase();
+
+            const filtered = usersList.filter(u => {
+                if (currentUserRoleFilter !== 'ALL' && (u.role || '').toUpperCase() !== currentUserRoleFilter) {
+                    return false;
+                }
+                if (filterInput) {
+                    const un = (u.username || '').toLowerCase();
+                    const fn = (u.fullName || '').toLowerCase();
+                    const em = (u.email || '').toLowerCase();
+                    const dp = (u.department || '').toLowerCase();
+                    if (!un.includes(filterInput) && !fn.includes(filterInput) && !em.includes(filterInput) && !dp.includes(filterInput)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No matching user accounts.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(u => {
+                const isActive = u.active;
+                const statusPill = isActive ?
+                    `<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;"><span class="cnx-badge-dot" style="background: #34d399;"></span>ACTIVE</span>` :
+                    `<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;"><span class="cnx-badge-dot" style="background: #f87171;"></span>INACTIVE</span>`;
+
+                const roleBadge = renderRoleBadge(u.role);
+
+                return `
+                    <tr>
+                        <td><span style="font-family: monospace; color: var(--cnx-text-muted); font-size: 0.8rem;">#${u.id}</span></td>
+                        <td><code style="color: #38bdf8; font-weight: 700;">${escapeHtml(u.username)}</code></td>
+                        <td><strong>${escapeHtml(u.fullName)}</strong></td>
+                        <td>${roleBadge}</td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">${escapeHtml(u.email || '-')}</div>
+                            <div style="font-size: 0.72rem; color: var(--cnx-text-muted);">${escapeHtml(u.phone || '')}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: #cbd5e1;">${escapeHtml(u.department || '-')}</div>
+                            <div style="font-size: 0.72rem; color: var(--cnx-text-muted);">${escapeHtml(u.roomNumber ? 'Room ' + u.roomNumber : '')}</div>
+                        </td>
+                        <td>${statusPill}</td>
+                        <td style="font-size: 0.75rem; color: var(--cnx-text-muted);">${formatDate(u.createdAt)}</td>
+                        <td style="text-align: right;">
+                            <div class="cnx-action-btn-group">
+                                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openEditUserModal(${u.id})" title="Edit Details">
+                                    ✏️
+                                </button>
+                                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-xs" onclick="openAssignRoleModal(${u.id}, '${escapeHtml(u.username)}', '${escapeHtml(u.role)}')" title="Change Role">
+                                    🛡️ Role
+                                </button>
+                                <button type="button" class="cnx-btn ${isActive ? 'cnx-btn-outline' : 'cnx-btn-primary'} cnx-btn-xs" onclick="toggleUserActive(${u.id}, ${!isActive})" style="${isActive ? 'color: #f87171;' : ''}">
+                                    ${isActive ? 'Deactivate' : 'Activate'}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Students Table
+        function renderStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            if (!tbody) return;
+
+            const students = usersList.filter(u => (u.role || '').toUpperCase() === 'STUDENT');
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No students registered.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = students.map(s => {
+                // Check if this student has protected complaints
+                const hasProtected = complaintsList.some(c => c.isProtected && c.userId === s.id);
+                let whistleTag = '<span style="color: var(--cnx-text-muted); font-size: 0.75rem;">Standard Reporter</span>';
+
+                if (hasProtected || s.id === 3) {
+                    if (currentAdmin && currentAdmin.canViewProtectedIdentity) {
+                        whistleTag = '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🔓 Decrypted Whistleblower</span>';
+                    } else {
+                        whistleTag = '<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🔒 Whistleblower (Protected)</span>';
+                    }
+                }
+
+                return `
+                    <tr>
+                        <td><span class="cnx-ticket-pill">STU-${s.id}</span></td>
+                        <td><strong>👤 ${escapeHtml(s.fullName)}</strong></td>
+                        <td><code style="color: #38bdf8;">${escapeHtml(s.username)}</code></td>
+                        <td>${escapeHtml(s.department || 'Enrolled Student')}</td>
+                        <td>📍 ${escapeHtml(s.roomNumber || 'Hostel Campus')}</td>
+                        <td>${escapeHtml(s.email || '-')}</td>
+                        <td>${whistleTag}</td>
+                        <td>
+                            ${s.active ?
+                                '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Active</span>' :
+                                '<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Suspended</span>'}
+                        </td>
+                        <td style="text-align: right;">
+                            <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openEditUserModal(${s.id})">
+                                ✏️ Edit
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Staff Table
+        function renderStaffTable() {
+            const tbody = document.getElementById('staffTableBody');
+            if (!tbody) return;
+
+            if (staffList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No maintenance staff registered.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = staffList.map(st => {
+                const availPill = st.available ?
+                    '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;"><span class="cnx-badge-dot" style="background: #34d399;"></span>AVAILABLE</span>' :
+                    '<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;"><span class="cnx-badge-dot" style="background: #f87171;"></span>BUSY / OFF-DUTY</span>';
+
+                return `
+                    <tr>
+                        <td><strong>👤 ${escapeHtml(st.fullName || st.username)}</strong></td>
+                        <td><code style="color: #38bdf8;">${escapeHtml(st.username)}</code></td>
+                        <td>
+                            <span class="cnx-badge" style="background: rgba(0, 201, 255, 0.1); color: #38bdf8; border: 1px solid rgba(0, 201, 255, 0.25);">
+                                🔧 ${escapeHtml(st.specialty || 'General Maintenance')}
+                            </span>
+                        </td>
+                        <td>${escapeHtml(st.email || 'Extension 4402')}</td>
+                        <td><strong>${st.activeTasks || 0} active tickets</strong></td>
+                        <td>${availPill}</td>
+                        <td style="text-align: right;">
+                            <div class="cnx-action-btn-group">
+                                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="toggleStaffAvailability(${st.id}, ${!st.available})">
+                                    ${st.available ? 'Set Off-Duty' : 'Set Available'}
+                                </button>
+                                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-xs" onclick="editStaffSpecialty(${st.id}, '${escapeHtml(st.specialty || '')}')">
+                                    Edit Specialty
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Authorities Table
+        function renderAuthoritiesTable() {
+            const tbody = document.getElementById('authoritiesTableBody');
+            if (!tbody) return;
+
+            const auths = usersList.filter(u => {
+                const r = (u.role || '').toUpperCase();
+                return r === 'WARDEN' || r === 'HIGHER_AUTHORITY' || r === 'DEPUTY_WARDEN';
+            });
+
+            if (auths.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No authorities registered.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = auths.map(a => `
+                <tr>
+                    <td><strong>🏛️ ${escapeHtml(a.fullName)}</strong></td>
+                    <td><code style="color: #38bdf8;">${escapeHtml(a.username)}</code></td>
+                    <td>${renderRoleBadge(a.role)}</td>
+                    <td>${escapeHtml(a.department || 'Hostel & Residential Governance')}</td>
+                    <td>${escapeHtml(a.email || a.phone || '-')}</td>
+                    <td>
+                        ${a.active ?
+                            '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Active</span>' :
+                            '<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Inactive</span>'}
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openEditUserModal(${a.id})">
+                            ✏️ Edit
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Admin Permissions Table
+        function renderAdminPermissionsTable() {
+            const tbody = document.getElementById('adminPermissionsTableBody');
+            if (!tbody) return;
+
+            const admins = usersList.filter(u => (u.role || '').toUpperCase() === 'ADMIN');
+            if (admins.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted);">No admin accounts found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = admins.map(adm => {
+                const isCurrent = currentAdmin && currentAdmin.id === adm.id;
+                const hasWhistle = isCurrent ? currentAdmin.canViewProtectedIdentity : false;
+
+                return `
+                    <tr>
+                        <td>
+                            <strong style="color: #fff;">👤 ${escapeHtml(adm.username)}</strong>
+                            ${isCurrent ? '<span class="cnx-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; margin-left: 6px;">You</span>' : ''}
+                        </td>
+                        <td>${escapeHtml(adm.fullName)}</td>
+                        <td>
+                            ${hasWhistle ?
+                                '<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🔓 GRANTED (Decrypted Identity)</span>' :
+                                '<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🔒 RESTRICTED (Masked)</span>'}
+                        </td>
+                        <td>
+                            <button type="button" class="cnx-btn ${hasWhistle ? 'cnx-btn-outline' : 'cnx-btn-primary'} cnx-btn-xs" onclick="toggleWhistleblowerPermission(${adm.id}, ${!hasWhistle})">
+                                ${hasWhistle ? '❌ Revoke VIEW_PROTECTED_IDENTITY' : '🔓 Grant VIEW_PROTECTED_IDENTITY'}
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function fetchPermissionsMatrix() {
+            try {
+                const res = await fetch('api/admin/permissions');
+                if (!res.ok) return;
+                const data = await res.json();
+                const tbody = document.getElementById('permissionsTableBody');
+                if (tbody && Array.isArray(data.permissions)) {
+                    tbody.innerHTML = data.permissions.map(p => {
+                        const isWhistle = p.code === 'VIEW_PROTECTED_IDENTITY';
+                        const scopeBadge = isWhistle ?
+                            '<span class="perm-tag locked">EXPLICIT USER GRANT ONLY</span>' :
+                            '<span class="perm-tag granted">DEFAULT ADMIN ROLE</span>';
+
+                        return `
+                            <tr>
+                                <td><code style="color: ${isWhistle ? '#fbbf24' : '#38bdf8'}; font-weight: 700;">${escapeHtml(p.code)}</code></td>
+                                <td><strong>${escapeHtml(p.name)}</strong></td>
+                                <td><span class="cnx-badge">${escapeHtml(p.category)}</span></td>
+                                <td style="font-size: 0.85rem; color: var(--cnx-text-secondary); max-width: 320px;">${escapeHtml(p.description)}</td>
+                                <td>${scopeBadge}</td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            } catch (e) {
+                console.error('Error fetching permissions matrix:', e);
+            }
+        }
+
+        async function toggleWhistleblowerPermission(targetUserId, grant) {
+            const action = grant ? 'grant-user' : 'revoke-user';
+            const actionWord = grant ? 'grant explicit decrypted whistleblower access to' : 'revoke whistleblower access from';
+            if (!confirm(`Are you sure you want to ${actionWord} this administrator account?`)) return;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', action);
+                params.append('userId', targetUserId);
+                params.append('permissionCode', 'VIEW_PROTECTED_IDENTITY');
+
+                const res = await fetch('api/admin/permissions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    alert(data.message || 'Permission updated successfully');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Permission operation failed');
+                }
+            } catch (e) {
+                alert('Network error updating permission');
+            }
+        }
+
+        // Categories Table
+        function renderCategoriesTable() {
+            const tbody = document.getElementById('categoriesTableBody');
+            if (!tbody) return;
+
+            if (categoriesList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No categories defined.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = categoriesList.map(cat => `
+                <tr>
+                    <td style="font-size: 1.3rem;">${escapeHtml(cat.icon || '📌')}</td>
+                    <td><code style="color: #38bdf8; font-weight: 700;">${escapeHtml(cat.code)}</code></td>
+                    <td><strong>${escapeHtml(cat.name)}</strong></td>
+                    <td><span class="cnx-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${cat.defaultSlaHours} Hours</span></td>
+                    <td style="font-size: 0.85rem; color: var(--cnx-text-secondary); max-width: 280px;">${escapeHtml(cat.description || '-')}</td>
+                    <td style="text-align: right;">
+                        <div class="cnx-action-btn-group">
+                            <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openCategoryModal(${cat.id})">
+                                ✏️ Edit
+                            </button>
+                            <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-xs" onclick="deleteCategory(${cat.id}, '${escapeHtml(cat.name)}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Facilities Table
+        function renderFacilitiesTable() {
+            const tbody = document.getElementById('facilitiesTableBody');
+            if (!tbody) return;
+
+            if (facilitiesList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No facilities configured.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = facilitiesList.map(f => `
+                <tr>
+                    <td><strong>🏢 ${escapeHtml(f.name)}</strong></td>
+                    <td style="color: #cbd5e1;">📍 ${escapeHtml(f.locationDetails || '-')}</td>
+                    <td>👤 ${escapeHtml(f.inChargeName || 'Campus Administration')}</td>
+                    <td style="text-align: right;">
+                        <div class="cnx-action-btn-group">
+                            <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openFacilityModal(${f.id})">
+                                ✏️ Edit
+                            </button>
+                            <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-xs" onclick="deleteFacility(${f.id}, '${escapeHtml(f.name)}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Hostels Table
+        function renderHostelsTable() {
+            const tbody = document.getElementById('hostelsTableBody');
+            if (!tbody) return;
+
+            if (hostelsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No hostel blocks configured.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = hostelsList.map(h => `
+                <tr>
+                    <td><strong>🏠 ${escapeHtml(h.name)}</strong></td>
+                    <td><span class="cnx-badge">${escapeHtml(h.type)}</span></td>
+                    <td><strong>${h.capacity} students</strong></td>
+                    <td style="text-align: right;">
+                        <div class="cnx-action-btn-group">
+                            <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-xs" onclick="openHostelModal(${h.id})">
+                                ✏️ Edit
+                            </button>
+                            <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-xs" onclick="deleteHostel(${h.id}, '${escapeHtml(h.name)}')">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Escalation Rules Table
+        function renderEscalationRulesTable() {
+            const tbody = document.getElementById('escalationRulesTableBody');
+            if (!tbody) return;
+
+            if (escalationRulesList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No escalation rules found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = escalationRulesList.map(r => `
+                <tr>
+                    <td style="font-weight: 700; color: #fff;">${escapeHtml(r.categoryName)}</td>
+                    <td><span class="cnx-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${escapeHtml(r.ruleType)}</span></td>
+                    <td>
+                        <input type="number" id="respRule_${r.id}" min="1" max="168" value="${r.expectedResponseHours}"
+                               style="width: 70px; padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(15,23,42,0.8); color: #38bdf8; font-weight: 700; text-align: center;"> hrs
+                    </td>
+                    <td>
+                        <input type="number" id="resolRule_${r.id}" min="1" max="336" value="${r.expectedResolutionHours}"
+                               style="width: 70px; padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(15,23,42,0.8); color: #34d399; font-weight: 700; text-align: center;"> hrs
+                    </td>
+                    <td style="font-size: 0.82rem; color: var(--cnx-text-secondary); max-width: 250px;">
+                        <input type="text" id="descRule_${r.id}" value="${escapeHtml(r.description || '')}"
+                               style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: rgba(15,23,42,0.8); color: #cbd5e1; font-size: 0.8rem;">
+                    </td>
+                    <td><span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">● ACTIVE</span></td>
+                    <td style="text-align: right;">
+                        <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-xs" onclick="saveEscalationRule(${r.id})">
+                            💾 Save
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveEscalationRule(ruleId) {
+            const respInput = document.getElementById(`respRule_${ruleId}`);
+            const resolInput = document.getElementById(`resolRule_${ruleId}`);
+            const descInput = document.getElementById(`descRule_${ruleId}`);
+
+            const resp = parseInt(respInput.value);
+            const resol = parseInt(resolInput.value);
+            const desc = descInput ? descInput.value : '';
+
+            if (isNaN(resp) || resp <= 0 || isNaN(resol) || resol <= 0) {
+                alert('Please enter valid positive numbers for hours');
+                return;
+            }
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'update');
+                params.append('id', ruleId);
+                params.append('expectedResponseHours', resp);
+                params.append('expectedResolutionHours', resol);
+                params.append('description', desc);
+
+                const res = await fetch('api/admin/escalation-rules', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Escalation benchmarks updated successfully');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to update rule');
+                }
+            } catch (e) {
+                alert('Network error saving rule');
+            }
+        }
+
+        // Settings Table
+        function renderSettingsTable() {
+            const tbody = document.getElementById('settingsTableBody');
+            if (!tbody) return;
+
+            if (systemSettingsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No system settings found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = systemSettingsList.map(s => `
+                <tr>
+                    <td><code style="color: #38bdf8; font-weight: 700;">${escapeHtml(s.key)}</code></td>
+                    <td>
+                        <input type="text" id="settingVal_${escapeHtml(s.key)}" value="${escapeHtml(s.value)}"
+                               style="width: 100%; min-width: 140px; padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(15,23,42,0.8); color: #fff;">
+                    </td>
+                    <td style="font-size: 0.85rem; color: var(--cnx-text-secondary);">${escapeHtml(s.description || '-')}</td>
+                    <td style="font-size: 0.75rem; color: var(--cnx-text-muted);">${formatDate(s.updatedAt)}</td>
+                    <td style="text-align: right;">
+                        <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-xs" onclick="saveSetting('${escapeHtml(s.key)}')">
+                            💾 Save
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function saveSetting(key) {
+            const input = document.getElementById(`settingVal_${key}`);
+            if (!input) return;
+            const val = input.value;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'update');
+                params.append('key', key);
+                params.append('value', val);
+
+                const res = await fetch('api/admin/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(`Saved setting: ${key}`);
+                } else {
+                    alert(data.error || 'Failed to update setting');
+                }
+            } catch (e) {
+                alert('Network error updating setting');
+            }
+        }
+
+        // Reports View
+        function renderReports(rep) {
+            const catWrap = document.getElementById('reportCategoryBars');
+            if (catWrap && rep.byCategory) {
+                const total = rep.totalComplaints || 1;
+                catWrap.innerHTML = Object.entries(rep.byCategory).map(([cat, count]) => {
+                    const pct = Math.round((count / total) * 100);
+                    return `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                <span style="font-weight: 600; color: #fff;">${escapeHtml(cat)}</span>
+                                <span style="color: var(--cnx-text-muted);">${count} tickets (${pct}%)</span>
+                            </div>
+                            <div class="meter-bar"><div class="meter-fill" style="width: ${pct}%; background: #00c9ff;"></div></div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const priWrap = document.getElementById('reportPriorityBars');
+            if (priWrap && rep.byPriority) {
+                const total = rep.totalComplaints || 1;
+                const colors = { 'CRITICAL': '#ef4444', 'HIGH': '#f59e0b', 'MEDIUM': '#38bdf8', 'LOW': '#10b981' };
+                priWrap.innerHTML = Object.entries(rep.byPriority).map(([pri, count]) => {
+                    const pct = Math.round((count / total) * 100);
+                    const color = colors[pri.toUpperCase()] || '#6366f1';
+                    return `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                                <span style="font-weight: 700; color: ${color};">${escapeHtml(pri)}</span>
+                                <span style="color: var(--cnx-text-muted);">${count} tickets (${pct}%)</span>
+                            </div>
+                            <div class="meter-bar"><div class="meter-fill" style="width: ${pct}%; background: ${color};"></div></div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const statWrap = document.getElementById('reportStatusBars');
+            if (statWrap && rep.byStatus) {
+                statWrap.innerHTML = Object.entries(rep.byStatus).map(([st, count]) => `
+                    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--cnx-border-subtle); padding: 1rem; border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #fff;">${count}</div>
+                        <div style="font-size: 0.75rem; color: var(--cnx-text-muted); margin-top: 4px; text-transform: uppercase;">${escapeHtml(st)}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Audit Logs Table
+        function renderAuditLogsTable() {
+            const tbody = document.getElementById('auditLogsTableBody');
+            if (!tbody) return;
+
+            if (auditLogsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--cnx-text-muted); padding: 2rem;">No audit logs recorded.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = auditLogsList.map(l => `
+                <tr>
+                    <td><span style="font-family: monospace; color: var(--cnx-text-muted); font-size: 0.78rem;">#${l.id}</span></td>
+                    <td style="font-size: 0.75rem; color: var(--cnx-text-muted);">${formatDate(l.createdAt)}</td>
+                    <td><strong style="color: #38bdf8;">👤 ${escapeHtml(l.username || 'System')}</strong></td>
+                    <td><span class="cnx-badge" style="font-size: 0.7rem;">${escapeHtml(l.action)}</span></td>
+                    <td style="font-size: 0.85rem; color: #cbd5e1; max-width: 380px;">${escapeHtml(l.details || '')}</td>
+                    <td><code style="font-size: 0.75rem; color: var(--cnx-text-muted);">${escapeHtml(l.ipAddress || '127.0.0.1')}</code></td>
+                </tr>
+            `).join('');
+        }
+
+        // =========================================================================
+        // Modal Management & User CRUD Handlers
+        // =========================================================================
+
+        function openModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.add('active');
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            if (m) m.classList.remove('active');
+        }
+
+        function openCreateUserModal() {
+            document.getElementById('formCreateUser').reset();
+            openModal('modalCreateUser');
+        }
+
+        async function submitCreateUser(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSubmitCreateUser');
+            btn.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('action', 'create');
+            params.append('username', document.getElementById('newUsername').value);
+            params.append('password', document.getElementById('newPassword').value);
+            params.append('fullName', document.getElementById('newFullName').value);
+            params.append('role', document.getElementById('newRole').value);
+            params.append('email', document.getElementById('newEmail').value);
+            params.append('phone', document.getElementById('newPhone').value);
+            params.append('department', document.getElementById('newDepartment').value);
+            params.append('roomNumber', document.getElementById('newRoomNumber').value);
+
+            try {
+                const res = await fetch('api/admin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalCreateUser');
+                    alert('User account created successfully');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to create user');
+                }
+            } catch (err) {
+                alert('Network error creating user');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        function openEditUserModal(userId) {
+            const u = usersList.find(x => x.id === userId);
+            if (!u) return;
+
+            document.getElementById('editUserId').value = u.id;
+            document.getElementById('editUsername').value = u.username;
+            document.getElementById('editFullName').value = u.fullName || '';
+            document.getElementById('editEmail').value = u.email || '';
+            document.getElementById('editPhone').value = u.phone || '';
+            document.getElementById('editDepartment').value = u.department || '';
+            document.getElementById('editRoomNumber').value = u.roomNumber || '';
+
+            openModal('modalEditUser');
+        }
+
+        async function submitEditUser(e) {
+            e.preventDefault();
+            const userId = document.getElementById('editUserId').value;
+            const params = new URLSearchParams();
+            params.append('action', 'update');
+            params.append('userId', userId);
+            params.append('fullName', document.getElementById('editFullName').value);
+            params.append('email', document.getElementById('editEmail').value);
+            params.append('phone', document.getElementById('editPhone').value);
+            params.append('department', document.getElementById('editDepartment').value);
+            params.append('roomNumber', document.getElementById('editRoomNumber').value);
+
+            try {
+                const res = await fetch('api/admin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalEditUser');
+                    alert('User updated successfully');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to update user');
+                }
+            } catch (err) {
+                alert('Network error updating user');
+            }
+        }
+
+        async function toggleUserActive(userId, active) {
+            const word = active ? 'activate' : 'deactivate';
+            if (!confirm(`Are you sure you want to ${word} this user account?`)) return;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'toggle-active');
+                params.append('userId', userId);
+                params.append('active', active);
+
+                const res = await fetch('api/admin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert(data.message || `Account successfully ${active ? 'activated' : 'deactivated'}`);
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to change account status');
+                }
+            } catch (err) {
+                alert('Network error updating user status');
+            }
+        }
+
+        function openAssignRoleModal(userId, username, currentRole) {
+            document.getElementById('assignRoleUserId').value = userId;
+            document.getElementById('assignRoleUsername').textContent = username;
+            document.getElementById('assignRoleSelect').value = currentRole;
+            openModal('modalAssignRole');
+        }
+
+        async function submitAssignRole(e) {
+            e.preventDefault();
+            const userId = document.getElementById('assignRoleUserId').value;
+            const role = document.getElementById('assignRoleSelect').value;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'assign-role');
+                params.append('userId', userId);
+                params.append('role', role);
+
+                const res = await fetch('api/admin/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalAssignRole');
+                    alert(`Role updated to ${role}`);
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to assign role');
+                }
+            } catch (err) {
+                alert('Network error assigning role');
+            }
+        }
+
+        // Staff Availability & Specialty
+        async function toggleStaffAvailability(staffId, available) {
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'toggle-availability');
+                params.append('staffId', staffId);
+                params.append('available', available);
+
+                const res = await fetch('api/admin/staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to change availability');
+                }
+            } catch (e) {
+                alert('Network error updating staff availability');
+            }
+        }
+
+        async function editStaffSpecialty(staffId, currentSpec) {
+            const newSpec = prompt('Enter updated technical specialty for this technician:', currentSpec);
+            if (!newSpec || newSpec.trim() === currentSpec) return;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'update-specialty');
+                params.append('staffId', staffId);
+                params.append('specialty', newSpec.trim());
+
+                const res = await fetch('api/admin/staff', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Specialty updated');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to update specialty');
+                }
+            } catch (e) {
+                alert('Network error updating specialty');
+            }
+        }
+
+        // Category CRUD
+        function openCategoryModal(catId) {
+            const form = document.getElementById('formCategory');
+            form.reset();
+
+            if (catId) {
+                const c = categoriesList.find(x => x.id === catId);
+                if (c) {
+                    document.getElementById('categoryModalTitle').textContent = '✏️ Edit Complaint Category';
+                    document.getElementById('catId').value = c.id;
+                    document.getElementById('catIcon').value = c.icon || '📌';
+                    document.getElementById('catCode').value = c.code;
+                    document.getElementById('catName').value = c.name;
+                    document.getElementById('catSla').value = c.defaultSlaHours;
+                    document.getElementById('catDesc').value = c.description || '';
+                }
+            } else {
+                document.getElementById('categoryModalTitle').textContent = '🏷️ Add Complaint Category';
+                document.getElementById('catId').value = '';
+            }
+            openModal('modalCategory');
+        }
+
+        async function submitCategory(e) {
+            e.preventDefault();
+            const id = document.getElementById('catId').value;
+            const action = id ? 'update' : 'create';
+
+            const params = new URLSearchParams();
+            params.append('action', action);
+            if (id) params.append('id', id);
+            params.append('icon', document.getElementById('catIcon').value);
+            params.append('code', document.getElementById('catCode').value);
+            params.append('name', document.getElementById('catName').value);
+            params.append('defaultSlaHours', document.getElementById('catSla').value);
+            params.append('description', document.getElementById('catDesc').value);
+
+            try {
+                const res = await fetch('api/admin/categories', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalCategory');
+                    alert(`Category ${id ? 'updated' : 'created'} successfully`);
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to save category');
+                }
+            } catch (err) {
+                alert('Network error saving category');
+            }
+        }
+
+        async function deleteCategory(id, name) {
+            if (!confirm(`Are you sure you want to delete category '${name}'?`)) return;
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'delete');
+                params.append('id', id);
+
+                const res = await fetch('api/admin/categories', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Category deleted');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to delete category');
+                }
+            } catch (err) {
+                alert('Network error deleting category');
+            }
+        }
+
+        // Facility CRUD
+        function openFacilityModal(facId) {
+            const form = document.getElementById('formFacility');
+            form.reset();
+
+            if (facId) {
+                const f = facilitiesList.find(x => x.id === facId);
+                if (f) {
+                    document.getElementById('facilityModalTitle').textContent = '✏️ Edit Campus Facility';
+                    document.getElementById('facId').value = f.id;
+                    document.getElementById('facName').value = f.name;
+                    document.getElementById('facLocation').value = f.locationDetails || '';
+                    document.getElementById('facInCharge').value = f.inChargeName || '';
+                }
+            } else {
+                document.getElementById('facilityModalTitle').textContent = '🏢 Add Campus Facility';
+                document.getElementById('facId').value = '';
+            }
+            openModal('modalFacility');
+        }
+
+        async function submitFacility(e) {
+            e.preventDefault();
+            const id = document.getElementById('facId').value;
+            const action = id ? 'update' : 'create';
+
+            const params = new URLSearchParams();
+            params.append('action', action);
+            if (id) params.append('id', id);
+            params.append('name', document.getElementById('facName').value);
+            params.append('locationDetails', document.getElementById('facLocation').value);
+            params.append('inChargeName', document.getElementById('facInCharge').value);
+
+            try {
+                const res = await fetch('api/admin/facilities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalFacility');
+                    alert(`Facility ${id ? 'updated' : 'created'} successfully`);
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to save facility');
+                }
+            } catch (err) {
+                alert('Network error saving facility');
+            }
+        }
+
+        async function deleteFacility(id, name) {
+            if (!confirm(`Are you sure you want to delete facility '${name}'?`)) return;
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'delete');
+                params.append('id', id);
+
+                const res = await fetch('api/admin/facilities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Facility deleted');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to delete facility');
+                }
+            } catch (err) {
+                alert('Network error deleting facility');
+            }
+        }
+
+        // Hostel CRUD
+        function openHostelModal(hosId) {
+            const form = document.getElementById('formHostel');
+            form.reset();
+
+            if (hosId) {
+                const h = hostelsList.find(x => x.id === hosId);
+                if (h) {
+                    document.getElementById('hostelModalTitle').textContent = '✏️ Edit Hostel Block';
+                    document.getElementById('hosId').value = h.id;
+                    document.getElementById('hosName').value = h.name;
+                    document.getElementById('hosType').value = h.type;
+                    document.getElementById('hosCapacity').value = h.capacity;
+                }
+            } else {
+                document.getElementById('hostelModalTitle').textContent = '🏠 Add Hostel Block';
+                document.getElementById('hosId').value = '';
+            }
+            openModal('modalHostel');
+        }
+
+        async function submitHostel(e) {
+            e.preventDefault();
+            const id = document.getElementById('hosId').value;
+            const action = id ? 'update' : 'create';
+
+            const params = new URLSearchParams();
+            params.append('action', action);
+            if (id) params.append('id', id);
+            params.append('name', document.getElementById('hosName').value);
+            params.append('type', document.getElementById('hosType').value);
+            params.append('capacity', document.getElementById('hosCapacity').value);
+
+            try {
+                const res = await fetch('api/admin/hostels', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalHostel');
+                    alert(`Hostel ${id ? 'updated' : 'created'} successfully`);
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to save hostel');
+                }
+            } catch (err) {
+                alert('Network error saving hostel');
+            }
+        }
+
+        async function deleteHostel(id, name) {
+            if (!confirm(`Are you sure you want to delete hostel '${name}'?`)) return;
+            try {
+                const params = new URLSearchParams();
+                params.append('action', 'delete');
+                params.append('id', id);
+
+                const res = await fetch('api/admin/hostels', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    alert('Hostel deleted');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to delete hostel');
+                }
+            } catch (err) {
+                alert('Network error deleting hostel');
+            }
+        }
+
+        // Dispatch / Assign Modal
+        function populateDispatchStaffSelect() {
+            const sel = document.getElementById('dispatchStaffSelect');
+            if (!sel) return;
+            sel.innerHTML = '<option value="">-- Choose Field Technician --</option>' +
+                staffList.map(s => `
+                    <option value="${s.userId}">
+                        👤 ${escapeHtml(s.fullName || s.username)} (${escapeHtml(s.specialty || 'General')}) &bull; ${s.activeTasks || 0} tasks
+                    </option>
+                `).join('');
+        }
+
+        function openDispatchModal(ticketId, ticketNum) {
+            document.getElementById('dispatchIssueId').value = ticketId;
+            document.getElementById('dispatchTicketNum').textContent = ticketNum || ('#' + ticketId);
+            openModal('modalAssignStaff');
+        }
+
+        async function submitDispatch(e) {
+            e.preventDefault();
+            const ticketId = document.getElementById('dispatchIssueId').value;
+            const staffId = document.getElementById('dispatchStaffSelect').value;
+
+            if (!staffId) {
+                alert('Please choose a technician from the roster');
+                return;
+            }
+
+            try {
+                const params = new URLSearchParams();
+                params.append('issueId', ticketId);
+                params.append('staffId', staffId);
+
+                const res = await fetch('api/admin/assign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    closeModal('modalAssignStaff');
+                    alert('Technician successfully dispatched');
+                    await loadAllAdminData();
+                } else {
+                    alert(data.error || 'Failed to dispatch technician');
+                }
+            } catch (err) {
+                alert('Network error dispatching technician');
+            }
+        }
+
+        // View Details Modal
+        function openTicketDetails(issueId) {
+            const issue = complaintsList.find(x => x.id === issueId);
+            if (!issue) return;
+
+            document.getElementById('detailModalTitle').textContent = `Grievance Details — ${issue.complaintNumber || '#' + issue.id}`;
+            const body = document.getElementById('detailModalBody');
+
+            let studentInfo = `👤 ${escapeHtml(issue.student || 'Student')}`;
+            if (issue.isProtected) {
+                if (currentAdmin && currentAdmin.canViewProtectedIdentity) {
+                    studentInfo = `🔓 <strong style="color: #34d399;">${escapeHtml(issue.student)}</strong> <span style="font-size: 0.75rem; color: #a7f3d0;">(Decrypted via VIEW_PROTECTED_IDENTITY)</span>`;
+                } else {
+                    studentInfo = `🔒 <strong style="color: #fbbf24;">PROTECTED COMPLAINANT</strong> <span style="font-size: 0.75rem; color: var(--cnx-text-muted);">(Whistleblower Protected)</span>`;
+                }
+            }
+
+            body.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Status</span>
+                        <div style="margin-top: 0.25rem;">${renderStatusBadge(issue.status)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Priority</span>
+                        <div style="margin-top: 0.25rem;">${renderPriorityBadge(issue.priority)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Category</span>
+                        <div style="color: #fff; font-weight: 600; margin-top: 0.25rem;">🏷️ ${escapeHtml(issue.category)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Location</span>
+                        <div style="color: #fff; font-weight: 600; margin-top: 0.25rem;">📍 ${escapeHtml(issue.location)}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Complainant</span>
+                        <div style="margin-top: 0.25rem;">${studentInfo}</div>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Assigned Staff</span>
+                        <div style="color: #cbd5e1; font-weight: 600; margin-top: 0.25rem;">${issue.staff ? '🔧 ' + escapeHtml(issue.staff) : '⚡ Unassigned'}</div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Title</span>
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-top: 0.25rem;">${escapeHtml(issue.title)}</div>
+                </div>
+                <div style="margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.75rem; color: var(--cnx-text-muted); font-weight: 700;">Issue Description</span>
+                    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--cnx-border-subtle); padding: 0.85rem 1rem; border-radius: 8px; color: #cbd5e1; font-size: 0.875rem; line-height: 1.5; margin-top: 0.35rem; white-space: pre-wrap;">${escapeHtml(issue.description)}</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--cnx-text-muted);">
+                    <div>Protected Channel: ${issue.isProtected ? '🛡️ YES (Confidential)' : 'NO (Standard)'}</div>
+                    <div>Logged: ${formatDate(issue.createdAt)}</div>
+                </div>
+            `;
+            openModal('modalViewDetails');
+        }
+
+        // Badge Rendering Utilities
+        function renderStatusBadge(status) {
+            const s = (status || 'SUBMITTED').toUpperCase();
+            if (s === 'RESOLVED' || s === 'CLOSED') {
+                return `<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;"><span class="cnx-badge-dot" style="background: #34d399;"></span>${s}</span>`;
+            } else if (s === 'IN_PROGRESS' || s === 'ASSIGNED') {
+                return `<span class="cnx-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;"><span class="cnx-badge-dot" style="background: #38bdf8;"></span>${s}</span>`;
+            } else if (s === 'ESCALATED') {
+                return `<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;"><span class="cnx-badge-dot" style="background: #f87171;"></span>${s}</span>`;
+            } else if (s === 'REOPENED') {
+                return `<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;"><span class="cnx-badge-dot" style="background: #fbbf24;"></span>${s}</span>`;
+            } else {
+                return `<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;"><span class="cnx-badge-dot" style="background: #fbbf24;"></span>SUBMITTED</span>`;
+            }
+        }
+
+        function renderPriorityBadge(priority) {
+            const p = (priority || 'MEDIUM').toUpperCase();
+            if (p === 'CRITICAL') {
+                return `<span class="cnx-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35);">🚨 CRITICAL</span>`;
+            } else if (p === 'HIGH') {
+                return `<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35);">⚠️ HIGH</span>`;
+            } else if (p === 'LOW') {
+                return `<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">🟢 LOW</span>`;
+            } else {
+                return `<span class="cnx-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">🔵 MEDIUM</span>`;
+            }
+        }
+
+        function renderRoleBadge(role) {
+            const r = (role || 'STUDENT').toUpperCase();
+            if (r === 'ADMIN') return `<span class="cnx-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">ADMIN</span>`;
+            if (r === 'STAFF' || r === 'MAINTENANCE_STAFF') return `<span class="cnx-badge" style="background: rgba(0, 201, 255, 0.15); color: #38bdf8;">STAFF</span>`;
+            if (r === 'WARDEN' || r === 'DEPUTY_WARDEN') return `<span class="cnx-badge" style="background: rgba(139, 92, 246, 0.2); color: #a78bfa;">WARDEN</span>`;
+            if (r === 'HIGHER_AUTHORITY') return `<span class="cnx-badge" style="background: rgba(236, 72, 153, 0.2); color: #f472b6;">HIGHER AUTH</span>`;
+            return `<span class="cnx-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">STUDENT</span>`;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const cleaned = dateStr.split('.')[0].replace(' ', 'T');
+                const d = new Date(cleaned);
+                if (isNaN(d.getTime())) return dateStr;
+                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+    <script src="js/notifications.js"></script>
+</body>
+</html>

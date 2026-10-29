@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusNexa — Report. Track. Resolve.</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+</head>
+<body>
+    <div class="auth-split-layout">
+        <!-- Left Hero Showcase: CampusNexa Brand & 4-Pillar Philosophy -->
+        <div class="auth-hero-panel">
+            <div>
+                <div class="hero-brand-top">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Logo" class="hero-brand-logo">
+                    <div>
+                        <h1>CampusNexa</h1>
+                        <p class="hero-tagline">Report. Track. Resolve.</p>
+                    </div>
+                </div>
+
+                <div class="hero-headline-wrap">
+                    <h2>Smarter Facilities. Safer Spaces. Connected Campus.</h2>
+                    <p>
+                        An intelligent, real-time campus maintenance platform bridging students, administrators, and facilities engineers into one synchronized operations workflow.
+                    </p>
+                </div>
+
+                <!-- The 4 Platform Philosophy Pillars -->
+                <div class="philosophy-grid">
+                    <!-- Pillar 1: Report Issues -->
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">📄</div>
+                        <h3>Report Issues</h3>
+                        <p>Frictionless repair ticket logging with automated priority categorization and zero paperwork.</p>
+                    </div>
+
+                    <!-- Pillar 2: Track Progress -->
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">📍</div>
+                        <h3>Track Progress</h3>
+                        <p>End-to-end lifecycle visibility from initial triage to technician dispatch and active repairs.</p>
+                    </div>
+
+                    <!-- Pillar 3: Ensure Safety -->
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">🛡️</div>
+                        <h3>Ensure Safety</h3>
+                        <p>Rapid mitigation of electrical, plumbing, and structural hazards to safeguard student life.</p>
+                    </div>
+
+                    <!-- Pillar 4: Stronger Campus -->
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap">👥</div>
+                        <h3>Stronger Campus</h3>
+                        <p>Shared civic stewardship empowering our university community through transparent collaboration.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-footer-note">
+                <span>🔒 Role-Based Access Control (RBAC) &bull; PreparedStatement SQL Defense &bull; Live MySQL Persistence</span>
+            </div>
+        </div>
+
+        <!-- Right Login Form Panel -->
+        <div class="auth-form-panel">
+            <div class="auth-card" id="authCardBox">
+                <!-- Role Selector Segmented Controller -->
+                <div class="role-tab-group" id="roleTabGroup" style="overflow-x: auto; flex-wrap: wrap;">
+                    <button type="button" class="role-tab-btn active" id="tabStudent" onclick="switchRole('STUDENT')">🎓 Student</button>
+                    <button type="button" class="role-tab-btn" id="tabStaff" onclick="switchRole('STAFF')">🔧 Staff</button>
+                    <button type="button" class="role-tab-btn" id="tabWarden" onclick="switchRole('WARDEN')">🏛️ Warden</button>
+                    <button type="button" class="role-tab-btn" id="tabHigherAuth" onclick="switchRole('HIGHER_AUTHORITY')">⚖️ Higher Auth</button>
+                    <button type="button" class="role-tab-btn" id="tabAdmin" onclick="switchRole('ADMIN')">⚙️ Admin</button>
+                </div>
+
+                <div class="auth-header">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="mobile-logo" style="display:block;">
+                    <div class="portal-role-badge badge-student" id="portalRoleBadge">🎓 Student Portal</div>
+                    <h2 id="loginHeaderTitle">Student Sign In</h2>
+                    <p id="loginHeaderDesc">Enter your institutional credentials to access your portal</p>
+                </div>
+
+                <!-- Error and Informational Messages -->
+                <div id="alertBox" class="alert hidden" role="alert"></div>
+
+                <!-- Instant 1-Click Demo Login -->
+                <a href="demo-login?role=STUDENT" class="btn-demo-instant btn-demo-student" id="unifiedDemoBtn">
+                    ⚡ 1-Click Student Demo Login &rarr;
+                </a>
+
+                <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: #64748b; font-size: 0.75rem;">
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                    <span style="padding: 0 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Or Sign In Manually</span>
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                </div>
+
+                <form action="login" method="POST" class="auth-form" id="loginForm">
+                    <input type="hidden" name="expectedRole" id="expectedRoleInput" value="STUDENT">
+                    <input type="hidden" name="sourcePage" id="sourcePageInput" value="login.html">
+
+                    <div class="form-group">
+                        <label for="username" id="usernameLabel">Student Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username" placeholder="e.g. student1, student2">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="loginBtn" style="padding: 0.9rem; font-size: 1rem; width: 100%;">
+                        Sign In to Student Portal &rarr;
+                    </button>
+                </form>
+
+                <div class="demo-accounts">
+                    <p style="font-weight: 600; margin-bottom: 0.65rem; color: #cbd5e1; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;" id="demoHeaderTitle">
+                        Student Demo Credentials (Click to Instant Login):
+                    </p>
+                    <div id="demoChipsContainer" style="display: flex; flex-direction: column; gap: 0.45rem;">
+                        <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student1'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span><code>student1</code> (Muskan Sah)</span>
+                                <span class="chip-role student">Student</span>
+                            </div>
+                            <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                        </div>
+                        <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student2'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span><code>student2</code> / <code>student123</code></span>
+                                <span class="chip-role student">Student</span>
+                            </div>
+                            <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.825rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <div id="dedicatedLinkBox">
+                        <a href="student-login.html" id="dedicatedPortalLink" style="color: #38bdf8; text-decoration: none; font-weight: 600;">
+                            Open Dedicated Student Login Page &rarr;
+                        </a>
+                    </div>
+                    <div><a href="index.html" style="color: #64748b; text-decoration: none;">&larr; Campus Gateway Selector</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const roleData = {
+            STUDENT: {
+                tabId: 'tabStudent',
+                activeClass: 'active',
+                badgeText: '🎓 Student Portal',
+                badgeClass: 'portal-role-badge badge-student',
+                title: 'Student Sign In',
+                desc: 'Submit maintenance requests and track campus repairs',
+                label: 'Student Username',
+                placeholder: 'e.g. student1, student2',
+                btnText: 'Sign In to Student Portal →',
+                btnClass: 'btn btn-primary',
+                demoBtnUrl: 'demo-login?role=STUDENT',
+                demoBtnText: '⚡ 1-Click Student Demo Login →',
+                demoBtnClass: 'btn-demo-instant btn-demo-student',
+                cardBorder: '1px solid rgba(0, 201, 255, 0.25)',
+                dedicatedUrl: 'student-login.html',
+                dedicatedText: 'Open Dedicated Student Login Page →',
+                dedicatedColor: '#38bdf8',
+                demoTitle: 'Student Demo Credentials (Click to Instant Login):',
+                demoHtml: `
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student1'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>student1</code> (Muskan Sah)</span>
+                            <span class="chip-role student">Student</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                    </div>
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STUDENT&user=student2'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>student2</code> / <code>student123</code></span>
+                            <span class="chip-role student">Student</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(0, 201, 255, 0.2); color: #38bdf8;">⚡ Login</span>
+                    </div>
+                `
+            },
+            STAFF: {
+                tabId: 'tabStaff',
+                activeClass: 'active tab-staff',
+                badgeText: '🔧 Staff Technician Portal',
+                badgeClass: 'portal-role-badge badge-staff',
+                title: 'Technician Sign In',
+                desc: 'Access assigned work orders, inspection queues, and active repairs',
+                label: 'Technician Username',
+                placeholder: 'e.g. technician1',
+                btnText: 'Sign In to Work Queue →',
+                btnClass: 'btn btn-primary btn-staff-submit',
+                demoBtnUrl: 'demo-login?role=STAFF',
+                demoBtnText: '⚡ 1-Click Staff Technician Demo Login →',
+                demoBtnClass: 'btn-demo-instant btn-demo-staff',
+                cardBorder: '1px solid rgba(16, 185, 129, 0.35)',
+                dedicatedUrl: 'staff-login.html',
+                dedicatedText: 'Open Dedicated Staff Technician Login →',
+                dedicatedColor: '#34d399',
+                demoTitle: 'Staff Technician Demo Credentials (Click to Instant Login):',
+                demoHtml: `
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STAFF&user=technician1'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>technician1</code> / <code>tech123</code></span>
+                            <span class="chip-role staff">Staff</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">⚡ Login</span>
+                    </div>
+                `
+            },
+            WARDEN: {
+                tabId: 'tabWarden',
+                activeClass: 'active tab-warden',
+                badgeText: '🏛️ Warden & Local Authority',
+                badgeClass: 'portal-role-badge badge-warden',
+                title: 'Warden / Authority Sign In',
+                desc: 'Hostel and department facilities triage, technician assignment & communications',
+                label: 'Authority Username',
+                placeholder: 'e.g. warden1',
+                btnText: 'Sign In to Authority Portal →',
+                btnClass: 'btn btn-primary',
+                demoBtnUrl: 'demo-login?role=WARDEN',
+                demoBtnText: '⚡ 1-Click Warden Demo Login →',
+                demoBtnClass: 'btn-demo-instant btn-demo-warden',
+                cardBorder: '1px solid rgba(139, 92, 246, 0.35)',
+                dedicatedUrl: 'login.html?role=WARDEN',
+                dedicatedText: 'Warden & Hostel Administration Portal',
+                dedicatedColor: '#c084fc',
+                demoTitle: 'Warden Demo Credentials (Click to Instant Login):',
+                demoHtml: `
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=WARDEN&user=warden1'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>warden1</code> / <code>warden123</code></span>
+                            <span class="chip-role" style="background: rgba(139, 92, 246, 0.2); color: #c084fc; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">Warden</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(139, 92, 246, 0.2); color: #c084fc;">⚡ Login</span>
+                    </div>
+                `
+            },
+            HIGHER_AUTHORITY: {
+                tabId: 'tabHigherAuth',
+                activeClass: 'active tab-higher-auth',
+                badgeText: '⚖️ Higher Authority & COE',
+                badgeClass: 'portal-role-badge badge-higher-auth',
+                title: 'Higher Authority / COE Sign In',
+                desc: 'Review campus-wide escalations, protected complaints, and recurring trends',
+                label: 'COE / Institutional Username',
+                placeholder: 'e.g. coe_admin',
+                btnText: 'Sign In to Higher Authority Console →',
+                btnClass: 'btn btn-primary',
+                demoBtnUrl: 'demo-login?role=HIGHER_AUTHORITY',
+                demoBtnText: '⚡ 1-Click Higher Authority Demo Login →',
+                demoBtnClass: 'btn-demo-instant btn-demo-higher-auth',
+                cardBorder: '1px solid rgba(244, 63, 94, 0.35)',
+                dedicatedUrl: 'login.html?role=HIGHER_AUTHORITY',
+                dedicatedText: 'Higher Authority & Institutional Oversight',
+                dedicatedColor: '#fb7185',
+                demoTitle: 'Higher Authority Demo Credentials (Click to Instant Login):',
+                demoHtml: `
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=HIGHER_AUTHORITY&user=coe_admin'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>coe_admin</code> / <code>coe123</code></span>
+                            <span class="chip-role" style="background: rgba(244, 63, 94, 0.2); color: #fb7185; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">COE</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(244, 63, 94, 0.2); color: #fb7185;">⚡ Login</span>
+                    </div>
+                `
+            },
+            ADMIN: {
+                tabId: 'tabAdmin',
+                activeClass: 'active tab-admin',
+                badgeText: '⚙️ Administrator Console',
+                badgeClass: 'portal-role-badge badge-admin',
+                title: 'Administrator Sign In',
+                desc: 'Facilities governance, category management, and audit logs',
+                label: 'Administrator Username',
+                placeholder: 'e.g. admin',
+                btnText: 'Sign In to Admin Console →',
+                btnClass: 'btn btn-primary btn-admin-submit',
+                demoBtnUrl: 'demo-login?role=ADMIN',
+                demoBtnText: '⚡ 1-Click Administrator Demo Login →',
+                demoBtnClass: 'btn-demo-instant btn-demo-admin',
+                cardBorder: '1px solid rgba(245, 158, 11, 0.35)',
+                dedicatedUrl: 'admin-login.html',
+                dedicatedText: 'Open Dedicated Admin Console Login →',
+                dedicatedColor: '#fbbf24',
+                demoTitle: 'Administrator Demo Credentials (Click to Instant Login):',
+                demoHtml: `
+                    <div class="demo-chip-action" onclick="window.location.href='demo-login?role=ADMIN&user=admin'">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span><code>admin</code> / <code>admin123</code></span>
+                            <span class="chip-role admin">Admin</span>
+                        </div>
+                        <span class="chip-quick-btn" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">⚡ Login</span>
+                    </div>
+                `
+            }
+        };
+
+        let currentRole = 'STUDENT';
+
+        function switchRole(roleKey) {
+            const config = roleData[roleKey];
+            if (!config) return;
+            currentRole = roleKey;
+
+            // Update Tab states
+            ['tabStudent', 'tabAdmin', 'tabStaff'].forEach(id => {
+                const btn = document.getElementById(id);
+                btn.className = 'role-tab-btn';
+            });
+            document.getElementById(config.tabId).className = 'role-tab-btn ' + config.activeClass;
+
+            // Update Hidden input
+            document.getElementById('expectedRoleInput').value = roleKey;
+
+            // Update Card elements
+            document.getElementById('authCardBox').style.border = config.cardBorder;
+            document.getElementById('portalRoleBadge').className = config.badgeClass;
+            document.getElementById('portalRoleBadge').textContent = config.badgeText;
+            document.getElementById('loginHeaderTitle').textContent = config.title;
+            document.getElementById('loginHeaderDesc').textContent = config.desc;
+            document.getElementById('usernameLabel').textContent = config.label;
+            document.getElementById('username').placeholder = config.placeholder;
+            
+            const submitBtn = document.getElementById('loginBtn');
+            submitBtn.textContent = config.btnText;
+            submitBtn.className = config.btnClass;
+
+            // Update Demo Button
+            const demoBtn = document.getElementById('unifiedDemoBtn');
+            if (demoBtn) {
+                demoBtn.href = config.demoBtnUrl;
+                demoBtn.textContent = config.demoBtnText;
+                demoBtn.className = config.demoBtnClass;
+            }
+
+            document.getElementById('demoHeaderTitle').textContent = config.demoTitle;
+            document.getElementById('demoChipsContainer').innerHTML = config.demoHtml;
+
+            const dedicatedLink = document.getElementById('dedicatedPortalLink');
+            dedicatedLink.href = config.dedicatedUrl;
+            dedicatedLink.textContent = config.dedicatedText;
+            dedicatedLink.style.color = config.dedicatedColor;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const message = urlParams.get('message');
+            const roleParam = urlParams.get('role');
+            const alertBox = document.getElementById('alertBox');
+
+            if (roleParam && roleData[roleParam.toUpperCase()]) {
+                switchRole(roleParam.toUpperCase());
+            }
+
+            if (error) {
+                alertBox.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-error';
+                alertBox.classList.remove('hidden');
+            } else if (message) {
+                alertBox.textContent = decodeURIComponent(message.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-success';
+                alertBox.classList.remove('hidden');
+            }
+        });
+
+        function fillLogin(u, p) {
+            document.getElementById('username').value = u;
+            document.getElementById('password').value = p;
+        }
+    </script>
+    <script src="js/app.js"></script>
+</body>
+</html>

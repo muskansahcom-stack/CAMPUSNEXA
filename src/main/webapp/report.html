@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+</head>
+<body class="portal-body">
+
+    <!-- Mobile Top Navigation Bar -->
+    <header class="mobile-topbar">
+        <button id="sidebarToggle" class="menu-toggle-btn" aria-label="Toggle Navigation">☰</button>
+        <div class="mobile-brand-wrap">
+            <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="mobile-logo-img">
+            <span class="mobile-brand">CampusNexa</span>
+        </div>
+        <a href="logout" class="mobile-logout">Logout</a>
+    </header>
+
+    <div class="portal-layout">
+        <!-- Sidebar Navigation Area -->
+        <aside class="portal-sidebar" id="portalSidebar">
+            <div class="sidebar-brand">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Logo" class="brand-img-logo">
+                <div class="brand-text-wrap">
+                    <h2>CampusNexa</h2>
+                    <span class="brand-tagline">Report. Track. Resolve.</span>
+                </div>
+            </div>
+
+            <!-- Current Logged-In User Information -->
+            <div class="user-profile-widget">
+                <div class="avatar-circle" id="userInitial">S</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebarUsername">Loading...</span>
+                    <span class="user-role" id="sidebarRole">STUDENT PORTAL</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu" id="sidebarMenu">
+                <div class="sidebar-group-title">OVERVIEW</div>
+                <a href="student-dashboard.html#overview" class="menu-item">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-label">Dashboard</span>
+                </a>
+
+                <div class="sidebar-group-title">COMPLAINTS</div>
+                <a href="report.html" class="menu-item active">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-label">Report Issue</span>
+                </a>
+                <a href="student-dashboard.html#my-complaints" class="menu-item">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-label">My Complaints</span>
+                </a>
+                <a href="student-dashboard.html#track-complaint" class="menu-item">
+                    <span class="menu-icon">🔍</span>
+                    <span class="menu-label">Track Complaint</span>
+                </a>
+                <a href="student-dashboard.html#complaint-history" class="menu-item">
+                    <span class="menu-icon">📜</span>
+                    <span class="menu-label">Complaint History</span>
+                </a>
+
+                <div class="sidebar-group-title">SPECIAL</div>
+                <a href="student-dashboard.html#protected-complaint" class="menu-item">
+                    <span class="menu-icon">🔒</span>
+                    <span class="menu-label">Protected Complaint</span>
+                </a>
+                <a href="student-dashboard.html#escalate" class="menu-item">
+                    <span class="menu-icon">⚠️</span>
+                    <span class="menu-label">Escalate Complaint</span>
+                </a>
+
+                <div class="sidebar-group-title">ACCOUNT</div>
+                <a href="student-dashboard.html#notifications" class="menu-item">
+                    <span class="menu-icon">🔔</span>
+                    <span class="menu-label">Notifications</span>
+                </a>
+                <a href="logout" class="menu-item logout-item">
+                    <span class="menu-icon">🚪</span>
+                    <span class="menu-label">Logout</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>CampusNexa v2.0 Enterprise</p>
+                <small>Connected to MySQL maintenance_db</small>
+            </div>
+        </aside>
+
+        <div class="cnx-main-wrapper">
+            <!-- SaaS Executive Topbar -->
+            <header class="cnx-topbar">
+                <div class="cnx-topbar-left">
+                    <button class="cnx-menu-toggle" id="desktopMenuToggle" onclick="document.getElementById('portalSidebar').classList.toggle('open')" aria-label="Toggle navigation">☰</button>
+                    <div class="cnx-breadcrumbs">
+                        <span>Student Portal</span>
+                        <span>/</span>
+                        <span class="cnx-breadcrumb-current">Report Issue</span>
+                    </div>
+                </div>
+
+                <div class="cnx-topbar-right">
+                    <a href="student-dashboard.html#my-complaints" class="cnx-btn cnx-btn-outline cnx-btn-sm">
+                        View My Complaints
+                    </a>
+                    <div class="cnx-user-pill">
+                        <div class="cnx-avatar" id="topbarInitial">S</div>
+                        <div class="cnx-user-info-wrap">
+                            <span class="cnx-user-name" id="topbarUsername">Student</span>
+                            <span class="cnx-user-role-label">Verified</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="portal-main">
+                <div id="statusAlert" class="alert hidden" role="alert"></div>
+
+                <!-- Form Section -->
+                <div id="reportingContainer">
+                    <div class="section-heading">
+                        <h2>Report Maintenance Issue</h2>
+                        <p>Submit formal service tickets for campus buildings, classrooms, residential hostels, or shared facilities.</p>
+                    </div>
+
+                    <div class="card form-card" style="max-width: 900px; margin: 0 auto 2rem auto;">
+                        <form id="standaloneReportForm" class="issue-form" enctype="multipart/form-data">
+                            <!-- Field 1 & 2: Category and Sub-category -->
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="categorySelect">Category *</label>
+                                    <select id="categorySelect" name="categoryId" required onchange="handleCategoryChange()">
+                                        <option value="" disabled selected>Select Category...</option>
+                                        <option value="1">🏢 Buildings & Rooms</option>
+                                        <option value="2">⚡ Electrical</option>
+                                        <option value="3">🚰 Plumbing & Water</option>
+                                        <option value="4">🧹 Cleaning & Sanitation</option>
+                                        <option value="5">🍲 Mess & Food Quality</option>
+                                        <option value="6">🪑 Furniture & Infrastructure</option>
+                                        <option value="7">❄️ AC & Ventilation</option>
+                                        <option value="8">💻 IT & Network</option>
+                                        <option value="9">🛡️ Security & Safety</option>
+                                        <option value="10">🌳 Grounds & Outdoor</option>
+                                        <option value="11">📌 Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="subCategorySelect">Sub-category *</label>
+                                    <select id="subCategorySelect" name="subCategory" required>
+                                        <option value="General Maintenance">General Maintenance</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Field 3, 4, 5: Building/Hostel, Location, Room Number -->
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="locationTypeSelect">Location Classification *</label>
+                                    <select id="locationTypeSelect" name="locationType" required onchange="handleLocationTypeChange()">
+                                        <option value="HOSTEL" selected>Hostel / Residence Block</option>
+                                        <option value="FACILITY">Campus Facility (Library, Mess, Sports, Labs)</option>
+                                        <option value="ACADEMIC">Academic Block / Department</option>
+                                        <option value="OUTDOOR">Grounds & Outdoors</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="flex: 1;" id="hostelGroup">
+                                    <label for="hostelSelect">Building / Hostel *</label>
+                                    <select id="hostelSelect" name="hostelId">
+                                        <option value="">Select Hostel Block...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group hidden" style="flex: 1;" id="facilityGroup">
+                                    <label for="facilitySelect">Campus Facility *</label>
+                                    <select id="facilitySelect" name="facilityId">
+                                        <option value="">Select Campus Facility...</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="flex: 1;" id="customBuildingGroup">
+                                    <label for="buildingInput">Building Name</label>
+                                    <input type="text" id="buildingInput" name="building" placeholder="e.g. Science Block A, Lecture Hall Complex">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="locationInput">Specific Location / Wing *</label>
+                                    <input type="text" id="locationInput" name="location" required placeholder="e.g. 2nd Floor East Wing, Dining Hall Counter 2">
+                                </div>
+
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="roomNumberInput">Room Number *</label>
+                                    <input type="text" id="roomNumberInput" name="roomNumber" required placeholder="e.g. Room 204, Lab 302, Common Area">
+                                </div>
+                            </div>
+
+                            <!-- Field 6: Title -->
+                            <div class="form-group">
+                                <label for="titleInput">Issue Title *</label>
+                                <input type="text" id="titleInput" name="title" required minlength="3" maxlength="200"
+                                       placeholder="e.g. Ceiling fan not spinning and making buzzing sound, Water leakage in washroom pipe">
+                                <small style="color: #94a3b8; font-size: 0.78rem;">Provide a concise summary between 3 and 200 characters</small>
+                            </div>
+
+                            <!-- Field 7: Description -->
+                            <div class="form-group">
+                                <label for="descriptionInput">Detailed Description *</label>
+                                <textarea id="descriptionInput" name="description" rows="5" required minlength="5" maxlength="4000"
+                                          placeholder="Describe the issue in detail: when it began, exact appliance or equipment involved, observed hazards, or recurring defects..."></textarea>
+                            </div>
+
+                            <!-- Field 8 & 9: Priority and Evidence/Photograph -->
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="prioritySelect">Priority Level *</label>
+                                    <select id="prioritySelect" name="priority" required>
+                                        <option value="LOW">Low (Cosmetic, non-disruptive — Target SLA: 48h)</option>
+                                        <option value="MEDIUM" selected>Medium (Standard defect — Target SLA: 24h)</option>
+                                        <option value="HIGH">High (Disrupts studying or sleeping — Target SLA: 12h)</option>
+                                        <option value="CRITICAL">Critical (Immediate hazard, flood, electrical sparking — Target SLA: 4h)</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" style="flex: 1;">
+                                    <label for="evidenceInput">Evidence / Photograph (Optional)</label>
+                                    <input type="file" id="evidenceInput" name="evidence" accept=".jpg,.jpeg,.png,.webp,.pdf" onchange="previewFile(this)" style="padding: 0.45rem; background: rgba(0,0,0,0.25);">
+                                    <small style="color: #94a3b8; font-size: 0.75rem;">Supported: JPG, PNG, WEBP, PDF (Max 5MB)</small>
+                                    <div id="filePreview" style="margin-top: 0.5rem; display: none; font-size: 0.85rem; color: #38bdf8;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Protected Complaint Toggle -->
+                            <div style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.25rem;">
+                                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; color: #f3e8ff;">
+                                    <input type="checkbox" id="isProtectedCheck" name="isProtected" value="true" style="margin-top: 0.25rem;">
+                                    <div>
+                                        <strong style="color: #c084fc;">Submit as Protected / Confidential Complaint</strong>
+                                        <p style="font-size: 0.8rem; color: #94a3b8; margin: 0.2rem 0 0 0;">
+                                            Your identity will be masked as <strong>🔒 PROTECTED_COMPLAINANT</strong> for local technicians and hostel wardens. Only Higher Authority can view credentials.
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-actions" style="display: flex; gap: 0.75rem;">
+                                <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                    Submit Maintenance Request &rarr;
+                                </button>
+                                <a href="student-dashboard.html" class="btn btn-outline">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Success Confirmation Card (After Submission) -->
+                <div id="successContainer" class="hidden" style="max-width: 750px; margin: 2rem auto;">
+                    <div class="card" style="text-align: center; padding: 3rem 2rem; border-color: rgba(16, 185, 129, 0.4);">
+                        <div style="font-size: 3.5rem; margin-bottom: 1rem;">✅</div>
+                        <h2 style="color: #34d399; margin: 0 0 0.5rem 0;">Complaint submitted successfully.</h2>
+                        <p style="color: #94a3b8; font-size: 1rem; margin: 0 0 1.5rem 0;">
+                            Your maintenance request has been recorded in the central MySQL database and queued for technician triage.
+                        </p>
+
+                        <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; display: inline-block; min-width: 320px;">
+                            <small style="color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Generated Complaint ID</small>
+                            <div id="confirmedComplaintNumber" style="font-size: 2rem; font-weight: 800; color: #38bdf8; margin: 0.5rem 0; letter-spacing: 0.5px;">CNX-2026-000000</div>
+                            <div style="display: flex; justify-content: center; gap: 0.5rem; align-items: center;">
+                                <span class="status-pill status-submitted">SUBMITTED</span>
+                                <span id="confirmedPriorityBadge" class="badge badge-medium">MEDIUM</span>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                            <a id="btnTrackSubmitted" href="#" class="btn btn-primary">🔍 Track This Complaint</a>
+                            <button type="button" class="btn btn-outline" onclick="resetFormForNewReport()">+ Report Another Issue</button>
+                            <a href="student-dashboard.html" class="btn btn-outline">Back to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const subCategoryMap = {
+            1: ["Door/Lock", "Window/Glass", "Flooring/Tiles", "Wall/Paint/Plaster", "Ceiling Leak", "Other"],
+            2: ["Ceiling Fan", "Tube Light/Bulb", "Switchboard/Socket", "Circuit Breaker", "Power Outage", "Other"],
+            3: ["Water Tap Leak", "Drain Blockage", "Washbasin Repair", "Shower Repair", "Toilet Flush", "No Water Supply"],
+            4: ["Corridor Cleaning", "Washroom Sanitization", "Trash Bin Clearance", "Stairwell Cleaning", "Pest Control"],
+            5: ["Food Quality / Stale Food", "Hygiene & Utensils", "Drinking Water Cooler", "Mess Timing / Service", "Pest in Food Area"],
+            6: ["Broken Desk/Chair", "Bed Frame / Mattress", "Cupboard / Wardrobe", "Study Table", "Blackboard/Whiteboard"],
+            7: ["AC Not Cooling", "AC Water Leakage", "Exhaust Fan Defect", "Remote Control Issue", "Ventilation Duct"],
+            8: ["WiFi Access Point Down", "Slow Internet Speed", "LAN Port Fault", "Authentication/Login Issue", "Lab PC Network"],
+            9: ["CCTV Camera Fault", "Hostel Security Gate", "Fire Extinguisher", "Emergency Exit Blockage", "Night Lighting"],
+            10: ["Overgrown Grass", "Tree Branch Trimming", "Walkway Repair", "Drain Overflow", "Outdoor Sports Court"],
+            11: ["Noise Disturbance", "Transportation / Shuttle", "Drinking Water Cooler Defect", "General Campus Grievance"]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSession();
+            loadReferenceData();
+            initFormSubmission();
+        });
+
+        function initSession() {
+            fetch('api/session')
+                .then(r => {
+                    if (!r.ok) {
+                        window.location.href = 'login.html?error=Please+log+in+first';
+                        return null;
+                    }
+                    return r.json();
+                })
+                .then(user => {
+                    if (!user || !user.authenticated) return;
+                    document.getElementById('sidebarUsername').textContent = user.username;
+                    document.getElementById('userInitial').textContent = user.username.charAt(0).toUpperCase();
+                    document.getElementById('topbarUsername').textContent = user.fullName || user.username;
+                    document.getElementById('topbarInitial').textContent = user.username.charAt(0).toUpperCase();
+                });
+        }
+
+        function loadReferenceData() {
+            fetch('api/hostels')
+                .then(r => r.json())
+                .then(hostels => {
+                    const sel = document.getElementById('hostelSelect');
+                    (hostels || []).forEach(h => {
+                        const opt = document.createElement('option');
+                        opt.value = h.id;
+                        opt.textContent = `${h.name} (${h.type})`;
+                        sel.appendChild(opt);
+                    });
+                })
+                .catch(console.error);
+
+            fetch('api/facilities')
+                .then(r => r.json())
+                .then(facs => {
+                    const sel = document.getElementById('facilitySelect');
+                    (facs || []).forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f.id;
+                        opt.textContent = `${f.name} — ${f.locationDetails}`;
+                        sel.appendChild(opt);
+                    });
+                })
+                .catch(console.error);
+        }
+
+        function handleCategoryChange() {
+            const catId = parseInt(document.getElementById('categorySelect').value);
+            const subSel = document.getElementById('subCategorySelect');
+            subSel.innerHTML = '';
+            const list = subCategoryMap[catId] || ["General Maintenance", "Other"];
+            list.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item;
+                subSel.appendChild(opt);
+            });
+        }
+
+        function handleLocationTypeChange() {
+            const type = document.getElementById('locationTypeSelect').value;
+            const hostelGroup = document.getElementById('hostelGroup');
+            const facilityGroup = document.getElementById('facilityGroup');
+            const customBuildingGroup = document.getElementById('customBuildingGroup');
+
+            if (type === 'HOSTEL') {
+                hostelGroup.classList.remove('hidden');
+                facilityGroup.classList.add('hidden');
+            } else if (type === 'FACILITY') {
+                hostelGroup.classList.add('hidden');
+                facilityGroup.classList.remove('hidden');
+            } else {
+                hostelGroup.classList.add('hidden');
+                facilityGroup.classList.add('hidden');
+            }
+        }
+
+        function previewFile(input) {
+            const preview = document.getElementById('filePreview');
+            if (input.files && input.files[0]) {
+                const f = input.files[0];
+                if (f.size > 5 * 1024 * 1024) {
+                    alert('File size exceeds the 5MB maximum limit.');
+                    input.value = '';
+                    preview.style.display = 'none';
+                    return;
+                }
+                preview.textContent = `📎 Selected: ${f.name} (${(f.size / 1024).toFixed(1)} KB)`;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        function initFormSubmission() {
+            const form = document.getElementById('standaloneReportForm');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const btn = document.getElementById('btnSubmit');
+                btn.disabled = true;
+                btn.textContent = 'Submitting to MySQL...';
+
+                const formData = new FormData(form);
+
+                fetch('report-issue', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                })
+                .then(r => r.json())
+                .then(res => {
+                    btn.disabled = false;
+                    btn.textContent = 'Submit Maintenance Request →';
+
+                    if (res && res.success) {
+                        showSuccessCard(res.complaintNumber, form.priority.value);
+                    } else {
+                        showAlert(res.message || 'Failed to submit complaint.', 'error');
+                    }
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    btn.textContent = 'Submit Maintenance Request →';
+                    showAlert('Server connection error. Please try again.', 'error');
+                });
+            });
+        }
+
+        function showSuccessCard(complaintNumber, priority) {
+            document.getElementById('reportingContainer').classList.add('hidden');
+            document.getElementById('successContainer').classList.remove('hidden');
+            document.getElementById('confirmedComplaintNumber').textContent = complaintNumber;
+
+            const badge = document.getElementById('confirmedPriorityBadge');
+            badge.className = `badge badge-${(priority || 'medium').toLowerCase()}`;
+            badge.textContent = priority || 'MEDIUM';
+
+            document.getElementById('btnTrackSubmitted').href = `student-dashboard.html#track-complaint`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetFormForNewReport() {
+            document.getElementById('standaloneReportForm').reset();
+            document.getElementById('filePreview').style.display = 'none';
+            document.getElementById('successContainer').classList.add('hidden');
+            document.getElementById('reportingContainer').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showAlert(msg, type) {
+            const alertBox = document.getElementById('statusAlert');
+            alertBox.textContent = msg;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => alertBox.classList.add('hidden'), 6000);
+        }
+    </script>
+</body>
+</html>

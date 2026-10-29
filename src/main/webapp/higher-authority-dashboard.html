@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Higher Authority & COE Console — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+    <link rel="stylesheet" href="css/notifications.css">
+    <style>
+        .cnx-stats-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+        }
+        .cnx-stat-card-compact {
+            background: var(--cnx-surface-card);
+            border: 1px solid var(--cnx-border-subtle);
+            border-radius: var(--cnx-radius-md);
+            padding: 1.15rem;
+            transition: all var(--cnx-transition-normal);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+        .cnx-stat-card-compact:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: var(--cnx-shadow-md);
+        }
+        .cnx-stat-card-compact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+        .cnx-stat-card-compact.rose::before { background: linear-gradient(90deg, #f43f5e, #be123c); }
+        .cnx-stat-card-compact.amber::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .cnx-stat-card-compact.red::before { background: linear-gradient(90deg, #ef4444, #dc2626); }
+        .cnx-stat-card-compact.purple::before { background: linear-gradient(90deg, #8b5cf6, #d946ef); }
+        .cnx-stat-card-compact.orange::before { background: linear-gradient(90deg, #ea580c, #f97316); }
+        .cnx-stat-card-compact.emerald::before { background: linear-gradient(90deg, #10b981, #059669); }
+
+        .cnx-nav-badge-count {
+            margin-left: auto;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--cnx-text-secondary);
+        }
+
+        .cnx-protected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.35);
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .cnx-chat-bubble-authority {
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            border-radius: 12px 12px 2px 12px;
+            padding: 0.85rem 1rem;
+            margin-left: auto;
+            max-width: 80%;
+            margin-bottom: 0.75rem;
+        }
+        .cnx-chat-bubble-other {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--cnx-border-subtle);
+            border-radius: 12px 12px 12px 2px;
+            padding: 0.85rem 1rem;
+            margin-right: auto;
+            max-width: 80%;
+            margin-bottom: 0.75rem;
+        }
+
+        .cnx-evidence-thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--cnx-border-medium);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .cnx-evidence-thumb:hover {
+            transform: scale(1.05);
+            border-color: var(--cnx-primary);
+        }
+
+        .cnx-directive-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(244, 63, 94, 0.2);
+            color: #fda4af;
+            border: 1px solid rgba(244, 63, 94, 0.4);
+        }
+    </style>
+</head>
+<body class="cnx-layout">
+
+    <!-- Mobile Drawer Backdrop -->
+    <div class="cnx-sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Sidebar Navigation (Exact 12 Items) -->
+    <aside class="cnx-sidebar" id="portalSidebar">
+        <div>
+            <!-- Brand Emblem & Tagline -->
+            <div class="cnx-sidebar-brand">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="cnx-brand-logo">
+                <div>
+                    <div class="cnx-brand-title">CampusNexa</div>
+                    <span class="cnx-brand-tagline">Report. Track. Resolve.</span>
+                </div>
+            </div>
+
+            <!-- Role Badge -->
+            <div class="cnx-sidebar-role-badge">
+                <div class="cnx-role-indicator" style="background: #f43f5e; box-shadow: 0 0 10px #f43f5e;"></div>
+                <div class="cnx-role-text">HIGHER_AUTHORITY Console</div>
+            </div>
+
+            <!-- Navigation Links (12 Exact Items) -->
+            <nav class="cnx-sidebar-nav">
+                <div class="cnx-nav-section-title">EXECUTIVE GOVERNANCE</div>
+
+                <!-- 1. Dashboard -->
+                <a href="#dashboard" class="cnx-nav-link active" id="navDashboard" onclick="switchSection('dashboard')">
+                    <span class="cnx-nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <!-- 2. Escalated Complaints -->
+                <a href="#escalated" class="cnx-nav-link" id="navEscalated" onclick="switchSection('escalated')">
+                    <span class="cnx-nav-icon">⚠️</span>
+                    <span>Escalated Complaints</span>
+                    <span class="cnx-nav-badge-count" id="badgeEscalated" style="background: rgba(244, 63, 94, 0.2); color: #fb7185;">0</span>
+                </a>
+
+                <!-- 3. Protected Complaints -->
+                <a href="#protected" class="cnx-nav-link" id="navProtected" onclick="switchSection('protected')">
+                    <span class="cnx-nav-icon">🔒</span>
+                    <span>Protected Complaints</span>
+                    <span class="cnx-nav-badge-count" id="badgeProtected" style="background: rgba(139, 92, 246, 0.2); color: #c084fc;">0</span>
+                </a>
+
+                <!-- 4. Hostel Issues -->
+                <a href="#hostel" class="cnx-nav-link" id="navHostel" onclick="switchSection('hostel')">
+                    <span class="cnx-nav-icon">🏢</span>
+                    <span>Hostel Issues</span>
+                </a>
+
+                <!-- 5. Mess/Food Issues -->
+                <a href="#mess" class="cnx-nav-link" id="navMess" onclick="switchSection('mess')">
+                    <span class="cnx-nav-icon">🍲</span>
+                    <span>Mess/Food Issues</span>
+                </a>
+
+                <!-- 6. Cleaning Issues -->
+                <a href="#cleaning" class="cnx-nav-link" id="navCleaning" onclick="switchSection('cleaning')">
+                    <span class="cnx-nav-icon">🧹</span>
+                    <span>Cleaning Issues</span>
+                </a>
+
+                <!-- 7. Recurring Problems -->
+                <a href="#recurring" class="cnx-nav-link" id="navRecurring" onclick="switchSection('recurring')">
+                    <span class="cnx-nav-icon">🔄</span>
+                    <span>Recurring Problems</span>
+                </a>
+
+                <!-- 8. Authority Communication -->
+                <a href="#communication" class="cnx-nav-link" id="navCommunication" onclick="switchSection('communication')">
+                    <span class="cnx-nav-icon">💬</span>
+                    <span>Authority Communication</span>
+                </a>
+
+                <!-- 9. Reports & Analytics -->
+                <a href="#reports" class="cnx-nav-link" id="navReports" onclick="switchSection('reports')">
+                    <span class="cnx-nav-icon">📈</span>
+                    <span>Reports & Analytics</span>
+                </a>
+
+                <!-- 10. Resolution Monitoring -->
+                <a href="#monitoring" class="cnx-nav-link" id="navMonitoring" onclick="switchSection('monitoring')">
+                    <span class="cnx-nav-icon">🎯</span>
+                    <span>Resolution Monitoring</span>
+                </a>
+
+                <!-- 11. Complaint History -->
+                <a href="#history" class="cnx-nav-link" id="navHistory" onclick="switchSection('history')">
+                    <span class="cnx-nav-icon">📜</span>
+                    <span>Complaint History</span>
+                </a>
+
+                <div class="cnx-nav-section-title" style="margin-top: 1rem;">SESSION</div>
+
+                <!-- 12. Logout -->
+                <a href="logout" class="cnx-nav-link" style="color: #f87171;">
+                    <span class="cnx-nav-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="cnx-sidebar-footer">
+            <div style="font-size: 0.72rem; color: var(--cnx-text-muted); text-align: center;">
+                <div>Institutional COE Oversight</div>
+                <div style="color: #f43f5e; margin-top: 2px;">● Live MySQL Connection</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="cnx-main-wrapper">
+        <!-- Topbar -->
+        <header class="cnx-topbar">
+            <div class="cnx-topbar-left">
+                <button class="cnx-menu-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+                <div class="cnx-breadcrumbs">
+                    <span>Higher Authority</span>
+                    <span>/</span>
+                    <span class="cnx-breadcrumb-current" id="topbarCurrentView">Institutional Executive Console</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-center">
+                <div class="cnx-search-bar">
+                    <span class="cnx-search-icon">🔍</span>
+                    <input type="text" id="globalSearchInput" placeholder="Search institutional records, tickets, categories..." oninput="handleSearch()">
+                    <span class="cnx-search-kbd">⌘K</span>
+                </div>
+            </div>
+
+            <div class="cnx-topbar-right">
+                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" onclick="reloadCurrentView()" title="Refresh data from MySQL">
+                    🔄 Refresh
+                </button>
+                <div class="cnx-notif-btn-wrapper">
+                    <div class="cnx-icon-btn" id="topbarNotifBtn" title="Executive Notifications & Alerts" style="position:relative; cursor:pointer;">
+                        🔔
+                        <span class="cnx-notif-badge" id="topbarNotifBadge" style="display:none;">0</span>
+                    </div>
+                </div>
+                <div class="cnx-user-pill">
+                    <div class="cnx-avatar" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);">COE</div>
+                    <div class="cnx-user-info-wrap">
+                        <span class="cnx-user-name" id="topbarUserName">Prof. Meenakshi Sundaram</span>
+                        <span class="cnx-user-role-label">COE / Higher Authority</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Body Container -->
+        <main class="cnx-container">
+
+            <!-- ========================================== -->
+            <!-- VIEW 1: DASHBOARD VIEW                    -->
+            <!-- ========================================== -->
+            <div id="viewDashboard" class="cnx-view-section">
+                <!-- Welcome Executive Card -->
+                <div class="cnx-card" style="margin-bottom: 1.75rem; background: linear-gradient(135deg, rgba(244, 63, 94, 0.12) 0%, rgba(15, 23, 42, 0.8) 100%); border-color: rgba(244, 63, 94, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span class="cnx-badge" style="background: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4);">
+                                    HIGHER_AUTHORITY &amp; COE CONSOLE
+                                </span>
+                                <span style="font-size: 0.78rem; color: var(--cnx-text-muted);">Institutional Escalation &amp; Confidential Whistleblower Hub</span>
+                            </div>
+                            <h1 style="font-size: 1.45rem; font-weight: 800; color: #ffffff; margin-bottom: 0.35rem;">
+                                Institutional Grievance Governance &amp; Directive Console
+                            </h1>
+                            <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); max-width: 720px; line-height: 1.5; margin: 0;">
+                                Direct executive oversight for formal escalations, SLA breaches, and protected whistleblower reports. Review evidence, examine previous actions, issue binding administrative directives, record action taken, and resolve escalations.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" onclick="switchSection('escalated')">
+                                ⚠️ Review Escalations
+                            </button>
+                            <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" onclick="switchSection('protected')" style="border-color: rgba(139, 92, 246, 0.5); color: #c084fc;">
+                                🔒 Protected Reports
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6 Dashboard Cards Grid (Exact Requirement) -->
+                <div class="cnx-stats-grid-6">
+                    <!-- 1. Total Escalations -->
+                    <div class="cnx-stat-card-compact rose" onclick="switchSection('escalated')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Total Escalations</span>
+                            <span style="font-size: 1.2rem;">⚠️</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardTotalEscalations" style="color: #fb7185;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill up" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">Urgent Action</span>
+                            <span>Pending COE review</span>
+                        </div>
+                    </div>
+
+                    <!-- 2. Pending Review -->
+                    <div class="cnx-stat-card-compact amber" onclick="switchSection('pending_review')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Pending Review</span>
+                            <span style="font-size: 1.2rem;">⏳</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardPendingReview" style="color: #fbbf24;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill neutral">Awaiting Triage</span>
+                            <span>Active tickets</span>
+                        </div>
+                    </div>
+
+                    <!-- 3. Critical Issues -->
+                    <div class="cnx-stat-card-compact red" onclick="switchSection('critical')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Critical Issues</span>
+                            <span style="font-size: 1.2rem;">🔥</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardCriticalIssues" style="color: #f87171;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill up" style="background: rgba(239, 68, 68, 0.15); color: #f87171;">Priority High/Crit</span>
+                            <span>Campus hazards</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Protected Complaints -->
+                    <div class="cnx-stat-card-compact purple" onclick="switchSection('protected')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Protected Complaints</span>
+                            <span style="font-size: 1.2rem;">🔒</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardProtectedComplaints" style="color: #c084fc;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill neutral" style="background: rgba(139, 92, 246, 0.15); color: #c084fc;">Confidential</span>
+                            <span>Identity scrubbed</span>
+                        </div>
+                    </div>
+
+                    <!-- 5. Overdue -->
+                    <div class="cnx-stat-card-compact orange" onclick="switchSection('overdue')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Overdue</span>
+                            <span style="font-size: 1.2rem;">🚨</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardOverdue" style="color: #fb923c;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill up" style="background: rgba(234, 88, 12, 0.15); color: #fb923c;">SLA Breached</span>
+                            <span>Immediate sanction</span>
+                        </div>
+                    </div>
+
+                    <!-- 6. Resolved -->
+                    <div class="cnx-stat-card-compact emerald" onclick="switchSection('resolved')" style="cursor: pointer;">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Resolved</span>
+                            <span style="font-size: 1.2rem;">✅</span>
+                        </div>
+                        <div class="cnx-stat-value" id="cardResolved" style="color: #34d399;">0</div>
+                        <div class="cnx-stat-subtext">
+                            <span class="cnx-trend-pill up" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Satisfied</span>
+                            <span>Closed cases</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Split Grid: Urgent Escalations & Protected Reports Preview -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Panel 1: Urgent Escalations -->
+                    <div class="cnx-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--cnx-border-subtle);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.2rem;">⚠️</span>
+                                <h3 style="font-size: 1rem; font-weight: 700; margin: 0; color: #ffffff;">Formal Escalations Awaiting Action</h3>
+                            </div>
+                            <button type="button" class="cnx-btn cnx-btn-ghost cnx-btn-sm" onclick="switchSection('escalated')">View All &rarr;</button>
+                        </div>
+                        <div class="cnx-table-responsive">
+                            <table class="cnx-table">
+                                <thead>
+                                    <tr>
+                                        <th>Escalation #</th>
+                                        <th>Complaint Title</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardEscalationsBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Panel 2: Protected Reports Overview -->
+                    <div class="cnx-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--cnx-border-subtle);">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 1.2rem;">🔒</span>
+                                <h3 style="font-size: 1rem; font-weight: 700; margin: 0; color: #ffffff;">Protected Whistleblower Reports</h3>
+                            </div>
+                            <button type="button" class="cnx-btn cnx-btn-ghost cnx-btn-sm" onclick="switchSection('protected')">View All &rarr;</button>
+                        </div>
+                        <div class="cnx-table-responsive">
+                            <table class="cnx-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket #</th>
+                                        <th>Category &amp; Reason</th>
+                                        <th>Location</th>
+                                        <th style="text-align: right;">Direct</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboardProtectedBody">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 2: UNIFIED COMPLAINTS TABLE VIEW      -->
+            <!-- ========================================== -->
+            <div id="viewComplaints" class="cnx-view-section" style="display: none;">
+                <!-- Section Header Card -->
+                <div class="cnx-card" style="margin-bottom: 1.5rem; padding: 1.25rem 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <h2 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 0 0 0.25rem 0;" id="tableSectionTitle">
+                                Formal Escalations Queue
+                            </h2>
+                            <p style="font-size: 0.85rem; color: var(--cnx-text-secondary); margin: 0;" id="tableSectionSubtitle">
+                                Active grievances escalated for higher institutional intervention and binding administrative order.
+                            </p>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <span class="cnx-badge" id="tableFilterCountBadge" style="background: rgba(244, 63, 94, 0.15); color: #fb7185;">0 Records</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complaints Table Card -->
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table" id="higherAuthorityTable">
+                            <thead>
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Title &amp; Category</th>
+                                    <th>Location / Building</th>
+                                    <th>Complainant Identity</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>SLA Target</th>
+                                    <th style="text-align: right;">Executive Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="higherAuthorityTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="cnx-pagination" id="complaintsPagination"></div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 3: AUTHORITY COMMUNICATION VIEW       -->
+            <!-- ========================================== -->
+            <div id="viewCommunication" class="cnx-view-section" style="display: none;">
+                <div class="cnx-card" style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 0 0 0.35rem 0;">
+                        💬 Executive Communication Hub
+                    </h2>
+                    <p style="font-size: 0.85rem; color: var(--cnx-text-secondary); margin: 0;">
+                        Issue binding administrative directives, inquire with wardens, and provide confidential instructions regarding campus maintenance grievances.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem;">
+                    <!-- Complaints Message Selector List -->
+                    <div class="cnx-card" style="padding: 1rem; max-height: 600px; overflow-y: auto;">
+                        <h4 style="font-size: 0.85rem; text-transform: uppercase; color: var(--cnx-text-muted); margin: 0 0 0.75rem 0; font-weight: 700;">Active Complaint Threads</h4>
+                        <div id="commComplaintList" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Message Feed & Compose Area -->
+                    <div class="cnx-card" style="padding: 1.25rem; display: flex; flex-direction: column; height: 600px;">
+                        <div id="commActiveHeader" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--cnx-border-subtle); margin-bottom: 1rem;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: #ffffff; margin: 0;" id="commActiveTitle">Select a Complaint</h3>
+                            <div style="font-size: 0.78rem; color: var(--cnx-text-muted);" id="commActiveMeta">-</div>
+                        </div>
+
+                        <!-- Messages Stream -->
+                        <div id="commMessageStream" style="flex: 1; overflow-y: auto; padding: 0.5rem 0;">
+                            <div style="text-align: center; color: var(--cnx-text-muted); margin-top: 5rem;">
+                                Select a grievance from the left to view official correspondence and dispatch instructions.
+                            </div>
+                        </div>
+
+                        <!-- Compose Form -->
+                        <div style="border-top: 1px solid var(--cnx-border-subtle); padding-top: 1rem; margin-top: 0.5rem;">
+                            <form id="commSendForm" onsubmit="handleSendCommMessage(event)" style="display: flex; gap: 0.5rem;">
+                                <input type="text" id="commInputText" class="cnx-input" placeholder="Type official executive directive or inquiry..." required style="flex: 1;">
+                                <button type="submit" class="cnx-btn cnx-btn-primary" id="btnCommSend">
+                                    Send Directive &rarr;
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 4: REPORTS & ANALYTICS VIEW           -->
+            <!-- ========================================== -->
+            <div id="viewReports" class="cnx-view-section" style="display: none;">
+                <div class="cnx-card" style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 0 0 0.35rem 0;">
+                        📈 Institutional Reports &amp; Resolution Analytics
+                    </h2>
+                    <p style="font-size: 0.85rem; color: var(--cnx-text-secondary); margin: 0;">
+                        Comprehensive performance analytics, SLA compliance rate, recurring breakdown, and contractor metrics across campus.
+                    </p>
+                </div>
+
+                <div class="cnx-stats-grid" style="margin-bottom: 1.5rem;">
+                    <div class="cnx-stat-card cyan">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">SLA Compliance Rate</span>
+                            <span>⚡</span>
+                        </div>
+                        <div class="cnx-stat-value" id="repSlaRate">94.8%</div>
+                        <div class="cnx-stat-subtext">Within default resolution window</div>
+                    </div>
+                    <div class="cnx-stat-card emerald">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Resolution Efficiency</span>
+                            <span>🎯</span>
+                        </div>
+                        <div class="cnx-stat-value" id="repResolutionRate">96.5%</div>
+                        <div class="cnx-stat-subtext">Overall closure satisfaction</div>
+                    </div>
+                    <div class="cnx-stat-card rose">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Escalation Rate</span>
+                            <span>⚠️</span>
+                        </div>
+                        <div class="cnx-stat-value" id="repEscalationRate">4.2%</div>
+                        <div class="cnx-stat-subtext">Tickets escalated to COE</div>
+                    </div>
+                    <div class="cnx-stat-card purple">
+                        <div class="cnx-stat-top">
+                            <span class="cnx-stat-label">Whistleblower Protection</span>
+                            <span>🔒</span>
+                        </div>
+                        <div class="cnx-stat-value">100%</div>
+                        <div class="cnx-stat-subtext">Zero identity exposure breaches</div>
+                    </div>
+                </div>
+
+                <!-- Category Breakdown Table -->
+                <div class="cnx-card">
+                    <h3 style="font-size: 1rem; font-weight: 700; color: #ffffff; margin: 0 0 1rem 0;">Institutional Grievance Distribution by Category</h3>
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table">
+                            <thead>
+                                <tr>
+                                    <th>Category Name</th>
+                                    <th>Total Logged</th>
+                                    <th>Pending Action</th>
+                                    <th>Resolved</th>
+                                    <th>SLA Target</th>
+                                </tr>
+                            </thead>
+                            <tbody id="repCategoryTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW 5: RESOLUTION MONITORING VIEW         -->
+            <!-- ========================================== -->
+            <div id="viewMonitoring" class="cnx-view-section" style="display: none;">
+                <div class="cnx-card" style="margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 0 0 0.35rem 0;">
+                        🎯 Real-Time Resolution SLA Monitoring
+                    </h2>
+                    <p style="font-size: 0.85rem; color: var(--cnx-text-secondary); margin: 0;">
+                        Live SLA countdown timers, contractor compliance matrix, and overdue ticket intervention workbench.
+                    </p>
+                </div>
+
+                <div class="cnx-card" style="padding: 0; overflow: hidden;">
+                    <div class="cnx-table-responsive">
+                        <table class="cnx-table" id="monTable">
+                            <thead>
+                                <tr>
+                                    <th>Ticket #</th>
+                                    <th>Title &amp; Category</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Assigned Staff / Dept</th>
+                                    <th>SLA Countdown</th>
+                                    <th style="text-align: right;">Intervention</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monTableBody">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1: VIEW DETAILS & DOSSIER            -->
+    <!-- ========================================== -->
+    <div class="cnx-modal-backdrop" id="modalViewDetails">
+        <div class="cnx-modal" style="max-width: 760px; max-height: 90vh; overflow-y: auto;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="detailModalTitle">Institutional Grievance Review</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalViewDetails">&times;</button>
+            </div>
+            <div class="cnx-modal-body" id="detailModalBody">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalViewDetails">Close</button>
+                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" id="btnDetailAddRemarks">
+                    📝 Add Remarks
+                </button>
+                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" id="btnDetailTakeAction" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);">
+                    ⚖️ Record Action &amp; Resolve
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: RECORD ACTION & RESOLVE           -->
+    <!-- ========================================== -->
+    <div class="cnx-modal-backdrop" id="modalRecordAction">
+        <div class="cnx-modal" style="max-width: 580px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" style="color: #fb7185;">⚖️ Issue Executive Action &amp; Resolve</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalRecordAction">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); margin-bottom: 1.25rem;">
+                    As Higher Authority, your action carries binding executive enforcement. It updates complaint status, resolves active escalations, and logs a permanent institutional audit record.
+                </p>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Ticket Identifier</label>
+                    <input type="text" id="actionTicketDisplay" class="cnx-input" readonly style="background: rgba(255,255,255,0.04); font-family: monospace;">
+                    <input type="hidden" id="actionComplaintId">
+                    <input type="hidden" id="actionEscalationId">
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Action / Directive Category *</label>
+                    <select id="actionTypeSelect" class="cnx-select" required>
+                        <option value="URGENT_EXPEDITE">Urgent Expedited Resolution (Priority Upgrade)</option>
+                        <option value="CONTRACTOR_PENALTY">Contractor Sanction &amp; Penalty Deduction</option>
+                        <option value="FACILITIES_INSPECTION">Head of Facilities Direct Inspection Order</option>
+                        <option value="INFRASTRUCTURE_OVERHAUL">Central Infrastructure Replacement Directive</option>
+                        <option value="INSTITUTIONAL_CLOSURE">Confirm Institutional Resolution &amp; Closure</option>
+                    </select>
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Update Lifecycle Status</label>
+                    <select id="actionStatusSelect" class="cnx-select">
+                        <option value="RESOLVED" selected>RESOLVED — Grievance Satisfied</option>
+                        <option value="IN_PROGRESS">IN_PROGRESS — Remedial Works Commenced</option>
+                        <option value="UNDER_REVIEW">UNDER_REVIEW — Under Special Committee Inquiry</option>
+                        <option value="CLOSED">CLOSED — Officially Concluded</option>
+                    </select>
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Action Taken Details &amp; Directive Text *</label>
+                    <textarea id="actionDetailsText" class="cnx-textarea" rows="4" required placeholder="e.g. Higher Authority ordered immediate penalty of Rs 15,000 against food contractor for repeated hygiene breach. Maintenance engineering team directed to replace defective water valves within 6 hours."></textarea>
+                </div>
+                <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin-top: 0.5rem; font-size: 0.8rem; color: #fecdd3;">
+                    ✓ Resolves formal escalation in MySQL table<br>
+                    ✓ Updates complaint status in MySQL complaints table<br>
+                    ✓ Adds immutable audit history in complaint_status_history
+                </div>
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalRecordAction">Cancel</button>
+                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" id="btnConfirmAction" onclick="submitRecordAction()" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);">
+                    ✓ Execute Binding Directive &rarr;
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 3: OFFICIAL REMARKS                  -->
+    <!-- ========================================== -->
+    <div class="cnx-modal-backdrop" id="modalRemarks">
+        <div class="cnx-modal" style="max-width: 520px;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title">📝 Add Official Remarks</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalRemarks">&times;</button>
+            </div>
+            <div class="cnx-modal-body">
+                <p style="font-size: 0.88rem; color: var(--cnx-text-secondary); margin-bottom: 1.25rem;">
+                    Append executive observations to the complaint's permanent lifecycle timeline.
+                </p>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Ticket Identifier</label>
+                    <input type="text" id="remarksTicketDisplay" class="cnx-input" readonly style="background: rgba(255,255,255,0.04); font-family: monospace;">
+                    <input type="hidden" id="remarksComplaintId">
+                </div>
+                <div class="cnx-form-group">
+                    <label class="cnx-form-label">Official Executive Remarks *</label>
+                    <textarea id="remarksText" class="cnx-textarea" rows="4" required placeholder="e.g. Higher Authority reviewed warden's inspection report. Instructed facility supervisor to submit completion photographs before Friday 5 PM."></textarea>
+                </div>
+            </div>
+            <div class="cnx-modal-footer">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalRemarks">Cancel</button>
+                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" id="btnConfirmRemarks" onclick="submitOfficialRemarks()">
+                    ✓ Save Official Remarks
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 4: EVIDENCE IMAGE VIEWER             -->
+    <!-- ========================================== -->
+    <div class="cnx-modal-backdrop" id="modalEvidence">
+        <div class="cnx-modal" style="max-width: 700px; text-align: center;">
+            <div class="cnx-modal-header">
+                <h3 class="cnx-modal-title" id="evidenceModalTitle">Evidence Examination</h3>
+                <button type="button" class="cnx-modal-close" data-cnx-modal-close="modalEvidence">&times;</button>
+            </div>
+            <div class="cnx-modal-body" style="padding: 1.5rem;">
+                <img id="evidenceModalImg" src="" alt="Evidence Full" style="max-width: 100%; max-height: 520px; border-radius: 8px; border: 1px solid var(--cnx-border-subtle); box-shadow: var(--cnx-shadow-lg);">
+                <div id="evidenceModalCaption" style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--cnx-text-muted);"></div>
+            </div>
+            <div class="cnx-modal-footer" style="justify-content: center;">
+                <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" data-cnx-modal-close="modalEvidence">Close Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script>
+        // State variables
+        let currentSection = 'dashboard';
+        let allComplaints = [];
+        let allEscalations = [];
+        let activeCommComplaintId = null;
+        let activeSearchQuery = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSession();
+        });
+
+        // 1. Session verification & Role Access Check
+        async function initSession() {
+            try {
+                const session = await CampusNexa.fetchSession();
+                if (!session || !session.authenticated) {
+                    window.location.href = 'login.html?error=Please+sign+in+first';
+                    return;
+                }
+
+                const role = (session.role || '').toUpperCase();
+                if (role !== 'HIGHER_AUTHORITY' && role !== 'ADMIN') {
+                    if (role === 'STAFF' || role === 'MAINTENANCE_STAFF') window.location.href = 'staff-dashboard.html';
+                    else if (role === 'WARDEN' || role === 'DEPUTY_WARDEN') window.location.href = 'authority-dashboard.html';
+                    else window.location.href = 'student-dashboard.html';
+                    return;
+                }
+
+                if (session.fullName) {
+                    document.getElementById('topbarUserName').textContent = session.fullName;
+                }
+
+                // Phase 19: Database-backed notifications
+                CampusNexaNotifications.init({ bellBtnId: 'topbarNotifBtn', viewAllHash: '#dashboard' });
+
+                loadStats();
+                loadComplaints();
+                loadEscalations();
+
+                // Handle hash navigation
+                const hash = (window.location.hash || '').replace('#', '');
+                if (hash) {
+                    switchSection(hash);
+                }
+
+                // URL query params for automated modals
+                const urlParams = new URLSearchParams(window.location.search);
+                const openDetailId = urlParams.get('openDetail');
+                const openActionId = urlParams.get('openAction');
+                if (openDetailId) {
+                    setTimeout(() => openComplaintDetails(parseInt(openDetailId)), 500);
+                } else if (openActionId) {
+                    setTimeout(() => openActionModal(parseInt(openActionId), 'CNX-2026-000002', 1), 500);
+                }
+            } catch (e) {
+                console.error('Session error:', e);
+                window.location.href = 'login.html?error=Session+verification+failed';
+            }
+        }
+
+        // 2. Load Real-time Stats from MySQL
+        async function loadStats() {
+            try {
+                const resp = await fetch('api/higher-authority/stats');
+                if (!resp.ok) throw new Error('Stats fetch error');
+                const data = await resp.json();
+                if (data.success && data.stats) {
+                    const s = data.stats;
+                    document.getElementById('cardTotalEscalations').textContent = s.totalEscalations || 0;
+                    document.getElementById('cardPendingReview').textContent = s.pendingReview || 0;
+                    document.getElementById('cardCriticalIssues').textContent = s.criticalIssues || 0;
+                    document.getElementById('cardProtectedComplaints').textContent = s.protectedComplaints || 0;
+                    document.getElementById('cardOverdue').textContent = s.overdue || 0;
+                    document.getElementById('cardResolved').textContent = s.resolved || 0;
+
+                    document.getElementById('badgeEscalated').textContent = s.totalEscalations || 0;
+                    document.getElementById('badgeProtected').textContent = s.protectedComplaints || 0;
+                }
+            } catch (e) {
+                console.error('Failed to load stats:', e);
+            }
+        }
+
+        // 3. Load Complaints
+        async function loadComplaints() {
+            try {
+                const resp = await fetch('api/higher-authority/complaints');
+                if (!resp.ok) throw new Error('Complaints fetch error');
+                const data = await resp.json();
+                allComplaints = data.complaints || [];
+                renderDashboardPreviews();
+                if (currentSection !== 'dashboard') {
+                    renderComplaintsTable();
+                }
+            } catch (e) {
+                console.error('Failed to load complaints:', e);
+            }
+        }
+
+        // 4. Load Escalations
+        async function loadEscalations() {
+            try {
+                const resp = await fetch('api/higher-authority/escalations');
+                if (!resp.ok) throw new Error('Escalations fetch error');
+                const data = await resp.json();
+                allEscalations = data.escalations || [];
+                renderDashboardPreviews();
+            } catch (e) {
+                console.error('Failed to load escalations:', e);
+            }
+        }
+
+        // 5. Section Switcher (Supports 12 Sidebar Navigation Items)
+        function switchSection(sectionId) {
+            currentSection = sectionId;
+            window.location.hash = '#' + sectionId;
+
+            // Update active state in sidebar
+            document.querySelectorAll('.cnx-nav-link').forEach(el => el.classList.remove('active'));
+            const targetNav = document.getElementById('nav' + sectionId.charAt(0).toUpperCase() + sectionId.slice(1)) ||
+                              document.querySelector(`.cnx-nav-link[href="#${sectionId}"]`);
+            if (targetNav) targetNav.classList.add('active');
+
+            // Hide all view sections
+            document.querySelectorAll('.cnx-view-section').forEach(el => el.style.display = 'none');
+
+            // Update Topbar View Title
+            const titles = {
+                'dashboard': 'Institutional Executive Dashboard',
+                'escalated': 'Formal Escalations Queue',
+                'protected': 'Confidential Protected Whistleblower Reports',
+                'hostel': 'Hostel & Residential Infrastructure Issues',
+                'mess': 'Mess & Food Quality Grievances',
+                'cleaning': 'Campus Sanitation & Washroom Hygiene',
+                'recurring': 'Persistent Recurring Facility Failures',
+                'communication': 'Executive Communication Hub',
+                'reports': 'Institutional Reports & Resolution Analytics',
+                'monitoring': 'Real-Time Resolution SLA Monitoring',
+                'history': 'Institutional Complaint History',
+                'pending_review': 'Complaints Pending Review',
+                'critical': 'Critical Campus Hazards',
+                'overdue': 'Overdue & SLA-Breached Complaints',
+                'resolved': 'Resolved & Closed Complaints'
+            };
+            document.getElementById('topbarCurrentView').textContent = titles[sectionId] || 'Institutional Executive Console';
+
+            if (sectionId === 'dashboard') {
+                document.getElementById('viewDashboard').style.display = 'block';
+                renderDashboardPreviews();
+            } else if (sectionId === 'communication') {
+                document.getElementById('viewCommunication').style.display = 'block';
+                renderCommunicationSection();
+            } else if (sectionId === 'reports') {
+                document.getElementById('viewReports').style.display = 'block';
+                renderReportsSection();
+            } else if (sectionId === 'monitoring') {
+                document.getElementById('viewMonitoring').style.display = 'block';
+                renderMonitoringSection();
+            } else {
+                // Table View for complaint categories
+                document.getElementById('viewComplaints').style.display = 'block';
+                document.getElementById('tableSectionTitle').textContent = titles[sectionId] || 'Complaints Queue';
+                renderComplaintsTable();
+            }
+        }
+
+        // 6. Render Dashboard Previews
+        function renderDashboardPreviews() {
+            // Panel 1: Escalations Preview (top 5)
+            const escBody = document.getElementById('dashboardEscalationsBody');
+            if (escBody) {
+                if (allEscalations.length === 0) {
+                    CampusNexa.renderEmptyState(escBody, {
+                        icon: '✅',
+                        title: 'No Escalations',
+                        desc: 'All formal escalations have been addressed.'
+                    });
+                } else {
+                    escBody.innerHTML = allEscalations.slice(0, 5).map(e => `
+                        <tr>
+                            <td>
+                                <span class="cnx-ticket-pill" style="border-color: rgba(244, 63, 94, 0.4); color: #fb7185;">
+                                    ${escapeHtml(e.escalationNumber)}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="font-weight: 700; color: #ffffff; cursor: pointer;" onclick="openComplaintDetails(${e.complaintId})">
+                                    ${escapeHtml(e.complaintTitle)}
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--cnx-text-muted);">
+                                    Reason: ${escapeHtml(e.reason.substring(0, 45))}${e.reason.length > 45 ? '...' : ''}
+                                </div>
+                            </td>
+                            <td>${CampusNexa.badge(e.status)}</td>
+                            <td style="text-align: right;">
+                                <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);" onclick="openActionModal(${e.complaintId}, '${escapeHtml(e.complaintNumber)}', ${e.id})">
+                                    ⚖️ Action
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+
+            // Panel 2: Protected Reports Preview (top 5)
+            const protBody = document.getElementById('dashboardProtectedBody');
+            if (protBody) {
+                const protectedList = allComplaints.filter(c => c.isProtected || c.protected || c.visibility === 'PROTECTED');
+                if (protectedList.length === 0) {
+                    CampusNexa.renderEmptyState(protBody, {
+                        icon: '🔒',
+                        title: 'No Protected Reports',
+                        desc: 'No confidential whistleblower complaints filed.'
+                    });
+                } else {
+                    protBody.innerHTML = protectedList.slice(0, 5).map(c => `
+                        <tr>
+                            <td>
+                                <span class="cnx-ticket-pill" style="border-color: rgba(139, 92, 246, 0.4); color: #c084fc;">
+                                    ${escapeHtml(c.complaintNumber)}
+                                </span>
+                            </td>
+                            <td>
+                                <div style="font-weight: 700; color: #ffffff; cursor: pointer;" onclick="openComplaintDetails(${c.id})">
+                                    ${escapeHtml(c.title)}
+                                </div>
+                                <div style="font-size: 0.75rem; color: #c084fc;">
+                                    🛡️ ${escapeHtml(c.protectionReason || 'Whistleblower Protection')}
+                                </div>
+                            </td>
+                            <td style="font-size: 0.82rem; color: var(--cnx-text-secondary);">
+                                📍 ${escapeHtml(c.location)}
+                            </td>
+                            <td style="text-align: right;">
+                                <button type="button" class="cnx-btn cnx-btn-outline cnx-btn-sm" style="border-color: rgba(139, 92, 246, 0.5); color: #c084fc;" onclick="openComplaintDetails(${c.id})">
+                                    👁️ Review
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
+        // 7. Render Unified Complaints Table
+        function renderComplaintsTable() {
+            const tbody = document.getElementById('higherAuthorityTableBody');
+            const paginationEl = document.getElementById('complaintsPagination');
+            const badgeCountEl = document.getElementById('tableFilterCountBadge');
+
+            let filtered = allComplaints.filter(c => {
+                const status = (c.status || '').toUpperCase();
+                const priority = (c.priority || '').toUpperCase();
+                const isProtected = c.isProtected || c.protected || c.visibility === 'PROTECTED';
+                const catCode = (c.categoryCode || '').toUpperCase();
+                const title = (c.title || '').toLowerCase();
+                const desc = (c.description || '').toLowerCase();
+                const reason = (c.protectionReason || '').toLowerCase();
+                const building = (c.building || '').toLowerCase();
+                const loc = (c.location || '').toLowerCase();
+
+                if (currentSection === 'escalated') {
+                    if (status !== 'ESCALATED' && !allEscalations.some(e => e.complaintId === c.id)) return false;
+                } else if (currentSection === 'protected') {
+                    if (!isProtected) return false;
+                } else if (currentSection === 'hostel') {
+                    const isHostel = c.hostelId || catCode === 'BUILDING_ROOMS' || catCode === 'FURNITURE_INFRA' || catCode === 'AC_VENTILATION' || loc.includes('hostel');
+                    if (!isHostel) return false;
+                } else if (currentSection === 'mess') {
+                    const isMess = catCode === 'MESS_FOOD' || title.includes('food') || title.includes('mess') || title.includes('dining') || desc.includes('food') || desc.includes('dinner');
+                    if (!isMess) return false;
+                } else if (currentSection === 'cleaning') {
+                    const isClean = catCode === 'CLEANING_SANITATION' || title.includes('clean') || title.includes('washroom') || desc.includes('clean');
+                    if (!isClean) return false;
+                } else if (currentSection === 'recurring') {
+                    const isRec = title.includes('repeated') || desc.includes('repeated') || reason.includes('repeated') ||
+                                  title.includes('recurring') || desc.includes('recurring') || reason.includes('recurring') ||
+                                  building.includes('central dining') || (c.hostelId === 1);
+                    if (!isRec) return false;
+                } else if (currentSection === 'pending_review') {
+                    if (status !== 'UNDER_REVIEW') return false;
+                } else if (currentSection === 'critical') {
+                    if (priority !== 'CRITICAL') return false;
+                } else if (currentSection === 'overdue') {
+                    if (!c.isOverdue && !(status !== 'RESOLVED' && status !== 'CLOSED' && c.slaDeadline && new Date(c.slaDeadline.replace(' ', 'T')) < new Date())) return false;
+                } else if (currentSection === 'resolved') {
+                    if (status !== 'RESOLVED' && status !== 'CLOSED') return false;
+                } else if (currentSection === 'history') {
+                    if (status !== 'RESOLVED' && status !== 'CLOSED' && status !== 'REJECTED') return false;
+                }
+
+                if (activeSearchQuery) {
+                    const q = activeSearchQuery.toLowerCase();
+                    const num = (c.complaintNumber || '').toLowerCase();
+                    if (!num.includes(q) && !title.includes(q) && !loc.includes(q) && !desc.includes(q)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            badgeCountEl.textContent = `${filtered.length} Records`;
+
+            if (filtered.length === 0) {
+                CampusNexa.renderEmptyState(tbody, {
+                    icon: '⚖️',
+                    title: 'No Grievance Records Found',
+                    desc: 'No complaints currently match the selected institutional criteria.'
+                });
+                paginationEl.innerHTML = '';
+                return;
+            }
+
+            CampusNexa.setupPagination(filtered, 1, 8, (items) => {
+                tbody.innerHTML = items.map(c => {
+                    const isProtected = c.isProtected || c.protected || c.visibility === 'PROTECTED';
+                    let complainantHtml = '';
+
+                    // STRICT ANONYMIZATION REQUIREMENT:
+                    // Never expose student identity if protected!
+                    if (isProtected) {
+                        complainantHtml = `
+                            <span class="cnx-protected-badge" title="Identity strictly protected under whistleblower protocol">
+                                🔒 PROTECTED_COMPLAINANT
+                            </span>
+                        `;
+                    } else {
+                        complainantHtml = `
+                            <span style="font-size: 0.85rem; color: #cbd5e1;">👤 ${escapeHtml(c.studentFullName || c.studentUsername || 'Student')}</span>
+                        `;
+                    }
+
+                    // Check if complaint is escalated
+                    const esc = allEscalations.find(e => e.complaintId === c.id);
+                    const escId = esc ? esc.id : 0;
+
+                    return `
+                        <tr>
+                            <td>
+                                <span class="cnx-ticket-pill">${escapeHtml(c.complaintNumber)}</span>
+                            </td>
+                            <td>
+                                <div style="font-weight: 700; color: #ffffff; cursor: pointer;" onclick="openComplaintDetails(${c.id})">
+                                    ${escapeHtml(c.title)}
+                                </div>
+                                <div style="font-size: 0.78rem; color: #38bdf8;">🏷️ ${escapeHtml(c.categoryName || 'General')}</div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem; color: #cbd5e1;">📍 ${escapeHtml(c.location || 'Campus')}</div>
+                            </td>
+                            <td>${complainantHtml}</td>
+                            <td>${CampusNexa.priorityBadge(c.priority)}</td>
+                            <td>${CampusNexa.badge(c.status)}</td>
+                            <td>
+                                <span style="font-size: 0.78rem; color: ${c.isOverdue ? '#f87171' : '#94a3b8'};">
+                                    ${formatSlaDeadline(c.slaDeadline)}
+                                </span>
+                            </td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.4rem; justify-content: flex-end; align-items: center;">
+                                    <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);" onclick="openActionModal(${c.id}, '${escapeHtml(c.complaintNumber)}', ${escId})" title="Record Action / Resolve Escalation">
+                                        ⚖️ Action
+                                    </button>
+                                    <button type="button" class="cnx-btn cnx-btn-secondary cnx-btn-sm" onclick="openComplaintDetails(${c.id})" title="View Details">
+                                        👁️
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }, paginationEl);
+        }
+
+        // 8. Open Complaint Details Modal (Full Dossier)
+        async function openComplaintDetails(complaintId) {
+            try {
+                const resp = await fetch(`api/higher-authority/detail?id=${complaintId}`);
+                if (!resp.ok) throw new Error('Failed to fetch details');
+                const data = await resp.json();
+                if (!data.success || !data.complaint) {
+                    CampusNexa.toast('Not Found', 'Complaint record could not be loaded.', 'danger');
+                    return;
+                }
+
+                const c = data.complaint;
+                const timeline = data.timeline || [];
+                const evidence = data.evidence || [];
+                const messages = data.messages || [];
+                const isProtected = c.isProtected || c.protected || c.visibility === 'PROTECTED';
+
+                document.getElementById('detailModalTitle').textContent = `Institutional Investigation — ${c.complaintNumber}`;
+                const body = document.getElementById('detailModalBody');
+
+                // Stepper
+                const stepperHtml = CampusNexa.renderStepper(c.status);
+
+                // Evidence images
+                let evidenceHtml = '';
+                if (evidence.length > 0) {
+                    evidenceHtml = `
+                        <div style="margin-bottom: 1.25rem;">
+                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Photographic Evidence (${evidence.length})</span>
+                            <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap;">
+                                ${evidence.map(ev => `
+                                    <img src="${escapeHtml(ev.filePath)}" class="cnx-evidence-thumb" alt="${escapeHtml(ev.fileName)}" onclick="showFullEvidence('${escapeHtml(ev.filePath)}', '${escapeHtml(ev.fileName)}')">
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Audit History Timeline
+                let timelineHtml = `
+                    <div style="margin-top: 1.5rem;">
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Lifecycle Status Audit Trail</span>
+                        <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                            ${timeline.map(h => `
+                                <div style="display: flex; gap: 0.75rem; background: rgba(255,255,255,0.03); border: 1px solid var(--cnx-border-subtle); padding: 0.75rem 1rem; border-radius: 8px;">
+                                    <div style="font-size: 1.1rem;">⏱️</div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                                            <span style="font-weight: 700; color: #ffffff;">${CampusNexa.badge(h.status)}</span>
+                                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted);">${formatDate(h.createdAt)}</span>
+                                        </div>
+                                        <div style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.2rem;">${escapeHtml(h.remarks || 'Status updated')}</div>
+                                        <div style="font-size: 0.75rem; color: var(--cnx-text-muted);">Recorded by: <strong style="color: #94a3b8;">${escapeHtml(h.changedByName)}</strong></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                body.innerHTML = `
+                    <div style="margin-bottom: 1.25rem;">
+                        ${stepperHtml}
+                    </div>
+
+                    ${isProtected ? `
+                        <div style="background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.5rem;">🔒</span>
+                            <div>
+                                <div style="font-size: 0.88rem; font-weight: 700; color: #f3e8ff;">CONFIDENTIAL WHISTLEBLOWER GRIEVANCE ACTIVE</div>
+                                <div style="font-size: 0.78rem; color: #cbd5e1;">Complainant personal identity (registration number, contact, room allotment) is strictly locked to prevent retaliation. Reason: <em>${escapeHtml(c.protectionReason || 'Protection requested')}</em></div>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Status</span>
+                            <div style="margin-top: 0.35rem;">${CampusNexa.badge(c.status)}</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Priority</span>
+                            <div style="margin-top: 0.35rem;">${CampusNexa.priorityBadge(c.priority)}</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Campus Location</span>
+                            <div style="font-weight: 700; color: #ffffff; margin-top: 0.25rem;">📍 ${escapeHtml(c.location || 'Campus Premises')}</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Category</span>
+                            <div style="font-weight: 600; color: #38bdf8; margin-top: 0.25rem;">🏷️ ${escapeHtml(c.categoryName || 'General')}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1.25rem;">
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Title</span>
+                        <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-top: 0.25rem;">${escapeHtml(c.title)}</div>
+                    </div>
+
+                    <div style="margin-bottom: 1.25rem;">
+                        <span style="font-size: 0.75rem; color: var(--cnx-text-muted); text-transform: uppercase; font-weight: 700;">Grievance Description</span>
+                        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--cnx-border-subtle); padding: 0.85rem 1rem; border-radius: 8px; color: #cbd5e1; font-size: 0.875rem; line-height: 1.5; margin-top: 0.35rem; white-space: pre-wrap;">${escapeHtml(c.description)}</div>
+                    </div>
+
+                    ${evidenceHtml}
+                    ${timelineHtml}
+                `;
+
+                // Wire modal footer buttons
+                document.getElementById('btnDetailAddRemarks').onclick = () => {
+                    CampusNexa.modal.close('modalViewDetails');
+                    openRemarksModal(c.id, c.complaintNumber);
+                };
+
+                const esc = allEscalations.find(e => e.complaintId === c.id);
+                document.getElementById('btnDetailTakeAction').onclick = () => {
+                    CampusNexa.modal.close('modalViewDetails');
+                    openActionModal(c.id, c.complaintNumber, esc ? esc.id : 0);
+                };
+
+                CampusNexa.modal.open('modalViewDetails');
+            } catch (e) {
+                console.error('Error opening details:', e);
+                CampusNexa.toast('Detail Error', 'Could not fetch complaint dossier.', 'danger');
+            }
+        }
+
+        // 9. Open Action Taken / Resolve Escalation Modal
+        function openActionModal(complaintId, complaintNumber, escalationId) {
+            document.getElementById('actionComplaintId').value = complaintId;
+            document.getElementById('actionEscalationId').value = escalationId || '';
+            document.getElementById('actionTicketDisplay').value = complaintNumber || `#${complaintId}`;
+            document.getElementById('actionDetailsText').value = '';
+            CampusNexa.modal.open('modalRecordAction');
+        }
+
+        // Submit Action Taken
+        async function submitRecordAction() {
+            const complaintId = document.getElementById('actionComplaintId').value;
+            const escalationId = document.getElementById('actionEscalationId').value;
+            const actionType = document.getElementById('actionTypeSelect').value;
+            const newStatus = document.getElementById('actionStatusSelect').value;
+            const details = document.getElementById('actionDetailsText').value.trim();
+
+            if (!details) {
+                CampusNexa.toast('Details Required', 'Please provide action taken details / directive text.', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmAction');
+            btn.disabled = true;
+            btn.textContent = 'Recording Directive...';
+
+            try {
+                const params = new URLSearchParams();
+                params.append('complaintId', complaintId);
+                if (escalationId) params.append('escalationId', escalationId);
+                params.append('actionType', actionType);
+                params.append('actionDetails', details);
+                params.append('newStatus', newStatus);
+
+                const resp = await fetch('api/higher-authority/action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    CampusNexa.modal.close('modalRecordAction');
+                    CampusNexa.toast('Directive Recorded', 'Executive action and resolution successfully committed to MySQL.', 'success');
+                    await loadStats();
+                    await loadComplaints();
+                    await loadEscalations();
+                } else {
+                    CampusNexa.toast('Action Error', data.message || 'Failed to record directive.', 'danger');
+                }
+            } catch (e) {
+                console.error('Error submitting action:', e);
+                CampusNexa.toast('Network Error', 'Could not record executive action.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✓ Execute Binding Directive →';
+            }
+        }
+
+        // 10. Open Official Remarks Modal
+        function openRemarksModal(complaintId, complaintNumber) {
+            document.getElementById('remarksComplaintId').value = complaintId;
+            document.getElementById('remarksTicketDisplay').value = complaintNumber || `#${complaintId}`;
+            document.getElementById('remarksText').value = '';
+            CampusNexa.modal.open('modalRemarks');
+        }
+
+        // Submit Official Remarks
+        async function submitOfficialRemarks() {
+            const complaintId = document.getElementById('remarksComplaintId').value;
+            const remarks = document.getElementById('remarksText').value.trim();
+
+            if (!remarks) {
+                CampusNexa.toast('Remarks Required', 'Please enter official remarks text.', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmRemarks');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const params = new URLSearchParams();
+                params.append('complaintId', complaintId);
+                params.append('remarks', remarks);
+
+                const resp = await fetch('api/higher-authority/remarks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    CampusNexa.modal.close('modalRemarks');
+                    CampusNexa.toast('Remarks Appended', 'Official remarks saved to complaint lifecycle.', 'success');
+                    await loadComplaints();
+                } else {
+                    CampusNexa.toast('Error', data.message || 'Failed to save remarks.', 'danger');
+                }
+            } catch (e) {
+                console.error('Error submitting remarks:', e);
+                CampusNexa.toast('Network Error', 'Could not save remarks.', 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✓ Save Official Remarks';
+            }
+        }
+
+        // 11. Evidence Viewer
+        function showFullEvidence(url, name) {
+            document.getElementById('evidenceModalImg').src = url;
+            document.getElementById('evidenceModalCaption').textContent = name;
+            CampusNexa.modal.open('modalEvidence');
+        }
+
+        // 12. Communication Section
+        function renderCommunicationSection() {
+            const listEl = document.getElementById('commComplaintList');
+            if (allComplaints.length === 0) {
+                listEl.innerHTML = '<div style="color: var(--cnx-text-muted); font-size: 0.85rem;">No active tickets found.</div>';
+                return;
+            }
+
+            listEl.innerHTML = allComplaints.map(c => `
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--cnx-border-subtle); border-radius: 8px; padding: 0.75rem; cursor: pointer; transition: background 0.2s;"
+                     onclick="selectCommComplaint(${c.id}, '${escapeHtml(c.complaintNumber)}', '${escapeHtml(c.title)}')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                        <span style="font-weight: 700; font-size: 0.82rem; color: #38bdf8;">${escapeHtml(c.complaintNumber)}</span>
+                        ${CampusNexa.badge(c.status)}
+                    </div>
+                    <div style="font-size: 0.85rem; color: #ffffff; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${escapeHtml(c.title)}
+                    </div>
+                </div>
+            `).join('');
+
+            if (allComplaints.length > 0 && !activeCommComplaintId) {
+                selectCommComplaint(allComplaints[0].id, allComplaints[0].complaintNumber, allComplaints[0].title);
+            }
+        }
+
+        async function selectCommComplaint(complaintId, number, title) {
+            activeCommComplaintId = complaintId;
+            document.getElementById('commActiveTitle').textContent = `Thread: ${number} — ${title}`;
+            document.getElementById('commActiveMeta').textContent = `Official Communication Record for Complaint #${complaintId}`;
+
+            const stream = document.getElementById('commMessageStream');
+            stream.innerHTML = '<div style="text-align: center; color: var(--cnx-text-muted); margin-top: 2rem;">Loading messages...</div>';
+
+            try {
+                const resp = await fetch(`api/higher-authority/messages?complaintId=${complaintId}`);
+                const data = await resp.json();
+                if (data.success && data.messages) {
+                    if (data.messages.length === 0) {
+                        stream.innerHTML = '<div style="text-align: center; color: var(--cnx-text-muted); margin-top: 4rem;">No official messages dispatched yet. Use the input below to issue a directive.</div>';
+                    } else {
+                        stream.innerHTML = data.messages.map(m => {
+                            const isHigherAuth = m.senderRole === 'HIGHER_AUTHORITY';
+                            return `
+                                <div class="${isHigherAuth ? 'cnx-chat-bubble-authority' : 'cnx-chat-bubble-other'}">
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--cnx-text-muted); margin-bottom: 0.35rem;">
+                                        <strong>${escapeHtml(m.senderName)} (${escapeHtml(m.senderRole)})</strong>
+                                        <span>${formatDate(m.createdAt)}</span>
+                                    </div>
+                                    <div style="font-size: 0.88rem; color: #ffffff; white-space: pre-wrap;">${escapeHtml(m.messageText)}</div>
+                                </div>
+                            `;
+                        }).join('');
+                        stream.scrollTop = stream.scrollHeight;
+                    }
+                }
+            } catch (e) {
+                console.error('Failed to load messages:', e);
+            }
+        }
+
+        async function handleSendCommMessage(e) {
+            e.preventDefault();
+            if (!activeCommComplaintId) {
+                CampusNexa.toast('No Thread', 'Please select a complaint thread first.', 'warning');
+                return;
+            }
+
+            const input = document.getElementById('commInputText');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const btn = document.getElementById('btnCommSend');
+            btn.disabled = true;
+
+            try {
+                const params = new URLSearchParams();
+                params.append('complaintId', activeCommComplaintId);
+                params.append('messageText', text);
+
+                const resp = await fetch('api/higher-authority/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                });
+
+                const data = await resp.json();
+                if (resp.ok && data.success) {
+                    input.value = '';
+                    CampusNexa.toast('Dispatched', 'Official instruction dispatched.', 'success');
+                    selectCommComplaint(activeCommComplaintId, '', '');
+                } else {
+                    CampusNexa.toast('Error', data.message || 'Failed to dispatch message.', 'danger');
+                }
+            } catch (e) {
+                console.error('Error sending message:', e);
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // 13. Reports Section
+        function renderReportsSection() {
+            const tbody = document.getElementById('repCategoryTableBody');
+            const catMap = {};
+
+            allComplaints.forEach(c => {
+                const cat = c.categoryName || 'General';
+                if (!catMap[cat]) {
+                    catMap[cat] = { total: 0, pending: 0, resolved: 0, defaultSla: '24 Hours' };
+                }
+                catMap[cat].total++;
+                if (c.status === 'RESOLVED' || c.status === 'CLOSED') {
+                    catMap[cat].resolved++;
+                } else {
+                    catMap[cat].pending++;
+                }
+            });
+
+            const rows = Object.keys(catMap).map(k => `
+                <tr>
+                    <td style="font-weight: 700; color: #ffffff;">🏷️ ${escapeHtml(k)}</td>
+                    <td>${catMap[k].total}</td>
+                    <td><span style="color: #fbbf24; font-weight: 700;">${catMap[k].pending}</span></td>
+                    <td><span style="color: #34d399; font-weight: 700;">${catMap[k].resolved}</span></td>
+                    <td style="color: var(--cnx-text-muted);">${catMap[k].defaultSla}</td>
+                </tr>
+            `).join('');
+
+            tbody.innerHTML = rows || '<tr><td colspan="5" style="text-align: center;">No category data available.</td></tr>';
+        }
+
+        // 14. Resolution Monitoring Section
+        function renderMonitoringSection() {
+            const tbody = document.getElementById('monTableBody');
+            const activeItems = allComplaints.filter(c => c.status !== 'RESOLVED' && c.status !== 'CLOSED' && c.status !== 'REJECTED');
+
+            if (activeItems.length === 0) {
+                CampusNexa.renderEmptyState(tbody, {
+                    icon: '🎯',
+                    title: 'All Tickets Resolved',
+                    desc: 'No open tickets currently under resolution tracking.'
+                });
+                return;
+            }
+
+            tbody.innerHTML = activeItems.map(c => `
+                <tr>
+                    <td><span class="cnx-ticket-pill">${escapeHtml(c.complaintNumber)}</span></td>
+                    <td>
+                        <div style="font-weight: 700; color: #ffffff;">${escapeHtml(c.title)}</div>
+                        <div style="font-size: 0.78rem; color: #38bdf8;">🏷️ ${escapeHtml(c.categoryName || 'General')}</div>
+                    </td>
+                    <td>${CampusNexa.priorityBadge(c.priority)}</td>
+                    <td>${CampusNexa.badge(c.status)}</td>
+                    <td><span style="font-size: 0.85rem; color: #cbd5e1;">👷 ${escapeHtml(c.assignedStaffName || 'Pending Triage')}</span></td>
+                    <td>
+                        <span style="font-size: 0.82rem; font-weight: 700; color: ${c.isOverdue ? '#f87171' : '#38bdf8'};">
+                            ${formatSlaDeadline(c.slaDeadline)}
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" class="cnx-btn cnx-btn-primary cnx-btn-sm" style="background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);" onclick="openActionModal(${c.id}, '${escapeHtml(c.complaintNumber)}', 0)">
+                            ⚖️ Direct
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // 15. Helper Utilities
+        function handleSearch() {
+            activeSearchQuery = (document.getElementById('globalSearchInput').value || '').trim();
+            if (currentSection !== 'dashboard') {
+                renderComplaintsTable();
+            }
+        }
+
+        function reloadCurrentView() {
+            CampusNexa.toast('Syncing', 'Refreshing grievance data from MySQL...', 'info');
+            loadStats();
+            loadComplaints();
+            loadEscalations();
+        }
+
+        function formatSlaDeadline(dateStr) {
+            if (!dateStr) return 'Standard (24h)';
+            try {
+                const cleaned = dateStr.split('.')[0].replace(' ', 'T');
+                const d = new Date(cleaned);
+                if (isNaN(d.getTime())) return dateStr;
+                const now = new Date();
+                const diffHours = Math.round((d.getTime() - now.getTime()) / (1000 * 3600));
+                if (diffHours < 0) return `⚠️ Overdue by ${Math.abs(diffHours)}h`;
+                return `${diffHours}h remaining`;
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const cleaned = dateStr.split('.')[0].replace(' ', 'T');
+                const d = new Date(cleaned);
+                if (isNaN(d.getTime())) return dateStr;
+                return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+    </script>
+    <script src="js/notifications.js"></script>
+</body>
+</html>

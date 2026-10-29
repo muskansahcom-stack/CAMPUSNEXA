@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Technician Portal Login — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .btn-staff-submit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.35) !important;
+        }
+        .btn-staff-submit:hover {
+            background: linear-gradient(135deg, #34d399 0%, #047857 100%) !important;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-split-layout">
+        <!-- Left Hero Showcase: CampusNexa Brand & 4-Pillar Philosophy -->
+        <div class="auth-hero-panel">
+            <div>
+                <div class="hero-brand-top">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Logo" class="hero-brand-logo">
+                    <div>
+                        <h1>CampusNexa</h1>
+                        <p class="hero-tagline">Report. Track. Resolve.</p>
+                    </div>
+                </div>
+
+                <div class="hero-headline-wrap">
+                    <h2>Staff Technician & Field Engineering Portal</h2>
+                    <p>
+                        Your direct work order execution environment. Inspect assigned facility issues, update real-time progress (`REPORTED → IN_PROGRESS → RESOLVED`), and ensure optimal campus operations.
+                    </p>
+                </div>
+
+                <!-- The 4 Platform Philosophy Pillars -->
+                <div class="philosophy-grid">
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.15);">📄</div>
+                        <h3>Assigned Tickets</h3>
+                        <p>Receive categorized work orders directly to your queue.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.15);">📍</div>
+                        <h3>Status Updates</h3>
+                        <p>One-click status transitions to inform campus users.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.15);">🛡️</div>
+                        <h3>Rapid Repairs</h3>
+                        <p>Prompt resolution of safety hazards and facility defects.</p>
+                    </div>
+                    <div class="philosophy-card">
+                        <div class="philosophy-icon-wrap" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.15);">👥</div>
+                        <h3>Field Synergy</h3>
+                        <p>Direct communication and accountability across teams.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-footer-note">
+                <span>🔧 Staff Technician Access &bull; Work Queue Authorization &bull; Instant Resolution Verification</span>
+            </div>
+        </div>
+
+        <!-- Right Login Form Panel -->
+        <div class="auth-form-panel">
+            <div class="auth-card" style="border-color: rgba(16, 185, 129, 0.3);">
+                <div class="auth-header">
+                    <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="mobile-logo" style="display:block;">
+                    <div class="portal-role-badge badge-staff">🔧 Staff Technician Portal</div>
+                    <h2>Technician Sign In</h2>
+                    <p>Enter your staff credentials to access your active work queue</p>
+                </div>
+
+                <!-- Error and Informational Messages -->
+                <div id="alertBox" class="alert hidden" role="alert"></div>
+
+                <!-- Instant 1-Click Demo Login -->
+                <a href="demo-login?role=STAFF" class="btn-demo-instant btn-demo-staff" id="demoStaffBtn">
+                    ⚡ 1-Click Staff Technician Demo Login &rarr;
+                </a>
+
+                <div style="display: flex; align-items: center; text-align: center; margin: 1rem 0; color: #64748b; font-size: 0.75rem;">
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                    <span style="padding: 0 0.75rem; text-transform: uppercase; letter-spacing: 1px;">Or Sign In Manually</span>
+                    <div style="flex: 1; height: 1px; background: rgba(255,255,255,0.1);"></div>
+                </div>
+
+                <form action="login" method="POST" class="auth-form" id="staffLoginForm">
+                    <input type="hidden" name="expectedRole" value="STAFF">
+                    <input type="hidden" name="sourcePage" value="staff-login.html">
+
+                    <div class="form-group">
+                        <label for="username">Technician Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username" placeholder="e.g. technician1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter technician password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-staff-submit" id="loginBtn" style="padding: 0.9rem; font-size: 1rem; width: 100%;">
+                        Sign In to Work Queue &rarr;
+                    </button>
+                </form>
+
+                <div class="demo-accounts">
+                    <p style="font-weight: 600; margin-bottom: 0.65rem; color: #cbd5e1; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Staff Technician Demo Account (Click to Instant Login):
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 0.45rem;">
+                        <div class="demo-chip-action" onclick="window.location.href='demo-login?role=STAFF&user=technician1'">
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span><code>technician1</code> / <code>tech123</code></span>
+                                <span class="chip-role staff">Staff</span>
+                            </div>
+                            <span class="chip-quick-btn" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">⚡ Login</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); text-align: center; font-size: 0.825rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.4rem;">
+                    <div>Student? <a href="student-login.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;">Go to Student Portal &rarr;</a></div>
+                    <div>Administrator? <a href="admin-login.html" style="color: #fbbf24; text-decoration: none; font-weight: 600;">Go to Admin Console &rarr;</a></div>
+                    <div><a href="index.html" style="color: #34d399; text-decoration: none;">&larr; Return to Campus Gateway</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+            const message = urlParams.get('message');
+            const alertBox = document.getElementById('alertBox');
+
+            if (error) {
+                alertBox.textContent = decodeURIComponent(error.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-error';
+                alertBox.classList.remove('hidden');
+            } else if (message) {
+                alertBox.textContent = decodeURIComponent(message.replace(/\+/g, ' '));
+                alertBox.className = 'alert alert-success';
+                alertBox.classList.remove('hidden');
+            }
+        });
+
+        function fillLogin(u, p) {
+            document.getElementById('username').value = u;
+            document.getElementById('password').value = p;
+        }
+    </script>
+</body>
+</html>

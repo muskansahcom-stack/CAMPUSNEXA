@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. MySQL Database Service (Pre-configured with full schema & initial data)
+  # ============================================================================
+  db:
+    image: mysql:8.0
+    container_name: campusnexa-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: maintenance_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Auto-import complete database dump on first startup
+      - ./database/campusnexa_full_dump.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - campusnexa-network
+
+  # ============================================================================
+  # 2. CampusNexa Java Tomcat Application
+  # ============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: campusnexa-app
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: "jdbc:mysql://db:3306/maintenance_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+      DB_USER: "root"
+      DB_PASSWORD: "rootpassword"
+    ports:
+      - "8080:8080"
+    networks:
+      - campusnexa-network
+
+networks:
+  campusnexa-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

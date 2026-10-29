@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Complaint — CampusNexa</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+</head>
+<body class="portal-body">
+
+    <!-- Mobile Top Navigation Bar -->
+    <header class="mobile-topbar">
+        <button id="sidebarToggle" class="menu-toggle-btn" aria-label="Toggle Navigation">☰</button>
+        <div class="mobile-brand-wrap">
+            <img src="images/campusnexa-logo.png" alt="CampusNexa Logo" class="mobile-logo-img">
+            <span class="mobile-brand">CampusNexa</span>
+        </div>
+        <a href="logout" class="mobile-logout">Logout</a>
+    </header>
+
+    <div class="portal-layout">
+        <!-- Sidebar Navigation Area -->
+        <aside class="portal-sidebar" id="portalSidebar">
+            <div class="sidebar-brand">
+                <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Logo" class="brand-img-logo">
+                <div class="brand-text-wrap">
+                    <h2>CampusNexa</h2>
+                    <span class="brand-tagline">Report. Track. Resolve.</span>
+                </div>
+            </div>
+
+            <!-- Current Logged-In User Information -->
+            <div class="user-profile-widget">
+                <div class="avatar-circle" id="userInitial">S</div>
+                <div class="user-info">
+                    <span class="user-name" id="sidebarUsername">Loading...</span>
+                    <span class="user-role" id="sidebarRole">STUDENT PORTAL</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu" id="sidebarMenu">
+                <div class="sidebar-group-title">OVERVIEW</div>
+                <a href="student-dashboard.html#overview" class="menu-item">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-label">Dashboard</span>
+                </a>
+
+                <div class="sidebar-group-title">COMPLAINTS</div>
+                <a href="report.html" class="menu-item">
+                    <span class="menu-icon">📝</span>
+                    <span class="menu-label">Report Issue</span>
+                </a>
+                <a href="student-dashboard.html#my-complaints" class="menu-item">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-label">My Complaints</span>
+                </a>
+                <a href="track.html" class="menu-item active">
+                    <span class="menu-icon">🔍</span>
+                    <span class="menu-label">Track Complaint</span>
+                </a>
+                <a href="student-dashboard.html#complaint-history" class="menu-item">
+                    <span class="menu-icon">📜</span>
+                    <span class="menu-label">Complaint History</span>
+                </a>
+
+                <div class="sidebar-group-title">ACCOUNT</div>
+                <a href="student-dashboard.html#profile" class="menu-item">
+                    <span class="menu-icon">👤</span>
+                    <span class="menu-label">Profile</span>
+                </a>
+                <a href="logout" class="menu-item">
+                    <span class="menu-icon">🚪</span>
+                    <span class="menu-label">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="portal-main">
+            <!-- Topbar Navigation -->
+            <header class="portal-topbar">
+                <div class="topbar-left">
+                    <button class="topbar-menu-btn" id="desktopSidebarToggle">☰</button>
+                    <div class="breadcrumb">
+                        <span>Complaints</span>
+                        <span class="separator">/</span>
+                        <span class="current">Track Complaint</span>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="brand-tag-pill">
+                        <span class="pulse-indicator"></span>
+                        <span>CampusNexa Core v2.4</span>
+                    </div>
+                    <a href="student-dashboard.html" class="btn btn-outline btn-sm">Student Dashboard</a>
+                </div>
+            </header>
+
+            <div class="portal-content">
+                <div class="section-heading">
+                    <h2>Track Complaint & Lifecycle Audit</h2>
+                    <p>Enter any Complaint Identifier (e.g., CNX-2026-000011) to view real-time stage progression and diagnostic audit records.</p>
+                </div>
+
+                <div id="statusAlert" class="alert hidden" style="margin-bottom: 1.5rem;"></div>
+
+                <!-- Tracker Search Form -->
+                <div class="card" style="padding: 1.25rem; margin-bottom: 1.5rem;">
+                    <form id="trackSearchForm" onsubmit="handleTrackSearch(event)" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <input type="text" id="trackSearchNumber" placeholder="Enter Complaint Number (e.g. CNX-2026-000011)" required style="flex: 1; min-width: 260px; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(15,23,42,0.85); color: #fff; font-weight: 600;">
+                        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.75rem;">Track Status &rarr;</button>
+                    </form>
+                </div>
+
+                <!-- Track Result Display Box -->
+                <div id="trackResultBox" class="hidden">
+                    <!-- Special Status Alert (for ESCALATED, REOPENED, REJECTED) -->
+                    <div id="trackSpecialAlert" class="alert alert-warning hidden" style="margin-bottom: 1.25rem;">
+                        <span id="trackSpecialAlertIcon">⚠️</span>
+                        <div id="trackSpecialAlertText">Notice message</div>
+                    </div>
+
+                    <!-- Visual 6-Stage Stepper -->
+                    <div class="card" style="padding: 1.75rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span class="ticket-tag" id="trackTicketNumber">#CNX-2026-000001</span>
+                                    <span id="trackPriorityBadge" class="priority-badge priority-medium">MEDIUM</span>
+                                </div>
+                                <h3 id="trackTicketTitle" style="margin: 0.35rem 0 0 0; font-size: 1.35rem; color: #fff;">-</h3>
+                            </div>
+                            <span id="trackTicketStatusBadge" class="status-pill status-submitted">SUBMITTED</span>
+                        </div>
+
+                        <!-- Stepper Progress Bar (6 Stages: Submitted -> Under Review -> Assigned -> In Progress -> Resolved -> Closed) -->
+                        <div class="stepper-container" id="trackerStepper">
+                            <div class="stepper-step" id="stepSubmitted">
+                                <div class="stepper-circle" id="circleSubmitted">✓</div>
+                                <span class="stepper-label" id="labelSubmitted">Submitted</span>
+                            </div>
+                            <div class="stepper-step" id="stepUnderReview">
+                                <div class="stepper-circle" id="circleUnderReview">✓</div>
+                                <span class="stepper-label" id="labelUnderReview">Under Review</span>
+                            </div>
+                            <div class="stepper-step" id="stepAssigned">
+                                <div class="stepper-circle" id="circleAssigned">✓</div>
+                                <span class="stepper-label" id="labelAssigned">Assigned</span>
+                            </div>
+                            <div class="stepper-step" id="stepInProgress">
+                                <div class="stepper-circle" id="circleInProgress">●</div>
+                                <span class="stepper-label" id="labelInProgress">In Progress</span>
+                            </div>
+                            <div class="stepper-step" id="stepResolved">
+                                <div class="stepper-circle" id="circleResolved">○</div>
+                                <span class="stepper-label" id="labelResolved">Resolved</span>
+                            </div>
+                            <div class="stepper-step" id="stepClosed">
+                                <div class="stepper-circle" id="circleClosed">○</div>
+                                <span class="stepper-label" id="labelClosed">Closed</span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Metadata Summary Grid -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08);">
+                            <div>
+                                <small style="color: #94a3b8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.5px;">Category</small>
+                                <div id="trackCategory" style="font-weight: 600; color: #fff; margin-top: 0.25rem;">-</div>
+                            </div>
+                            <div>
+                                <small style="color: #94a3b8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.5px;">Campus Location</small>
+                                <div id="trackLocation" style="font-weight: 600; color: #fff; margin-top: 0.25rem;">-</div>
+                            </div>
+                            <div>
+                                <small style="color: #94a3b8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.5px;">Assigned Staff / Authority</small>
+                                <div id="trackStaff" style="font-weight: 600; color: #34d399; margin-top: 0.25rem;">Unassigned</div>
+                            </div>
+                            <div>
+                                <small style="color: #94a3b8; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.5px;">Target SLA Deadline</small>
+                                <div id="trackSlaDeadline" style="font-weight: 600; color: #38bdf8; margin-top: 0.25rem;">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resolution Details Card (When RESOLVED or CLOSED) -->
+                    <div id="trackResolutionCard" class="card hidden" style="padding: 1.5rem; margin-bottom: 1.5rem; border: 1px solid rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.04);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <h4 style="margin: 0; color: #34d399; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>✓</span> Resolution Details
+                            </h4>
+                            <span id="trackResolvedAt" style="font-size: 0.85rem; color: #94a3b8;">-</span>
+                        </div>
+                        <div style="background: rgba(15,23,42,0.6); padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.06);">
+                            <div style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.35rem;">Technician Diagnostic Remarks:</div>
+                            <div id="trackResolutionRemarks" style="color: #f1f5f9; font-weight: 500; font-size: 0.95rem;">-</div>
+                            <div id="trackResolvedBy" style="margin-top: 0.5rem; font-size: 0.8rem; color: #38bdf8;">Resolved by: -</div>
+                        </div>
+                        <!-- Student Confirmation Actions (for RESOLVED tickets) -->
+                        <div id="trackStudentActions" style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-primary" onclick="confirmCloseTicket()" style="background: #10b981; border-color: #10b981;">✓ Accept & Close Ticket</button>
+                            <button type="button" class="btn btn-outline" onclick="openReopenPrompt()" style="border-color: #f59e0b; color: #f59e0b;">⚠️ Reopen Issue</button>
+                        </div>
+                    </div>
+
+                    <!-- Milestone Audit Timeline Trail -->
+                    <div class="card" style="padding: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                            <h4 style="margin: 0; font-size: 1.1rem; color: #fff;">Milestone Audit Trail</h4>
+                            <span style="font-size: 0.8rem; color: #94a3b8;">Stored in MySQL <code style="color: #38bdf8;">complaint_status_history</code></span>
+                        </div>
+                        <div id="timelineEntriesContainer">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentlyTrackedComplaint = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSession();
+            initSidebar();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const num = urlParams.get('number') || urlParams.get('id');
+            if (num) {
+                document.getElementById('trackSearchNumber').value = num;
+                executeTracking(num);
+            }
+        });
+
+        function initSession() {
+            fetch('api/session')
+                .then(r => {
+                    if (!r.ok) {
+                        window.location.href = 'login.html?error=Please+log+in+first';
+                        return null;
+                    }
+                    return r.json();
+                })
+                .then(user => {
+                    if (!user || !user.authenticated) {
+                        window.location.href = 'login.html?error=Please+log+in+first';
+                        return;
+                    }
+                    document.getElementById('sidebarUsername').textContent = user.fullName || user.username;
+                    document.getElementById('sidebarRole').textContent = (user.role || 'STUDENT') + ' PORTAL';
+                    const initial = (user.fullName || user.username || 'S').charAt(0).toUpperCase();
+                    document.getElementById('userInitial').textContent = initial;
+                })
+                .catch(() => {
+                    window.location.href = 'login.html';
+                });
+        }
+
+        function initSidebar() {
+            const toggle = document.getElementById('sidebarToggle');
+            const dToggle = document.getElementById('desktopSidebarToggle');
+            const sidebar = document.getElementById('portalSidebar');
+            if (toggle) toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+            if (dToggle) dToggle.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+        }
+
+        function handleTrackSearch(e) {
+            e.preventDefault();
+            const num = document.getElementById('trackSearchNumber').value.trim();
+            if (num) {
+                executeTracking(num);
+            }
+        }
+
+        function executeTracking(complaintNum) {
+            fetch(`api/complaints/detail?number=${encodeURIComponent(complaintNum)}`)
+                .then(r => {
+                    if (r.status === 403) throw new Error("Access denied: You can only view your own complaints.");
+                    if (!r.ok) throw new Error("Complaint not found.");
+                    return r.json();
+                })
+                .then(data => {
+                    const c = data.complaint;
+                    const timeline = data.timeline || [];
+                    const resDetails = data.resolutionDetails || {};
+                    currentlyTrackedComplaint = c;
+
+                    document.getElementById('trackResultBox').classList.remove('hidden');
+                    document.getElementById('trackTicketNumber').textContent = `#${c.complaintNumber}`;
+                    document.getElementById('trackTicketTitle').textContent = c.title;
+
+                    // Priority Badge
+                    const priBadge = document.getElementById('trackPriorityBadge');
+                    priBadge.className = `priority-badge priority-${(c.priority || 'medium').toLowerCase()}`;
+                    priBadge.textContent = c.priority || 'MEDIUM';
+
+                    document.getElementById('trackCategory').textContent = `${c.categoryIcon || '📌'} ${c.categoryName} (${c.subCategory || 'General'})`;
+                    document.getElementById('trackLocation').textContent = `📍 ${c.location}`;
+                    document.getElementById('trackStaff').textContent = c.assignedStaffName ? `🔧 ${c.assignedStaffName}` : 'Pending Assignment';
+                    document.getElementById('trackSlaDeadline').textContent = formatSlaDeadline(c.slaDeadline);
+
+                    // Update Status Badge
+                    const badge = document.getElementById('trackTicketStatusBadge');
+                    badge.className = `status-pill status-${(c.status || 'submitted').toLowerCase()}`;
+                    badge.textContent = c.status;
+
+                    // Special Alert handling (ESCALATED, REOPENED, REJECTED)
+                    const specialAlert = document.getElementById('trackSpecialAlert');
+                    const alertIcon = document.getElementById('trackSpecialAlertIcon');
+                    const alertText = document.getElementById('trackSpecialAlertText');
+                    if (c.status === 'ESCALATED') {
+                        specialAlert.className = 'alert alert-warning';
+                        specialAlert.classList.remove('hidden');
+                        alertIcon.textContent = '🚨';
+                        alertText.innerHTML = `<strong>Escalated to Higher Authority:</strong> This complaint is receiving prioritized institutional intervention.`;
+                    } else if (c.status === 'REOPENED') {
+                        specialAlert.className = 'alert alert-info';
+                        specialAlert.classList.remove('hidden');
+                        alertIcon.textContent = '🔄';
+                        alertText.innerHTML = `<strong>Issue Reopened:</strong> Maintenance work has been reactivated upon student request.`;
+                    } else if (c.status === 'REJECTED') {
+                        specialAlert.className = 'alert alert-error';
+                        specialAlert.classList.remove('hidden');
+                        alertIcon.textContent = '✕';
+                        alertText.innerHTML = `<strong>Complaint Rejected:</strong> This complaint was rejected by administration. Please see remarks below.`;
+                    } else {
+                        specialAlert.classList.add('hidden');
+                    }
+
+                    // Update 6-Stage Stepper
+                    updateStepper(c.status);
+
+                    // Resolution Details Card
+                    const resCard = document.getElementById('trackResolutionCard');
+                    if (c.status === 'RESOLVED' || c.status === 'CLOSED' || (resDetails && resDetails.resolutionRemarks)) {
+                        resCard.classList.remove('hidden');
+                        document.getElementById('trackResolvedAt').textContent = resDetails.resolvedAt ? formatDate(resDetails.resolvedAt) : (c.resolvedAt ? formatDate(c.resolvedAt) : 'Resolved');
+                        document.getElementById('trackResolutionRemarks').textContent = resDetails.resolutionRemarks || 'Maintenance repair completed according to campus standards.';
+                        document.getElementById('trackResolvedBy').textContent = `Resolved by: ${resDetails.resolvedByName || c.assignedStaffName || 'Assigned Technician'}`;
+
+                        const studentActions = document.getElementById('trackStudentActions');
+                        if (c.status === 'RESOLVED') {
+                            studentActions.classList.remove('hidden');
+                        } else {
+                            studentActions.classList.add('hidden');
+                        }
+                    } else {
+                        resCard.classList.add('hidden');
+                    }
+
+                    // Render Audit Timeline
+                    renderAuditTimeline(timeline);
+                })
+                .catch(err => {
+                    showAlert(err.message || `Complaint ${complaintNum} not found or access denied.`, 'error');
+                });
+        }
+
+        function updateStepper(status) {
+            const stages = [
+                { key: 'SUBMITTED', id: 'stepSubmitted', circleId: 'circleSubmitted', labelId: 'labelSubmitted', name: 'Submitted' },
+                { key: 'UNDER_REVIEW', id: 'stepUnderReview', circleId: 'circleUnderReview', labelId: 'labelUnderReview', name: 'Under Review' },
+                { key: 'ASSIGNED', id: 'stepAssigned', circleId: 'circleAssigned', labelId: 'labelAssigned', name: 'Assigned' },
+                { key: 'IN_PROGRESS', id: 'stepInProgress', circleId: 'circleInProgress', labelId: 'labelInProgress', name: 'In Progress' },
+                { key: 'RESOLVED', id: 'stepResolved', circleId: 'circleResolved', labelId: 'labelResolved', name: 'Resolved' },
+                { key: 'CLOSED', id: 'stepClosed', circleId: 'circleClosed', labelId: 'labelClosed', name: 'Closed' }
+            ];
+
+            let activeIdx = 0;
+            if (status === 'CLOSED') activeIdx = 5;
+            else if (status === 'RESOLVED') activeIdx = 4;
+            else if (status === 'IN_PROGRESS' || status === 'REOPENED' || status === 'ESCALATED') activeIdx = 3;
+            else if (status === 'ASSIGNED') activeIdx = 2;
+            else if (status === 'UNDER_REVIEW') activeIdx = 1;
+            else activeIdx = 0;
+
+            stages.forEach((s, idx) => {
+                const stepEl = document.getElementById(s.id);
+                const circleEl = document.getElementById(s.circleId);
+                const labelEl = document.getElementById(s.labelId);
+                if (!stepEl || !circleEl || !labelEl) return;
+
+                stepEl.classList.remove('completed', 'active');
+
+                if (status === 'CLOSED' || idx < activeIdx) {
+                    stepEl.classList.add('completed');
+                    circleEl.textContent = '✓';
+                    labelEl.textContent = `✓ ${s.name}`;
+                } else if (idx === activeIdx) {
+                    stepEl.classList.add('active');
+                    circleEl.textContent = '●';
+                    labelEl.textContent = `● ${s.name}`;
+                } else {
+                    circleEl.textContent = '○';
+                    labelEl.textContent = `○ ${s.name}`;
+                }
+            });
+        }
+
+        function renderAuditTimeline(timeline) {
+            const container = document.getElementById('timelineEntriesContainer');
+            if (!timeline || timeline.length === 0) {
+                container.innerHTML = '<p style="color:#94a3b8;">Initial stage registered. Awaiting technician update.</p>';
+                return;
+            }
+
+            container.innerHTML = timeline.map(h => {
+                const oldStatusLabel = h.oldStatus ? `<span class="status-pill status-${h.oldStatus.toLowerCase()}" style="font-size:0.7rem; padding: 2px 6px;">${h.oldStatus}</span> &rarr; ` : '';
+                const newStatus = h.newStatus || h.status || 'SUBMITTED';
+                return `
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                        <div class="timeline-time">${formatDate(h.createdAt)} &bull; Changed by <strong>${escapeHtml(h.changedByName || 'System')}</strong></div>
+                        <div class="timeline-action" style="margin: 0.25rem 0;">Status: ${oldStatusLabel}<span class="status-pill status-${newStatus.toLowerCase()}" style="font-size:0.75rem; padding: 2px 8px;">${newStatus}</span></div>
+                        <div class="timeline-notes" style="color: #cbd5e1; font-size: 0.88rem; background: rgba(255,255,255,0.03); padding: 0.5rem 0.75rem; border-radius: 6px; margin-top: 0.35rem; border-left: 2px solid rgba(56, 189, 248, 0.4);">${escapeHtml(h.remarks || 'Status logged')}</div>
+                    </div>
+                </div>
+            `;}).join('');
+        }
+
+        function confirmCloseTicket() {
+            if (!currentlyTrackedComplaint) return;
+            if (!confirm(`Are you sure you want to close complaint #${currentlyTrackedComplaint.complaintNumber}? This confirms the work is complete to your satisfaction.`)) return;
+
+            const fd = new FormData();
+            fd.append('action', 'updateStatus');
+            fd.append('complaintId', currentlyTrackedComplaint.id);
+            fd.append('newStatus', 'CLOSED');
+            fd.append('remarks', 'Resolution confirmed and closed by student.');
+
+            fetch('api/complaints/status', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: fd
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showAlert(res.message || 'Ticket closed successfully!', 'success');
+                    executeTracking(currentlyTrackedComplaint.complaintNumber);
+                } else {
+                    showAlert(res.message || 'Failed to close ticket.', 'error');
+                }
+            })
+            .catch(() => showAlert('Network error while closing ticket.', 'error'));
+        }
+
+        function openReopenPrompt() {
+            if (!currentlyTrackedComplaint) return;
+            const reason = prompt(`Please specify why the resolution for #${currentlyTrackedComplaint.complaintNumber} was not satisfactory:`);
+            if (!reason || reason.trim().length === 0) return;
+
+            const fd = new FormData();
+            fd.append('action', 'updateStatus');
+            fd.append('complaintId', currentlyTrackedComplaint.id);
+            fd.append('newStatus', 'REOPENED');
+            fd.append('remarks', 'Reopened by student: ' + reason.trim());
+
+            fetch('api/complaints/status', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: fd
+            })
+            .then(r => r.json())
+            .then(res => {
+                if (res.success) {
+                    showAlert(res.message || 'Ticket reopened successfully!', 'success');
+                    executeTracking(currentlyTrackedComplaint.complaintNumber);
+                } else {
+                    showAlert(res.message || 'Failed to reopen ticket.', 'error');
+                }
+            })
+            .catch(() => showAlert('Network error while reopening ticket.', 'error'));
+        }
+
+        function formatDate(dStr) {
+            if (!dStr) return '-';
+            const d = new Date(dStr);
+            if (isNaN(d.getTime())) return dStr;
+            return d.toLocaleString('en-US', {
+                month: 'short', day: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function formatSlaDeadline(dStr) {
+            if (!dStr) return 'Standard 24h Window';
+            const d = new Date(dStr);
+            if (isNaN(d.getTime())) return dStr;
+            return d.toLocaleString('en-US', {
+                month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showAlert(msg, type) {
+            const alertBox = document.getElementById('statusAlert');
+            alertBox.textContent = msg;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => alertBox.classList.add('hidden'), 6000);
+        }
+    </script>
+</body>
+</html>

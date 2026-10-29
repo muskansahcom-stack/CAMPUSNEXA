@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <display-name>CampusNexa - Campus Maintenance and Digital Complaint Management System</display-name>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>login.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- Session Configuration: 30 minutes timeout -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
+
+    <!-- Error Handling: Never expose raw stack traces or internal server details -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error.html?code=400</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.html?code=403</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.html?code=404</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.html?code=500</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/error.html?code=500</location>
+    </error-page>
+
+</web-app>

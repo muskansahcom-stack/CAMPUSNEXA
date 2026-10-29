@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusNexa — Campus Maintenance & Facilities Gateway</title>
+    <link rel="icon" type="image/png" href="images/campusnexa-logo.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/campusnexa-design-system.css">
+</head>
+<body>
+    <div class="gateway-container">
+        <!-- Gateway Header & Branding -->
+        <header class="gateway-header">
+            <img src="images/campusnexa-logo.png" alt="CampusNexa 3D Emblem" class="gateway-brand-logo">
+            <h1>CampusNexa</h1>
+            <p style="color: #38bdf8; font-weight: 700; text-transform: uppercase; letter-spacing: 2.5px; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                Report. Track. Resolve.
+            </p>
+            <p>
+                Integrated Facilities & Maintenance Management Platform. Select your institutional role or launch an instant one-click demo session below.
+            </p>
+        </header>
+
+        <!-- Top Instant 1-Click Demo Access Bar -->
+        <div class="demo-access-bar" aria-label="Instant Demo Login Bar">
+            <div class="demo-access-bar-title">
+                <span>⚡</span>
+                <div>
+                    <div>Instant 1-Click Demo Access</div>
+                    <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 400;">No typing required &bull; Auto-authenticates and enters live dashboard</div>
+                </div>
+            </div>
+            <div class="demo-pill-group">
+                <a href="demo-login?role=STUDENT" class="demo-pill pill-student" id="quickDemoStudent" title="Instant Student Demo Login">
+                    <span>🎓</span> Student Demo &rarr;
+                </a>
+                <a href="demo-login?role=STAFF" class="demo-pill pill-staff" id="quickDemoStaff" title="Instant Staff Demo Login">
+                    <span>🔧</span> Staff Demo &rarr;
+                </a>
+                <a href="demo-login?role=WARDEN" class="demo-pill pill-warden" id="quickDemoWarden" title="Instant Warden Demo Login">
+                    <span>🏛️</span> Warden Demo &rarr;
+                </a>
+                <a href="demo-login?role=HIGHER_AUTHORITY" class="demo-pill pill-higher-auth" id="quickDemoHigherAuth" title="Instant Higher Authority Demo Login">
+                    <span>⚖️</span> Higher Auth Demo &rarr;
+                </a>
+                <a href="demo-login?role=ADMIN" class="demo-pill pill-admin" id="quickDemoAdmin" title="Instant Admin Demo Login">
+                    <span>⚙️</span> Admin Demo &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- Gateway 5 Role Cards Grid -->
+        <main class="gateway-grid">
+            <!-- Student Portal Card -->
+            <div class="gateway-card card-student" id="cardStudent">
+                <div class="gateway-icon-box">🎓</div>
+                <div class="portal-role-badge badge-student" style="align-self: flex-start; margin-bottom: 0.75rem;">Student Portal</div>
+                <h3>Student Access</h3>
+                <p>
+                    Report campus infrastructure defects, submit maintenance tickets for classrooms, labs, and hostels, and track live repair progress.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: auto;">
+                    <a href="demo-login?role=STUDENT" class="btn-demo-instant btn-demo-student" style="text-align: center; text-decoration: none; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;">
+                        ⚡ Instant Student Demo &rarr;
+                    </a>
+                    <a href="student-login.html" class="gateway-btn-text" style="text-decoration: none; font-size: 0.85rem; justify-content: center;">
+                        Standard Student Sign In &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Staff Technician Card -->
+            <div class="gateway-card card-staff" id="cardStaff">
+                <div class="gateway-icon-box">🔧</div>
+                <div class="portal-role-badge badge-staff" style="align-self: flex-start; margin-bottom: 0.75rem;">Staff Portal</div>
+                <h3>Technician Work Queue</h3>
+                <p>
+                    Field maintenance operations, view tickets assigned directly to you, update diagnostic stages, and transition issues to resolved.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: auto;">
+                    <a href="demo-login?role=STAFF" class="btn-demo-instant btn-demo-staff" style="text-align: center; text-decoration: none; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;">
+                        ⚡ Instant Staff Demo &rarr;
+                    </a>
+                    <a href="staff-login.html" class="gateway-btn-text" style="text-decoration: none; font-size: 0.85rem; justify-content: center;">
+                        Standard Staff Sign In &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Warden / Local Authority Card -->
+            <div class="gateway-card card-warden" id="cardWarden">
+                <div class="gateway-icon-box">🏛️</div>
+                <div class="portal-role-badge badge-warden" style="align-self: flex-start; margin-bottom: 0.75rem;">Warden Portal</div>
+                <h3>Hostel Warden & Authority</h3>
+                <p>
+                    Local residential governance, hostel defect triage, room inspections, local escalation monitoring, and student dispute resolution.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: auto;">
+                    <a href="demo-login?role=WARDEN" class="btn-demo-instant btn-demo-warden" style="text-align: center; text-decoration: none; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;">
+                        ⚡ Instant Warden Demo &rarr;
+                    </a>
+                    <a href="login.html?role=WARDEN" class="gateway-btn-text" style="text-decoration: none; font-size: 0.85rem; justify-content: center;">
+                        Warden Authority Sign In &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Higher Authority / COE Card -->
+            <div class="gateway-card card-higher-auth" id="cardHigherAuth">
+                <div class="gateway-icon-box">⚖️</div>
+                <div class="portal-role-badge badge-higher-auth" style="align-self: flex-start; margin-bottom: 0.75rem;">Higher Authority</div>
+                <h3>Disciplinary & COE Board</h3>
+                <p>
+                    Institutional grievance board, anonymous & confidential reports, critical campus escalations, and official student messaging.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: auto;">
+                    <a href="demo-login?role=HIGHER_AUTHORITY" class="btn-demo-instant btn-demo-higher-auth" style="text-align: center; text-decoration: none; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;">
+                        ⚡ Instant Higher Auth Demo &rarr;
+                    </a>
+                    <a href="login.html?role=HIGHER_AUTHORITY" class="gateway-btn-text" style="text-decoration: none; font-size: 0.85rem; justify-content: center;">
+                        Higher Authority Sign In &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Admin Console Card -->
+            <div class="gateway-card card-admin" id="cardAdmin">
+                <div class="gateway-icon-box">⚙️</div>
+                <div class="portal-role-badge badge-admin" style="align-self: flex-start; margin-bottom: 0.75rem;">Admin Console</div>
+                <h3>Administrator Console</h3>
+                <p>
+                    Executive facilities oversight, campus-wide maintenance statistics, issue triage, staff technician work assignments, and ticket auditing.
+                </p>
+                <div style="display: flex; flex-direction: column; gap: 0.65rem; margin-top: auto;">
+                    <a href="demo-login?role=ADMIN" class="btn-demo-instant btn-demo-admin" style="text-align: center; text-decoration: none; padding: 0.75rem; font-size: 0.9rem; font-weight: 700;">
+                        ⚡ Instant Admin Demo &rarr;
+                    </a>
+                    <a href="admin-login.html" class="gateway-btn-text" style="text-decoration: none; font-size: 0.85rem; justify-content: center;">
+                        Standard Admin Sign In &rarr;
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Secondary Option: Unified Login Switcher -->
+        <div style="z-index: 2; margin-bottom: 3.5rem; text-align: center;">
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                Looking for the multi-role login interface?
+            </p>
+            <a href="login.html" class="btn btn-secondary" style="border-radius: var(--radius-full); padding: 0.65rem 1.5rem; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                <span>🔀</span> Access Unified Multi-Role Switcher
+            </a>
+        </div>
+
+        <!-- 4-Pillar Platform Philosophy Strip -->
+        <section class="philosophy-strip" style="width: 100%; max-width: 1100px; z-index: 2;" aria-label="Platform Philosophy">
+            <div class="philosophy-strip-item">
+                <div class="philosophy-strip-icon">📄</div>
+                <div class="philosophy-strip-content">
+                    <h4>Report Issues</h4>
+                    <p>Instant repair requests with automated priority tagging and clean location data.</p>
+                </div>
+            </div>
+            <div class="philosophy-strip-item">
+                <div class="philosophy-strip-icon">📍</div>
+                <div class="philosophy-strip-content">
+                    <h4>Track Progress</h4>
+                    <p>Live transparency from initial submission to technician dispatch and final fix.</p>
+                </div>
+            </div>
+            <div class="philosophy-strip-item">
+                <div class="philosophy-strip-icon">🛡️</div>
+                <div class="philosophy-strip-content">
+                    <h4>Ensure Safety</h4>
+                    <p>Proactive hazard mitigation, electrical checks, and rapid infrastructure upkeep.</p>
+                </div>
+            </div>
+            <div class="philosophy-strip-item">
+                <div class="philosophy-strip-icon">👥</div>
+                <div class="philosophy-strip-content">
+                    <h4>Stronger Campus</h4>
+                    <p>Fostering institutional pride, transparent governance, and collaborative stewardship.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="margin-top: 2.5rem; text-align: center; color: #64748b; font-size: 0.8rem; z-index: 2;">
+            <p>&copy; 2026 CampusNexa Facilities Operations &bull; Institutional Maintenance Platform &bull; Jakarta EE & MySQL</p>
+        </footer>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>
